@@ -390,6 +390,22 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 .sub-form label{display:flex;flex-direction:column;gap:6px;font-weight:500;font-size:13.5px}
 .sub-form .warn{grid-column:1/-1;margin:0;display:flex;gap:8px;align-items:center;color:var(--amber);font-size:13px}
 .sub-form .sub-acts{grid-column:1/-1;margin-top:4px}
+.upl{display:flex;flex-direction:column;gap:10px}
+.sub-form label .input{flex:none;height:38px}
+.wide-f{grid-column:1/-1}
+.drop{display:flex;align-items:center;gap:14px;padding:16px;border:1.5px dashed var(--border-strong);border-radius:12px;background:var(--surface);cursor:pointer;transition:border-color .15s,background-color .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop.has{border-style:solid;border-color:var(--accent)}
+.drop .ic{width:26px;height:26px;color:var(--accent)}
+.drop b{display:block;font-weight:500}
+.drop small{color:var(--muted);font-size:12.5px}
+.upl-row{display:flex;gap:8px}
+.upl-row .input{max-width:200px}
+.upl-bar{height:4px;border-radius:2px;background:var(--border);overflow:hidden}
+.upl-bar b{display:block;height:100%;width:40%;background:var(--accent);border-radius:2px;animation:slide 1s ease-in-out infinite}
+.upl-msg{margin:0;font-size:13px;color:var(--muted);min-height:0}
+.upl-msg.ok{color:var(--green)} .upl-msg.err{color:var(--red)}
+.btn:disabled{opacity:.6;cursor:wait}
 .sub-done{margin-top:20px;display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--green-soft);color:var(--green)}
 .sub-done > div{flex:1;min-width:0;display:flex;flex-direction:column}
 .sub-done b{color:var(--text);font-weight:600}
@@ -685,6 +701,8 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 
 
   /* ---------- submissions ---------- */
+  var UPLOAD_URL='https://script.google.com/macros/s/AKfycbx9zfHV5dS__wxZvBTqRD_9VXzhU4OLRmTInETFLdQ5St1GOkKB4KCEm6gkI8Icjv4F3A/exec';
+  var upFile=null, upBusy=false;
   var SUBL={not:'Not started',work:'In progress',review:'Ready for review',submitted:'Submitted'};
   function subState(x){ if(x.status==='submitted') return 'submitted'; if(x.status==='review') return 'review'; return x.reqs.some(function(r){return r.d;})?'work':'not'; }
   function subMs(x){ return state.milestones.filter(function(m){return m.id===x.ms;})[0]; }
@@ -703,7 +721,15 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     if(st==='submitted'){
       h+='<div class="sub-done">'+ic('check',2.4)+'<div><b>Submitted '+short(parse(sel.at))+(by?' by '+esc(by.first+' '+by.last):'')+'</b>'+(sel.link?'<a href="'+esc(sel.link)+'" target="_blank" rel="noopener">'+esc(sel.link.replace(/^https?:\/\//,''))+'</a>':'<span class="muted">No link saved</span>')+'</div><button class="btn sm" data-subundo="'+sel.id+'">Undo</button></div>';
     } else if(ui.subForm){
-      h+='<form class="sub-form" id="sub-form" data-sub="'+sel.id+'"><label for="sf-link">Link to what you submitted<input class="input" id="sf-link" type="text" inputmode="url" autocomplete="off" placeholder="Drive, Canva, YouTube or Loom link" value="'+esc(sel.link)+'"></label><label for="sf-by">Submitted by<select class="input" id="sf-by"><option value="">Choose</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===me?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>'+
+      var code=''; try{ code=localStorage.getItem('sysande-code')||''; }catch(e){}
+      var upl='';
+      if(UPLOAD_URL && !window.claude){
+        upl='<div class="upl wide-f"><div class="drop'+(upFile?' has':'')+'" id="sf-drop" role="button" tabindex="0" aria-label="Choose a file to upload">'+ic('inbox')+'<div><b id="sf-fname">'+(upFile?esc(upFile.name):'Choose a file or drop it here')+'</b><small>Saved to the team’s Google Drive, up to 20 MB</small></div><input type="file" id="sf-file" hidden></div>'+
+          '<div class="upl-row"><input class="input" id="sf-code" placeholder="Team code" value="'+esc(code)+'" aria-label="Team code" autocomplete="off"><button type="button" class="btn" id="sf-up" data-upload="'+sel.id+'">'+ic('send')+'Upload to Drive</button></div><div class="upl-bar" id="sf-bar" hidden><b></b></div><p class="upl-msg" id="sf-msg"></p></div>';
+      } else if(UPLOAD_URL){
+        upl='<div class="upl wide-f"><a class="btn" href="'+esc(UPLOAD_URL)+'?d='+sel.id+'" target="_blank" rel="noopener">'+ic('inbox')+'Open the Drive upload page</a><small class="muted">Upload there, then paste the link it gives you below.</small></div>';
+      }
+      h+='<form class="sub-form" id="sub-form" data-sub="'+sel.id+'">'+upl+'<label for="sf-link">Link to what you submitted<input class="input" id="sf-link" type="text" inputmode="url" autocomplete="off" placeholder="Drive, Canva, YouTube or Loom link" value="'+esc(ui.upLink||sel.link)+'"></label><label for="sf-by">Submitted by<select class="input" id="sf-by"><option value="">Choose</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===me?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>'+
         (n<sel.reqs.length?'<p class="warn">'+ic('help')+(sel.reqs.length-n)+' requirement'+(sel.reqs.length-n===1?' is':'s are')+' not ticked yet. You can still mark it submitted.</p>':'')+
         '<div class="sub-acts"><button type="button" class="btn" data-subform="0">Cancel</button><button type="submit" class="btn primary">'+ic('send')+'Mark as submitted</button></div></form>';
     } else {
@@ -712,6 +738,36 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     h+='</div></div>';
     return h;
   }
+
+
+  function pickUp(file){ if(!file) return; upFile=file; var n=document.getElementById('sf-fname'), dz=document.getElementById('sf-drop'); if(n) n.textContent=file.name+' ('+(file.size/1048576).toFixed(1)+' MB)'; if(dz) dz.classList.add('has'); var m=document.getElementById('sf-msg'); if(m){ m.textContent=''; m.className='upl-msg'; } }
+  function doUpload(sid){
+    var msg=document.getElementById('sf-msg'), bar=document.getElementById('sf-bar'), btn=document.getElementById('sf-up');
+    function say(t,c){ msg.textContent=t; msg.className='upl-msg '+(c||''); }
+    var code=document.getElementById('sf-code').value.trim(), by=document.getElementById('sf-by').value;
+    if(!upFile) return say('Choose a file first.','err');
+    if(upFile.size>20*1048576) return say('This file is over 20 MB. Upload it to Drive or YouTube yourself and paste the link below.','err');
+    if(!code) return say('Enter the team code. Ask Vik if you don’t have it.','err');
+    if(!by) return say('Choose who is submitting first.','err');
+    try{ localStorage.setItem('sysande-code',code); }catch(e){}
+    upBusy=true; btn.disabled=true; bar.hidden=false; say('Uploading '+upFile.name+'…');
+    var r=new FileReader();
+    r.onload=function(){
+      fetch(UPLOAD_URL,{method:'POST',body:JSON.stringify({code:code,sub:sid,by:by,name:upFile.name,type:upFile.type,b64:String(r.result).split(',')[1]})})
+        .then(function(res){ return res.json(); })
+        .then(function(j){ upBusy=false; btn.disabled=false; bar.hidden=true;
+          if(!j.ok) return say(j.error||'Upload failed. Try again.','err');
+          ui.upLink=j.url; document.getElementById('sf-link').value=j.url; say('Saved to Google Drive as '+j.name+'. Press Mark as submitted to finish.','ok'); })
+        .catch(function(){ upBusy=false; btn.disabled=false; bar.hidden=true; say('Couldn’t reach Google Drive. Check your connection and try again.','err'); });
+    };
+    r.readAsDataURL(upFile);
+  }
+  document.addEventListener('change',function(e){ if(e.target.id==='sf-file') pickUp(e.target.files[0]); });
+  document.addEventListener('dragover',function(e){ var z=e.target.closest&&e.target.closest('#sf-drop'); if(z){ e.preventDefault(); z.classList.add('over'); } });
+  document.addEventListener('dragleave',function(e){ var z=e.target.closest&&e.target.closest('#sf-drop'); if(z) z.classList.remove('over'); });
+  document.addEventListener('drop',function(e){ var z=e.target.closest&&e.target.closest('#sf-drop'); if(z){ e.preventDefault(); z.classList.remove('over'); pickUp(e.dataTransfer.files[0]); } });
+  document.addEventListener('click',function(e){ if(e.target.id==='sf-file') return; var z=e.target.closest('#sf-drop'); if(z) document.getElementById('sf-file').click(); var u=e.target.closest('[data-upload]'); if(u&&!upBusy) doUpload(u.dataset.upload); });
+  document.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&e.target.id==='sf-drop'){ e.preventDefault(); document.getElementById('sf-file').click(); } });
 
   /* ---------- legal ---------- */
   var LEGAL_DATE='November 14, 2026';
@@ -812,7 +868,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     else if(d.menu){ re(function(){ ui.menu=d.menu==='1'; }); }
     else if(d.themeSet){ themePref=d.themeSet; try{ localStorage.setItem(TK,themePref); }catch(err){} applyTheme(); document.querySelectorAll('[data-theme-set]').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.themeSet===themePref)); }); }
     else if(d.consent){ try{ localStorage.setItem(CK,'1'); }catch(err){} var c=document.getElementById('consent'); if(c){ c.classList.add('out'); setTimeout(function(){ c.remove(); },250); } }
-    else if(d.subsel){ re(function(){ ui.subSel=d.subsel; ui.subForm=false; }); }
+    else if(d.subsel){ re(function(){ ui.subSel=d.subsel; ui.subForm=false; ui.upLink=''; upFile=null; }); }
     else if(d.req){ var sb=state.submissions.filter(function(x){return x.id===d.req;})[0]; sb.reqs[+d.ri].d=!sb.reqs[+d.ri].d; popKey='[data-req="'+d.req+'"][data-ri="'+d.ri+'"]'; commit(); }
     else if(d.subform){ re(function(){ ui.subForm=d.subform==='1'; }); var lf=document.getElementById('sf-link'); if(lf) lf.focus(); }
     else if(d.subreview){ var sr=state.submissions.filter(function(x){return x.id===d.subreview;})[0]; sr.status=sr.status==='review'?'not':'review'; commit(sr.status==='review'?'Marked ready for review':'Back to in progress'); }
@@ -839,7 +895,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
       var sx=state.submissions.filter(function(x){return x.id===f.dataset.sub;})[0];
       var lk=document.getElementById('sf-link').value.trim(); if(lk&&!/^https?:\/\//i.test(lk)) lk='https://'+lk;
       var who=document.getElementById('sf-by').value; if(!who){ toast('Choose who submitted it'); return; }
-      sx.status='submitted'; sx.link=lk; sx.by=who; sx.at=iso(today()); ui.subForm=false;
+      sx.status='submitted'; sx.link=lk; sx.by=who; sx.at=iso(today()); ui.subForm=false; ui.upLink=''; upFile=null;
       state.log.push({id:uid(),date:iso(today()),by:who,text:'Submitted: '+sx.title});
       commit('Marked as submitted');
     }
