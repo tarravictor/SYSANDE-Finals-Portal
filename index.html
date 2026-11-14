@@ -221,6 +221,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 .fact > span:first-child{color:var(--faint);font-weight:500}
 .fact ul{margin:0;padding-left:16px}
 .sdgs{display:flex;gap:5px;flex-wrap:wrap}
+.sdgs .tag{height:auto;min-height:22px;white-space:normal;padding:2px 8px}
 .idea-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .voters{display:flex;gap:4px}
 .vote{width:28px;height:28px;border-radius:50%;border:1.5px dashed var(--border-strong);background:transparent;color:var(--faint);font-size:10.5px;font-weight:600;cursor:pointer;display:grid;place-items:center;padding:0}
@@ -514,6 +515,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
   function av(id,cls){ var m=member(id); return m?'<span class="av '+(cls||'')+'" style="--c:'+col(id)+'" title="'+esc(m.first+' '+m.last)+'">'+initials(m)+'</span>':'<span class="av empty '+(cls||'')+'" title="Unassigned">?</span>'; }
   function dueOf(ms){ if(ms.due==='final') return parse(state.finalDate); if(ms.due==='rec'){ var f=parse(state.finalDate); if(!f) return null; var r=new Date(f); r.setDate(r.getDate()-7); return r; } return parse(ms.due); }
   function rel(dt){ if(!dt) return {t:'Needs presentation date',c:'soon'}; var d=daysTo(dt); if(d<0) return {t:'Passed',c:'past'}; if(d===0) return {t:'Due today',c:'soon'}; if(d===1) return {t:'Due tomorrow',c:'soon'}; return {t:'In '+d+' days',c:d<=7?'soon':''}; }
+  function sdgList(t){ return String(t||'').split(/[,;\n]+|\s+(?:and|&)\s+(?=SDG\b)/i).map(function(x){return x.trim().replace(/^(?:and|&)\s+/i,'').replace(/\.$/,'');}).filter(Boolean); }
   function allProjects(){ return state.ideas.concat(state.options); }
   function findProject(id){ return allProjects().filter(function(o){return o.id===id;})[0]; }
   function allTasks(){ var a=[]; state.milestones.forEach(function(m){ m.items.forEach(function(i){ a.push({i:i,m:m}); }); }); return a; }
@@ -625,7 +627,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     h+='<div class="facts">';
     if(o.solves&&o.solves.length) h+='<div class="fact"><span>Solves</span><ul>'+o.solves.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
     if(o.ai) h+='<div class="fact"><span>AI use</span><span>'+esc(o.ai)+'</span></div>';
-    if(o.sdg&&o.sdg.length) h+='<div class="fact"><span>SDG</span><span class="sdgs">'+o.sdg.map(function(x){return '<span class="tag">'+esc(x)+'</span>';}).join('')+'</span></div>';
+    if(o.sdg&&o.sdg.length) h+='<div class="fact"><span>SDG</span><span class="sdgs">'+sdgList(o.sdg.join(', ')).map(function(x){return '<span class="tag">'+esc(x)+'</span>';}).join('')+'</span></div>';
     if(o.elicit) h+='<div class="fact"><span>Elicitation</span><span>'+esc(o.elicit)+'</span></div>';
     h+='</div><div class="idea-foot"><div class="voters">'+state.members.map(function(m){ var v=o.votes.indexOf(m.id)>-1; return '<button class="vote" style="--c:'+col(m.id)+'" data-vote="'+o.id+'" data-m="'+m.id+'" aria-pressed="'+v+'" title="'+esc(m.first)+(v?' supports this':': tap to support')+'">'+initials(m)+'</button>'; }).join('')+'</div><span class="vc">'+o.votes.length+'/'+state.members.length+'</span>'+
       '<div class="right">'+(isIdea?'<button class="btn sm ghost" data-delidea="'+o.id+'" title="Remove idea" aria-label="Remove idea">'+ic('trash')+'</button>':'')+'<button class="btn sm '+(on?'':'primary')+'" data-pick="'+o.id+'">'+(on?'Unchoose':'Choose')+'</button></div></div></article>';
@@ -902,7 +904,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     else if(f.id==='idea-form'){
       function val(id){ return document.getElementById(id).value.trim(); }
       var by=val('i-by'), name=val('i-name'); if(!by||!name){ toast('Add your name and a project name'); return; }
-      state.ideas.push({id:uid(),by:by,name:name,what:val('i-what'),desc:val('i-desc'),solves:val('i-solves').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean),ai:val('i-ai'),sdg:val('i-sdg').split(/[,;]+/).map(function(x){return x.trim();}).filter(Boolean),elicit:val('i-elicit'),votes:[by]});
+      state.ideas.push({id:uid(),by:by,name:name,what:val('i-what'),desc:val('i-desc'),solves:val('i-solves').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean),ai:val('i-ai'),sdg:sdgList(val('i-sdg')),elicit:val('i-elicit'),votes:[by]});
       state.log.push({id:uid(),date:iso(today()),by:by,text:'Posted a project idea: '+name});
       closeModal(); ui.ideaTab='team'; commit('Idea posted');
     } else if(f.id==='log-form'){ var t=document.getElementById('log-text').value.trim(); if(!t){ toast('Write an update first'); return; } state.log.push({id:uid(),date:iso(today()),by:document.getElementById('log-by').value,text:t}); commit('Update posted'); }
