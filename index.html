@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SYSANDE Finals Portal</title>
+<link id="app-icon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2215%22 fill=%22%233B5BDB%22/%3E%3Crect y=%2252%22 width=%2264%22 height=%2212%22 rx=%220%22 fill=%22%23000%22 opacity=%22.12%22/%3E%3Crect width=%2264%22 height=%2264%22 rx=%2215%22 fill=%22none%22/%3E%3Ctext x=%2232%22 y=%2245%22 font-family=%22Helvetica, Arial, sans-serif%22 font-weight=%22700%22 font-size=%2238%22 fill=%22%23fff%22 text-anchor=%22middle%22%3ES%3C/text%3E%3C/svg%3E">
+<link id="app-touch" rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#3B5BDB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="app-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
@@ -696,7 +699,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     clearTimeout(timer); timer=setTimeout(publish,900); if(msg) toast(msg); }
   function buildDoc(){
     var json=JSON.stringify(state).replace(/</g,'\\u003c');
-    var head='<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>SYSANDE Finals Portal</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+document.getElementById('app-fonts').outerHTML+'\n'+document.getElementById('app-style').outerHTML;
+    var head='<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>SYSANDE Finals Portal</title>\n'+document.getElementById('app-icon').outerHTML+'\n'+document.getElementById('app-touch').outerHTML+'\n<meta name="theme-color" content="#3B5BDB">\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+document.getElementById('app-fonts').outerHTML+'\n'+document.getElementById('app-style').outerHTML;
     return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'+head+'\n</head>\n<body>\n<script type="application/json" id="portal-state">'+json+'<\/script>\n<div id="app"></div>\n<div class="toast" id="toast" role="status" aria-live="polite"></div>\n'+SELF.outerHTML+'\n</body>\n</html>';
   }
   function publish(){ if(!api) return; api.publish(buildDoc()).catch(function(err){ var c=(err&&(err.code||err.name||err.message))||''; if(/not_granted|not_writer/.test(c)){ mode='readonly'; render(); toast('View only. Change not saved'); } else if(!/conflict/.test(c)) toast('Couldn’t save. Try again'); }); }
