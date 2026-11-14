@@ -1,4 +1,4 @@
-# Finals Project Portal
+# SYSANDE Finals Project Portal
 
 Team portal for our finals project: project options, deadlines, task owners, Drive links and updates.
 
