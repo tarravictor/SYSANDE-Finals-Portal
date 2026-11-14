@@ -449,6 +449,9 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
 .btn.danger{color:var(--red)}
 .sheet-f .danger{margin-right:auto}
 .tabbar{display:none}
+.show-sm{display:none}
+.frow .t-btn b{display:block;font-weight:500}
+.frow .t-btn small{display:block}
 @media (max-width:860px){
   .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:34;background:var(--surface);border-top:1px solid var(--border);padding:6px 4px 8px}
   .tabbar a,.tabbar button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:var(--muted);font:500 11px var(--font);text-decoration:none;padding:4px 0;cursor:pointer}
@@ -458,6 +461,8 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   .toast{bottom:84px}
   .consent{bottom:76px}
   .hide-sm{display:none !important}
+  .show-sm{display:inline}
+  .frow .acts .btn.ghost{display:none}
   .top h1 .crumb{display:none}
   .check{width:24px;height:24px}
   .pill{height:28px}
@@ -578,8 +583,9 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   function rel(dt){ if(!dt) return {t:'Needs presentation date',c:'soon'}; var d=daysTo(dt); if(d<0) return {t:'Passed',c:'past'}; if(d===0) return {t:'Due today',c:'soon'}; if(d===1) return {t:'Due tomorrow',c:'soon'}; return {t:'In '+d+' days',c:d<=7?'soon':''}; }
   function sdgList(t){ return String(t||'').split(/[,;\n]+|\s+(?:and|&)\s+(?=SDG\b)/i).map(function(x){return x.trim().replace(/^(?:and|&)\s+/i,'').replace(/\.$/,'');}).filter(Boolean); }
   function fixSubs(){ var D={s1:'arradaza',s2:'tarra',s3:'barba',s4:'grefaldeo',s5:'arradaza',s6:''}; state.submissions.forEach(function(x){ if(x.owner===undefined) x.owner=D[x.id]||''; }); }
-  var APP_VERSION='2026.11.14-3', VK='sysande-seen-version';
+  var APP_VERSION='2026.11.14-4', VK='sysande-seen-version';
   var CHANGELOG={date:'November 14', items:[
+    ['pen','Edit almost anything','Team ideas, updates, file links, deadlines, submission checklists and member details now have an edit button. You can also add new file links and submissions.','ideas'],
     ['inbox','Every submission has an owner','Each deliverable is assigned to a member. Filter to yours, tick the checklist, and upload the file straight to our Google Drive.','submissions'],
     ['pen','Edit, add and delete tasks','Click any task to change its text, owner, status or deadline. Press New task to add one.','tasks'],
     ['users','More things are clickable','The countdown, the stat cards and each member card now open the matching page. See tasks on a member card shows only their tasks.','team'],
@@ -649,6 +655,8 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     var action='';
     if(ui.view==='ideas') action='<button class="btn primary" data-newidea="1">'+ic('plus')+'New idea</button>';
     else if(ui.view==='tasks') action='<button class="btn primary" data-newtask="1">'+ic('plus')+'New task</button>';
+    else if(ui.view==='submissions') action='<button class="btn primary" data-newsub="1">'+ic('plus')+'<span class="hide-sm">New submission</span><span class="show-sm">New</span></button>';
+    else if(ui.view==='files') action='<button class="btn primary" data-newlink="1">'+ic('plus')+'Add link</button>';
     else if(ui.view==='home') action='<button class="btn hide-sm" data-newidea="1">'+ic('plus')+'New idea</button>';
     var top='<header class="top"><button class="menu-btn" data-menu="1" aria-label="Open menu">'+ic('menu')+'</button><h1><span class="crumb">'+esc(state.course||'Finals')+' / </span>'+TITLES[ui.view]+'</h1><div class="top-actions">'+action+'</div></header>';
     var body={home:home,ideas:ideasView,tasks:tasksView,submissions:subsView,files:filesView,team:teamView,rules:rulesView,updates:updatesView,terms:termsView,privacy:privacyView}[ui.view]();
@@ -713,7 +721,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     if(o.sdg&&o.sdg.length) h+='<div class="fact"><span>SDG</span><span class="sdgs">'+sdgList(o.sdg.join(', ')).map(function(x){return '<span class="tag">'+esc(x)+'</span>';}).join('')+'</span></div>';
     if(o.elicit) h+='<div class="fact"><span>Elicitation</span><span>'+esc(o.elicit)+'</span></div>';
     h+='</div><div class="idea-foot"><div class="voters">'+state.members.map(function(m){ var v=o.votes.indexOf(m.id)>-1; return '<button class="vote" style="--c:'+col(m.id)+'" data-vote="'+o.id+'" data-m="'+m.id+'" aria-pressed="'+v+'" title="'+esc(m.first)+(v?' supports this':': tap to support')+'">'+initials(m)+'</button>'; }).join('')+'</div><span class="vc">'+o.votes.length+'/'+state.members.length+'</span>'+
-      '<div class="right">'+(isIdea?'<button class="btn sm ghost" data-delidea="'+o.id+'" title="Remove idea" aria-label="Remove idea">'+ic('trash')+'</button>':'')+'<button class="btn sm '+(on?'':'primary')+'" data-pick="'+o.id+'">'+(on?'Unchoose':'Choose')+'</button></div></div></article>';
+      '<div class="right">'+(isIdea?'<button class="btn sm ghost" data-editidea="'+o.id+'" title="Edit idea" aria-label="Edit idea">'+ic('pen')+'</button><button class="btn sm ghost" data-delidea="'+o.id+'" title="Remove idea" aria-label="Remove idea">'+ic('trash')+'</button>':'')+'<button class="btn sm '+(on?'':'primary')+'" data-pick="'+o.id+'">'+(on?'Unchoose':'Choose')+'</button></div></div></article>';
     return h;
   }
   function ideasView(){
@@ -747,7 +755,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
       if(!items.length && !(ui.taskFilter==='all'||ui.taskFilter===m.id)) return;
       shown++;
       var d=dueOf(m), r=rel(d), dn=m.items.filter(function(i){return i.status==='done';}).length;
-      h+='<div class="card group" id="g-'+m.id+'"><div class="group-h"><h2>'+esc(m.title)+'</h2><span class="tag'+(r.c==='soon'?' red':'')+'">'+short(d)+(d?', '+r.t.toLowerCase():'')+'</span><span class="muted">'+dn+'/'+m.items.length+'</span><div class="bar"><b style="width:'+(m.items.length?Math.round(dn/m.items.length*100):0)+'%"></b></div><button class="btn sm ghost" data-newtask="'+m.id+'" title="Add a task to '+esc(m.title)+'">'+ic('plus')+'<span class="hide-sm">Add task</span></button></div>'+
+      h+='<div class="card group" id="g-'+m.id+'"><div class="group-h"><h2>'+esc(m.title)+'</h2><span class="tag'+(r.c==='soon'?' red':'')+'">'+short(d)+(d?', '+r.t.toLowerCase():'')+'</span><span class="muted">'+dn+'/'+m.items.length+'</span><div class="bar"><b style="width:'+(m.items.length?Math.round(dn/m.items.length*100):0)+'%"></b></div><button class="btn sm ghost" data-editms="'+m.id+'" title="Edit this deadline" aria-label="Edit this deadline">'+ic('pen')+'</button><button class="btn sm ghost" data-newtask="'+m.id+'" title="Add a task to '+esc(m.title)+'">'+ic('plus')+'<span class="hide-sm">Add task</span></button></div>'+
         (m.note?'<p class="group-note">'+m.note+'</p>':'')+(items.length?'':'<div class="trow-empty">No tasks here yet.</div>')+items.map(function(i){
           return '<div class="trow'+(i.status==='done'?' done':'')+'">'+checkBtn(i)+'<button class="tt t-btn" data-edittask="'+i.id+'" title="Edit task">'+esc(i.text)+'</button><button class="pill '+i.status+'" data-status="'+i.id+'">'+SL[i.status]+'</button><span class="owner">'+av(i.owner,'sm')+'<select data-owner="'+i.id+'" aria-label="Owner"><option value="">Unassigned</option>'+state.members.map(function(mm){return '<option value="'+mm.id+'"'+(i.owner===mm.id?' selected':'')+'>'+esc(mm.first)+'</option>';}).join('')+'</select></span><button class="btn sm ghost hide-sm" data-edittask="'+i.id+'" aria-label="Edit task" title="Edit task">'+ic('pen')+'</button></div>';
         }).join('')+'</div>';
@@ -782,23 +790,23 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   }
   function closeNews(){ closeModal(); re(function(){}); }
   var FK={drive:['drive','#E8F7EE','#16A34A'],doc:['doc','#EEF2FF','#3B5BDB'],canva:['slides','#E6F7FB','#0891B2'],figma:['figma','#F6EEFB','#9C36B5'],video:['video','#FDECEC','#DC2626'],form:['form','#F3EEFF','#7048E8'],diagram:['diagram','#FEF3E2','#D97706']};
+  var KINDS={drive:'Google Drive folder',doc:'Document',canva:'Slides or deck',figma:'Figma',video:'Video',form:'Form or survey',diagram:'Diagram'};
   function filesView(){
     var set=state.links.filter(function(k){return k.url;}).length;
     var h='<div class="toolbar"><span class="muted">'+set+' of '+state.links.length+' links added. Paste a share link once and everyone opens it from here.</span></div><div class="card">';
     h+=state.links.map(function(k){
       var f=FK[k.kind]||FK.doc, has=!!k.url;
-      var s='<div class="frow"><span class="ficon" style="--fbg:color-mix(in srgb,'+f[2]+' 14%,transparent);--fc:'+f[2]+'">'+ic(f[0])+'</span><div style="min-width:0"><b>'+esc(k.label)+'</b><small>'+esc(has?k.url.replace(/^https?:\/\//,''):k.hint)+'</small></div><div class="acts">'+
-        (has?'<a class="btn sm" href="'+esc(k.url)+'" target="_blank" rel="noopener">'+ic('open')+'Open</a><button class="btn sm ghost" data-editlink="'+k.id+'" aria-label="Edit link" title="Edit link">'+ic('pen')+'</button>':'<button class="btn sm" data-editlink="'+k.id+'">'+ic('link')+'Add link</button>')+'</div>';
-      if(ui.editingLink===k.id) s+='<form data-linkform="'+k.id+'"><input class="input" id="link-'+k.id+'" type="text" inputmode="url" autocomplete="off" value="'+esc(k.url)+'" placeholder="Paste the share link" aria-label="Link for '+esc(k.label)+'"><button class="btn sm primary" type="submit">Save</button><button class="btn sm" type="button" data-cancel="1">Cancel</button></form>';
-      return s+'</div>';
+      return '<div class="frow"><span class="ficon" style="--fbg:color-mix(in srgb,'+f[2]+' 14%,transparent);--fc:'+f[2]+'">'+ic(f[0])+'</span><button class="t-btn" data-editlink="'+k.id+'" title="Edit" style="min-width:0"><b>'+esc(k.label)+'</b><small>'+esc(has?k.url.replace(/^https?:\/\//,''):(k.hint||'No link yet'))+'</small></button><div class="acts">'+
+        (has?'<a class="btn sm" href="'+esc(k.url)+'" target="_blank" rel="noopener">'+ic('open')+'Open</a><button class="btn sm ghost" data-editlink="'+k.id+'" aria-label="Edit" title="Edit">'+ic('pen')+'</button>':'<button class="btn sm" data-editlink="'+k.id+'">'+ic('link')+'Add link</button>')+'</div></div>';
     }).join('');
+    if(!state.links.length) h+='<div class="empty-state">'+ic('folder')+'<span>No file links yet.</span><button class="btn" data-newlink="1">Add link</button></div>';
     return h+'</div>';
   }
   function teamView(){
     var c={}; allTasks().forEach(function(x){ var o=x.i.owner; if(o){ c[o]=c[o]||{a:0,d:0}; c[o].a++; if(x.i.status==='done') c[o].d++; } });
     return '<div class="toolbar"><span class="muted">Roles for the Meet the Team slide. Click a role or focus to edit it.</span></div><div class="team">'+state.members.map(function(m){
       var k=c[m.id]||{a:0,d:0}, bins=state.submissions.filter(function(x){return x.owner===m.id;});
-      return '<div class="card mem"><div class="mem-top">'+av(m.id,'lg')+'<div><b>'+esc(m.first+' '+m.last)+'</b><small>'+(m.id===me?'You':'Member')+'</small></div><a class="btn sm" style="margin-left:auto" href="#tasks" data-goto-group="m:'+m.id+'">'+ic('tasks')+'See tasks</a></div>'+
+      return '<div class="card mem"><div class="mem-top">'+av(m.id,'lg')+'<div><b>'+esc(m.first+' '+m.last)+'</b><small>'+(m.id===me?'You':'Member')+'</small></div><span style="margin-left:auto;display:flex;gap:6px"><button class="btn sm ghost" data-editmember="'+m.id+'" title="Edit member" aria-label="Edit member">'+ic('pen')+'</button><a class="btn sm" href="#tasks" data-goto-group="m:'+m.id+'">'+ic('tasks')+'See tasks</a></span></div>'+
         '<label>Role<input data-mrole="'+m.id+'" value="'+esc(m.role)+'"></label><label>Focus<input data-mfocus="'+m.id+'" value="'+esc(m.focus)+'"></label>'+
         (bins.length?'<div class="mem-bins"><span>Submits</span>'+bins.map(function(x){return '<a class="tag" href="#submissions" data-gosub="'+x.id+'">'+esc(x.title)+'</a>';}).join('')+'</div>':'')+
         '<div class="mem-prog"><span>'+k.d+'/'+k.a+' tasks</span><div class="bar"><b style="width:'+(k.a?Math.round(k.d/k.a*100):0)+'%;background:'+col(m.id)+'"></b></div></div></div>';
@@ -813,7 +821,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   }
   function updatesView(){
     return '<div class="card"><form class="composer" id="log-form">'+(me?av(me):'<span class="av empty">?</span>')+'<select id="log-by" aria-label="Posting as"><option value="">Posting as…</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===me?' selected':'')+'>'+esc(m.first)+'</option>';}).join('')+'</select><input class="input" id="log-text" placeholder="Share an update or decision" aria-label="Update"><button class="btn primary" type="submit">'+ic('send')+'Post</button></form>'+
-      '<div class="list feed">'+(state.log.length?state.log.slice().reverse().map(function(e){ return feedLine(e).replace('</div></div>','</div><button class="btn sm ghost" data-dellog="'+e.id+'" aria-label="Delete update" title="Delete">'+ic('trash')+'</button></div>'); }).join(''):'<div class="empty-state">No updates yet.</div>')+'</div></div>';
+      '<div class="list feed">'+(state.log.length?state.log.slice().reverse().map(function(e){ return feedLine(e).replace('</div></div>','</div><button class="btn sm ghost" data-editlog="'+e.id+'" aria-label="Edit update" title="Edit">'+ic('pen')+'</button><button class="btn sm ghost" data-dellog="'+e.id+'" aria-label="Delete update" title="Delete">'+ic('trash')+'</button></div>'); }).join(''):'<div class="empty-state">No updates yet.</div>')+'</div></div>';
   }
 
 
@@ -838,7 +846,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     }).join('')+'</div>';
     var st=subState(sel), d=dueOf(subMs(sel)), r=rel(d), n=sel.reqs.filter(function(q){return q.d;}).length, pct=Math.round(n/sel.reqs.length*100), by=member(sel.by);
     h+='<div class="card sub-detail" id="sub-detail"><div class="sub-head"><div><span class="tag">'+esc(sel.kind)+'</span>'+(me&&sel.owner===me?' <span class="tag accent">Yours</span>':'')+'<h2>'+esc(sel.title)+'</h2><p class="muted">'+(d?'Due '+short(d)+', '+r.t.toLowerCase():'Due date depends on the final presentation date')+'</p></div><span class="sstat '+st+'">'+SUBL[st]+'</span></div>';
-    h+='<label class="assign">Assigned to '+av(sel.owner,'sm')+'<select data-subowner="'+sel.id+'" aria-label="Assigned to"><option value="">Whole team</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(sel.owner===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>';
+    h+='<label class="assign">Assigned to '+av(sel.owner,'sm')+'<select data-subowner="'+sel.id+'" aria-label="Assigned to"><option value="">Whole team</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(sel.owner===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select><button type="button" class="btn sm ghost" data-editsub="'+sel.id+'" style="margin-left:auto">'+ic('pen')+'Edit details</button></label>';
     h+='<div class="sub-prog"><div class="bar"><b style="width:'+pct+'%"></b></div><span>'+n+' of '+sel.reqs.length+' requirements met</span></div>';
     h+='<ul class="reqs">'+sel.reqs.map(function(q,i){ return '<li><button class="check '+(q.d?'done':'')+'" data-req="'+sel.id+'" data-ri="'+i+'" aria-label="'+(q.d?'Met':'Not met')+': '+esc(q.t)+'">'+(q.d?ic('check',3):'')+'</button><span class="'+(q.d?'met':'')+'">'+esc(q.t)+'</span></li>'; }).join('')+'</ul>';
     if(st==='submitted'){
@@ -940,21 +948,59 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   }
 
   /* ---------- modal: new idea ---------- */
-  function openIdea(){
-    var mo=document.createElement('div'); mo.className='modal'; mo.id='idea-modal';
-    mo.innerHTML='<form class="sheet" id="idea-form" role="dialog" aria-modal="true" aria-labelledby="im-t"><div class="sheet-h"><h2 id="im-t">New project idea</h2><button type="button" class="btn sm ghost" data-closemodal="1" aria-label="Close">'+ic('x')+'</button></div><div class="sheet-b">'+
-      '<label for="i-by">Your name<select id="i-by" required><option value="">Choose</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===me?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>'+
-      '<label for="i-name">Project name<input id="i-name" maxlength="40" placeholder="BantayBaha" required></label>'+
-      '<label class="wide" for="i-what">One-line summary<input id="i-what" maxlength="70" placeholder="AI flood alerts for barangays"></label>'+
-      '<label class="wide" for="i-desc">What it does<textarea id="i-desc" rows="3" placeholder="Who uses it and what they do with it"></textarea></label>'+
-      '<label class="wide" for="i-solves">Problems it solves <small>One per line</small><textarea id="i-solves" rows="3"></textarea></label>'+
-      '<label for="i-ai">AI and analytics<input id="i-ai" placeholder="Forecasting, image recognition"></label>'+
-      '<label for="i-sdg">SDG<input id="i-sdg" placeholder="SDG 3, SDG 11"></label>'+
-      '<label class="wide" for="i-elicit">Elicitation so far <small>Optional</small><input id="i-elicit" placeholder="Interviewed 3 tricycle drivers"></label>'+
-      '</div><div class="sheet-f"><button type="button" class="btn" data-closemodal="1">Cancel</button><button type="submit" class="btn primary">'+ic('send')+'Post idea</button></div></form>';
+  function sheet(formId, id, title, body, okLabel, delKey){
+    closeModal();
+    var mo=document.createElement('div'); mo.className='modal'; mo.id='app-modal';
+    mo.innerHTML='<form class="sheet" id="'+formId+'" data-id="'+esc(id||'')+'" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="sheet-h"><h2 id="sh-t">'+title+'</h2><button type="button" class="btn sm ghost" data-closemodal="1" aria-label="Close">'+ic('x')+'</button></div><div class="sheet-b">'+body+'</div><div class="sheet-f">'+
+      (delKey?'<button type="button" class="btn ghost danger" data-del="'+delKey+'">'+ic('trash')+'Delete</button>':'')+'<button type="button" class="btn" data-closemodal="1">Cancel</button><button type="submit" class="btn primary">'+okLabel+'</button></div></form>';
     document.body.appendChild(mo);
     mo.addEventListener('mousedown',function(e){ if(e.target===mo) closeModal(); });
-    var f=document.getElementById(me?'i-name':'i-by'); if(f) f.focus();
+    var f=mo.querySelector('.sheet-b input:not([type=date]), .sheet-b textarea'); if(f){ f.focus(); try{ f.setSelectionRange(f.value.length,f.value.length); }catch(e){} }
+  }
+  function memberOpts(sel, blank){ return (blank?'<option value="">'+blank+'</option>':'')+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===sel?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join(''); }
+  function byId(list,id){ return list.filter(function(x){return x.id===id;})[0]; }
+  function openIdea(id){
+    var o=id?byId(state.ideas,id):null, v=o||{by:me,name:'',what:'',desc:'',solves:[],ai:'',sdg:[],elicit:''};
+    sheet('idea-form', o?o.id:'', o?'Edit project idea':'New project idea',
+      '<label for="i-by">'+(o?'Posted by':'Your name')+'<select id="i-by" required>'+memberOpts(v.by,'Choose')+'</select></label>'+
+      '<label for="i-name">Project name<input id="i-name" maxlength="40" placeholder="BantayBaha" required value="'+esc(v.name)+'"></label>'+
+      '<label class="wide" for="i-what">One-line summary<input id="i-what" maxlength="70" placeholder="AI flood alerts for barangays" value="'+esc(v.what)+'"></label>'+
+      '<label class="wide" for="i-desc">What it does<textarea id="i-desc" rows="3" placeholder="Who uses it and what they do with it">'+esc(v.desc)+'</textarea></label>'+
+      '<label class="wide" for="i-solves">Problems it solves <small>One per line</small><textarea id="i-solves" rows="3">'+esc((v.solves||[]).join('\n'))+'</textarea></label>'+
+      '<label for="i-ai">AI and analytics<input id="i-ai" placeholder="Forecasting, image recognition" value="'+esc(v.ai)+'"></label>'+
+      '<label for="i-sdg">SDG<input id="i-sdg" placeholder="SDG 3, SDG 11" value="'+esc(sdgList((v.sdg||[]).join(', ')).join(', '))+'"></label>'+
+      '<label class="wide" for="i-elicit">Elicitation so far <small>Optional</small><input id="i-elicit" placeholder="Interviewed 3 tricycle drivers" value="'+esc(v.elicit)+'"></label>',
+      o?'Save changes':ic('send')+'Post idea', o?'idea:'+o.id:'');
+  }
+  function openLog(id){ var e=byId(state.log,id); if(!e) return;
+    sheet('log-edit', id, 'Edit update', '<label class="wide" for="le-text">Update<textarea id="le-text" rows="3" required>'+esc(e.text)+'</textarea></label><label class="wide" for="le-by">Posted by<select id="le-by">'+memberOpts(e.by,'Team')+'</select></label>', 'Save changes', 'log:'+id);
+  }
+  function openLink(id){ var k=id?byId(state.links,id):null, v=k||{label:'',url:'',kind:'doc'};
+    sheet('link-form', k?k.id:'', k?'Edit file link':'Add a file link',
+      '<label class="wide" for="l-label">Name<input id="l-label" required maxlength="60" placeholder="Survey responses" value="'+esc(v.label)+'"></label>'+
+      '<label class="wide" for="l-url">Link <small>Leave empty if you don’t have it yet</small><input id="l-url" type="text" inputmode="url" autocomplete="off" placeholder="Paste the share link" value="'+esc(v.url)+'"></label>'+
+      '<label class="wide" for="l-kind">Type<select id="l-kind">'+Object.keys(KINDS).map(function(x){return '<option value="'+x+'"'+(x===v.kind?' selected':'')+'>'+KINDS[x]+'</option>';}).join('')+'</select></label>',
+      k?'Save changes':'Add link', k?'link:'+k.id:'');
+    if(k){ var u=document.getElementById('l-url'); if(u) u.focus(); }
+  }
+  function openMs(id){ var m=byId(state.milestones,id); if(!m) return;
+    var fixed=/^\d{4}-\d\d-\d\d$/.test(m.due);
+    var dateF = m.due==='rec' ? '<p class="wide muted" style="margin:0;font-size:13.5px">This deadline is always one week before the final presentation. Change the final presentation date to move it.</p>'
+      : '<label class="wide" for="m-date">'+(fixed?'Due date':'Final presentation date')+'<input id="m-date" type="date" value="'+esc(fixed?m.due:state.finalDate)+'"></label>';
+    sheet('ms-form', id, 'Edit deadline', '<label class="wide" for="m-title">Name<input id="m-title" required maxlength="50" value="'+esc(m.title)+'"></label>'+dateF+
+      '<label class="wide" for="m-note">Note <small>Shown above its tasks. Optional</small><textarea id="m-note" rows="2">'+esc(String(m.note||'').replace(/<[^>]+>/g,''))+'</textarea></label>', 'Save changes', '');
+  }
+  function openSub(id){ var x=id?byId(state.submissions,id):null, nd=nextDue(), v=x||{title:'',kind:'Document',ms:nd?nd.m.id:state.milestones[0].id,reqs:[]};
+    sheet('subedit-form', x?x.id:'', x?'Edit submission':'New submission',
+      '<label class="wide" for="s-title">Name<input id="s-title" required maxlength="60" placeholder="Survey results summary" value="'+esc(v.title)+'"></label>'+
+      '<label for="s-kind">Type<input id="s-kind" maxlength="20" placeholder="Document, Video, Slides" value="'+esc(v.kind)+'"></label>'+
+      '<label for="s-ms">Due with<select id="s-ms">'+state.milestones.map(function(m){ var d=dueOf(m); return '<option value="'+m.id+'"'+(m.id===v.ms?' selected':'')+'>'+esc(m.title)+(d?' ('+short(d)+')':'')+'</option>'; }).join('')+'</select></label>'+
+      '<label class="wide" for="s-reqs">Checklist <small>One requirement per line. Ticks are kept for lines you don’t change</small><textarea id="s-reqs" rows="7" required>'+esc(v.reqs.map(function(q){return q.t;}).join('\n'))+'</textarea></label>',
+      x?'Save changes':'Add submission', x?'sub:'+x.id:'');
+  }
+  function openMember(id){ var m=member(id); if(!m) return;
+    sheet('member-form', id, 'Edit member', '<label for="mb-first">First name<input id="mb-first" required maxlength="30" value="'+esc(m.first)+'"></label><label for="mb-last">Last name<input id="mb-last" required maxlength="30" value="'+esc(m.last)+'"></label>'+
+      '<label class="wide" for="mb-role">Role<input id="mb-role" maxlength="60" value="'+esc(m.role)+'"></label><label class="wide" for="mb-focus">Focus<input id="mb-focus" maxlength="120" value="'+esc(m.focus)+'"></label>', 'Save changes', '');
   }
   function closeModal(){ document.querySelectorAll('#idea-modal,#app-modal').forEach(function(m){ if(m.dataset.news){ try{ localStorage.setItem(VK,APP_VERSION); }catch(e){} } m.remove(); }); }
 
@@ -987,7 +1033,20 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     else if(d.itab){ re(function(){ ui.ideaTab=d.itab; }); }
     else if(d.tfilter){ re(function(){ ui.taskFilter=d.tfilter; }); }
     else if(d.tview){ re(function(){ ui.taskView=d.tview; }); }
-    else if(d.editlink){ re(function(){ ui.editingLink=d.editlink; }); var inp=document.getElementById('link-'+d.editlink); if(inp) inp.focus(); }
+    else if(d.editlink){ openLink(d.editlink); }
+    else if(d.newlink){ openLink(''); }
+    else if(d.editidea){ openIdea(d.editidea); }
+    else if(d.editlog){ openLog(d.editlog); }
+    else if(d.editms){ openMs(d.editms); }
+    else if(d.editsub){ openSub(d.editsub); }
+    else if(d.newsub){ openSub(''); }
+    else if(d.editmember){ openMember(d.editmember); }
+    else if(d.del){ if(!d.armed){ d.armed='1'; b.textContent='Click again to delete'; return; } var dk=d.del.split(':'), di=dk[1];
+      if(dk[0]==='link') state.links=state.links.filter(function(x){return x.id!==di;});
+      else if(dk[0]==='log') state.log=state.log.filter(function(x){return x.id!==di;});
+      else if(dk[0]==='idea'){ state.ideas=state.ideas.filter(function(x){return x.id!==di;}); if(state.chosen===di) state.chosen=''; }
+      else if(dk[0]==='sub'){ state.submissions=state.submissions.filter(function(x){return x.id!==di;}); }
+      closeModal(); commit('Deleted'); }
     else if(d.cancel){ re(function(){ ui.editingLink=null; }); }
     else if(d.dellog){ state.log=state.log.filter(function(x){return x.id!==d.dellog;}); commit('Update deleted'); }
     else if(d.menu){ re(function(){ ui.menu=d.menu==='1'; }); }
@@ -1047,9 +1106,43 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     else if(f.id==='idea-form'){
       function val(id){ return document.getElementById(id).value.trim(); }
       var by=val('i-by'), name=val('i-name'); if(!by||!name){ toast('Add your name and a project name'); return; }
-      state.ideas.push({id:uid(),by:by,name:name,what:val('i-what'),desc:val('i-desc'),solves:val('i-solves').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean),ai:val('i-ai'),sdg:sdgList(val('i-sdg')),elicit:val('i-elicit'),votes:[by]});
-      state.log.push({id:uid(),date:iso(today()),by:by,text:'Posted a project idea: '+name});
-      closeModal(); ui.ideaTab='team'; commit('Idea posted');
+      var data={by:by,name:name,what:val('i-what'),desc:val('i-desc'),solves:val('i-solves').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean),ai:val('i-ai'),sdg:sdgList(val('i-sdg')),elicit:val('i-elicit')};
+      var ex=f.dataset.id?byId(state.ideas,f.dataset.id):null;
+      if(ex){ Object.keys(data).forEach(function(k){ ex[k]=data[k]; }); closeModal(); commit('Idea saved'); }
+      else { data.id=uid(); data.votes=[by]; state.ideas.push(data); state.log.push({id:uid(),date:iso(today()),by:by,text:'Posted a project idea: '+name}); closeModal(); ui.ideaTab='team'; commit('Idea posted'); }
+    }
+    else if(f.id==='log-edit'){ var le=byId(state.log,f.dataset.id), lt=document.getElementById('le-text').value.trim(); if(!lt){ toast('Write the update first'); return; } le.text=lt; le.by=document.getElementById('le-by').value; closeModal(); commit('Update saved'); }
+    else if(f.id==='link-form'){
+      var ll=document.getElementById('l-label').value.trim(), lu=document.getElementById('l-url').value.trim(), lk=document.getElementById('l-kind').value;
+      if(!ll){ toast('Give the link a name'); return; }
+      if(lu&&!/^https?:\/\//i.test(lu)) lu='https://'+lu;
+      var lx=f.dataset.id?byId(state.links,f.dataset.id):null;
+      if(lx){ lx.label=ll; lx.url=lu; lx.kind=lk; } else state.links.push({id:uid(),label:ll,hint:'',kind:lk,url:lu});
+      closeModal(); commit(lx?'Link saved':'Link added');
+    }
+    else if(f.id==='ms-form'){
+      var mm=byId(state.milestones,f.dataset.id), mt=document.getElementById('m-title').value.trim(); if(!mt){ toast('Give the deadline a name'); return; }
+      var md=document.getElementById('m-date');
+      mm.title=mt; mm.note=esc(document.getElementById('m-note').value.trim());
+      if(md){ if(mm.due==='final') state.finalDate=md.value; else if(md.value) mm.due=md.value; }
+      closeModal(); commit('Deadline saved');
+    }
+    else if(f.id==='subedit-form'){
+      var st2=document.getElementById('s-title').value.trim(), lines=document.getElementById('s-reqs').value.split(/\n+/).map(function(x){return x.trim();}).filter(Boolean);
+      if(!st2){ toast('Give the submission a name'); return; }
+      if(!lines.length){ toast('Add at least one requirement'); return; }
+      var sx2=f.dataset.id?byId(state.submissions,f.dataset.id):null, old={};
+      if(sx2) sx2.reqs.forEach(function(q){ old[q.t]=q.d; });
+      var reqs=lines.map(function(t){ return {t:t,d:!!old[t]}; });
+      var sk=document.getElementById('s-kind').value.trim()||'File', sm=document.getElementById('s-ms').value;
+      if(sx2){ sx2.title=st2; sx2.kind=sk; sx2.ms=sm; sx2.reqs=reqs; }
+      else { var nid=uid(); state.submissions.push({id:nid,ms:sm,title:st2,kind:sk,reqs:reqs,status:'not',link:'',by:'',at:'',owner:me||''}); ui.subSel=nid; ui.subFilter='all'; }
+      closeModal(); commit(sx2?'Submission saved':'Submission added');
+    }
+    else if(f.id==='member-form'){
+      var mb=member(f.dataset.id), fn=document.getElementById('mb-first').value.trim(), ln=document.getElementById('mb-last').value.trim(); if(!fn||!ln){ toast('Add a first and last name'); return; }
+      mb.first=fn; mb.last=ln; mb.role=document.getElementById('mb-role').value.trim(); mb.focus=document.getElementById('mb-focus').value.trim();
+      closeModal(); commit('Member saved');
     } else if(f.id==='log-form'){ var t=document.getElementById('log-text').value.trim(); if(!t){ toast('Write an update first'); return; } state.log.push({id:uid(),date:iso(today()),by:document.getElementById('log-by').value,text:t}); commit('Update posted'); }
   });
 
