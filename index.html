@@ -61,6 +61,65 @@ header.top h1 em{font-style:normal;background:linear-gradient(transparent 62%,va
 .roster{display:flex;flex-wrap:wrap;gap:6px}
 .roster span{font:600 12px var(--f-mono);letter-spacing:.04em;padding:4px 8px;border:1px solid var(--line);border-radius:3px;background:var(--sheet)}
 
+/* icons + polish */
+.ic{width:17px;height:17px;flex:none;vertical-align:-3px}
+.ic.tiny{width:13px;height:13px;vertical-align:-2px}
+.btn,.pick,a.open,.vote,.status,nav.index a,.stat,.help{transition:background-color .15s,border-color .15s,color .15s,transform .15s,box-shadow .15s}
+.btn,.pick,a.open{display:inline-flex;align-items:center;gap:7px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.btn.ghost:hover{background:var(--ink);color:var(--sheet)}
+.pick:hover{background:var(--ink);color:var(--sheet)}
+.opt.chosen .pick:hover{background:var(--accent)}
+.vote:hover{border-color:var(--ink);color:var(--ink)}
+.status:hover{filter:brightness(.96)}
+.lbl-i{display:flex;align-items:center;gap:5px}
+.lbl-i .ic{width:13px;height:13px}
+.sdg{align-items:center;color:var(--muted)}
+.rm{margin-left:auto;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;display:inline-flex;gap:4px;align-items:center;padding:4px;border-radius:3px}
+.rm:hover{color:var(--bad)}
+.rm .ic{width:14px;height:14px}
+.ex-badge{display:inline-flex;align-items:center;gap:6px}
+.ex-badge .ic{width:14px;height:14px}
+.tab{display:flex;align-items:center;gap:6px}
+.tab .ic{width:13px;height:13px;color:var(--accent)}
+.tab i{margin-right:0}
+.link .edit{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:4px;text-decoration:none}
+.link .edit:hover{background:var(--paper);color:var(--ink)}
+.log .x{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:4px}
+.log .x:hover{color:var(--bad);background:var(--paper)}
+.log .x .ic{width:15px;height:15px}
+nav.index .brand{display:flex;gap:10px;align-items:center;text-transform:none;letter-spacing:0;color:var(--ink);font-size:16px}
+nav.index .brand small{display:block;font:500 11.5px var(--f-body);color:var(--muted);margin-top:2px}
+nav.index .logo{width:34px;height:34px;border-radius:8px;background:var(--ink);color:var(--sheet);display:grid;place-items:center}
+nav.index .logo .ic{width:18px;height:18px}
+nav.index a{align-items:center;border-left:2px solid transparent;border-radius:0 4px 4px 0}
+nav.index a .ic{opacity:.75}
+nav.index a span.nl{font:inherit;width:auto;opacity:1;color:inherit;white-space:nowrap}
+nav.index a.active{color:var(--ink);background:var(--sheet);border-left-color:var(--accent);font-weight:600}
+nav.index a.active .ic{color:var(--accent);opacity:1}
+nav.index .help{display:flex;align-items:center;gap:8px}
+.theme{display:flex;gap:2px;margin-top:10px;padding:3px;border:1px solid var(--line);border-radius:6px;background:var(--sheet)}
+.theme button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:transparent;border-radius:4px;padding:6px 2px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer}
+.theme button .ic{width:16px;height:16px}
+.theme button:hover{color:var(--ink)}
+.theme button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.g-demo .theme{margin:0;width:240px}
+.roster span{display:inline-flex;align-items:center;gap:6px}
+.roster i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:4px}
+.stat{position:relative;display:flex;gap:12px;align-items:center;padding:14px;background:var(--sheet);border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink);min-width:0}
+.stat:hover{border-color:var(--ink);transform:translateY(-1px)}
+.stat .si{width:36px;height:36px;border-radius:8px;background:var(--paper);display:grid;place-items:center;flex:none;color:var(--accent)}
+.stat > span:nth-child(2){min-width:0}
+.stat b{display:block;font:800 24px/1.05 var(--f-display);font-variant-numeric:tabular-nums}
+.stat b.sm{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat b.urgent{color:var(--bad)} .stat b.soon{color:var(--warn)}
+.stat small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ring{margin-left:auto;width:30px;height:30px;border-radius:50%;flex:none;background:conic-gradient(var(--ok) calc(var(--p)*1%), var(--line) 0);-webkit-mask:radial-gradient(circle,transparent 9px,#000 10px);mask:radial-gradient(circle,transparent 9px,#000 10px)}
+.idea-grid .opt:hover{box-shadow:0 6px 18px rgba(0,0,0,.08)}
+@media (max-width:1100px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion: reduce){.btn,.pick,a.open,.vote,.status,nav.index a,.stat,.help{transition:none}.btn:hover,.stat:hover{transform:none}}
+
 /* timeline */
 .timeline{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:20px 22px 18px}
 .tl-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
@@ -252,8 +311,14 @@ nav.index .help:hover{border-color:var(--ink)}
 @media (max-width:900px){
   .shell{grid-template-columns:1fr;gap:18px;padding:18px 16px 60px}
   nav.index{position:static;flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:4px}
+  nav.index{position:sticky;top:0;z-index:20;background:var(--paper);margin:0 -16px;padding:8px 16px;border-bottom:1px solid var(--line);align-items:center}
   nav.index .brand,nav.index .sync{display:none}
-  nav.index a{white-space:nowrap;background:var(--sheet);border:1px solid var(--line)}
+  nav.index a{white-space:nowrap;background:var(--sheet);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+  nav.index a.active{border-color:var(--accent)}
+  .theme{margin-top:0;flex:none}
+  .theme button{flex-direction:row;padding:6px 8px}
+  .theme button span{display:none}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .options,.team,.links,.two,.idea-form{grid-template-columns:1fr}
   .opt{border-left:0;border-top:1px solid var(--line)} .opt:first-child{border-top:0}
   .member{border-left:0 !important;border-top:1px solid var(--line) !important} .member:first-child{border-top:0 !important}
@@ -266,7 +331,7 @@ nav.index .help:hover{border-color:var(--ink)}
 </style>
 </head>
 <body>
-<script type="application/json" id="portal-state">{"course":"","finalDate":"","chosen":"","members":[{"id":"arradaza","last":"Arradaza","first":"Maynard","role":"Project Manager / Business Analyst","focus":"Problem definition, objectives, SWOT, keeps deadlines"},{"id":"barba","last":"Barba","first":"Raymond","role":"Requirements Analyst","focus":"Elicitation (survey + interviews), user stories, FR/NFR"},{"id":"grefaldeo","last":"Grefaldeo","first":"Shawn","role":"Systems Analyst","focus":"Use case diagram, DFD (Context, L1, L2), data dictionary"},{"id":"tarra","last":"Tarra","first":"Victor","role":"UI/UX Designer & Media Lead","focus":"High-fidelity Figma, promotional video"}],"options":[{"id":"agos","name":"AgosAlert","what":"Barangay flood risk & response","desc":"Residents report flooding on their street with photos; the system combines this with rainfall data to predict risk per barangay and push early warnings. Officials get a dashboard for evacuation and relief.","solves":["Late or overly general flood warnings","No street-level flood data","Disorganized evacuation and relief"],"ai":"Risk prediction, photo-based water depth estimate, flood heatmaps","sdg":["SDG 11","SDG 13"],"votes":[]},{"id":"tinda","name":"TindaSmart","what":"AI assistant for sari-sari stores","desc":"Store owners log sales and expenses. The app forecasts what will run out, suggests restock amounts, tracks utang, and builds a record owners can show when applying for microloans.","solves":["Overstock and stockouts","Unrecorded customer credit (utang)","No records to qualify for formal loans"],"ai":"Demand forecasting, restock suggestions, credit risk scoring","sdg":["SDG 8","SDG 1"],"votes":[]},{"id":"konsulta","name":"KonsultaQ","what":"Smart queue for health centers","desc":"Patients book a slot and answer guided symptom questions before arriving. Urgent cases are flagged first. Health workers see illness trends per area to catch outbreaks early.","solves":["Long queues at barangay health centers","Urgent cases waiting behind routine ones","Slow detection of local outbreaks"],"ai":"Urgency triage support, outbreak spike detection, volume forecasting","sdg":["SDG 3"],"votes":[]}],"milestones":[{"id":"m1","title":"Feasible project options","due":"2026-11-14","note":"","items":[{"id":"t1","text":"Write 3 project options: name, description, benefits (issues solved)","owner":"arradaza","status":"doing"},{"id":"t2","text":"Run elicitation: short survey + 2–3 stakeholder interviews","owner":"barba","status":"todo"},{"id":"t3","text":"Check each option uses AI & analytics and maps to an SDG","owner":"grefaldeo","status":"todo"},{"id":"t4","text":"Make the slides for the 3 options","owner":"tarra","status":"todo"},{"id":"t5","text":"Vote and lock in the final project","owner":"","status":"todo"}]},{"id":"m2","title":"Promotional video + Canva deck","due":"2026-12-06","note":"The deck needs user stories, use case, DFD, data dictionary and Figma, so those SRS artifacts must be <strong>drafted before Dec 6</strong>, not Dec 28.","items":[{"id":"v1","text":"Video script + storyboard (current issue → system → how it solves it)","owner":"tarra","status":"todo"},{"id":"v2","text":"Record footage, screen captures of the Figma prototype, voice-over","owner":"tarra","status":"todo"},{"id":"v3","text":"Edit to 1–2 minutes, professional look, captions","owner":"tarra","status":"todo"},{"id":"d1","text":"Deck: Project introduction (embed promo video) + Meet the Team","owner":"arradaza","status":"todo"},{"id":"d2","text":"Deck: Problem definition + General & specific objectives","owner":"arradaza","status":"todo"},{"id":"d3","text":"Deck: User stories","owner":"barba","status":"todo"},{"id":"d4","text":"Deck: Use case diagram, DFD, data dictionary","owner":"grefaldeo","status":"todo"},{"id":"d5","text":"Deck: Figma design screens","owner":"tarra","status":"todo"}]},{"id":"m3","title":"Recorded group presentation","due":"rec","note":"Teams or Loom, max 20 minutes, every member presents. Due 1 week before the final presentation.","items":[{"id":"r1","text":"Assign speaking parts for all 4 members","owner":"arradaza","status":"todo"},{"id":"r2","text":"Rehearse once with a timer (stay under 20 min)","owner":"","status":"todo"},{"id":"r3","text":"Record and submit the video","owner":"","status":"todo"}]},{"id":"m4","title":"Software Requirements Specification (SRS)","due":"2026-12-28","note":"Finals paper, 30% of the grade.","items":[{"id":"s1","text":"SWOT analysis","owner":"arradaza","status":"todo"},{"id":"s2","text":"User stories → functional & non-functional requirements (from Weaknesses and Opportunities)","owner":"barba","status":"todo"},{"id":"s3","text":"Figma design (high fidelity)","owner":"tarra","status":"todo"},{"id":"s4","text":"Use case diagram (high level)","owner":"grefaldeo","status":"todo"},{"id":"s5","text":"Data flow diagrams: Context, Level 1, Level 2","owner":"grefaldeo","status":"todo"},{"id":"s6","text":"Data dictionaries","owner":"grefaldeo","status":"todo"},{"id":"s7","text":"Compile, format and proofread the SRS document","owner":"arradaza","status":"todo"}]},{"id":"m5","title":"Final presentation & defense","due":"final","note":"On-site, semi-formal attire, 20-minute Q&A defense.","items":[{"id":"f1","text":"List likely panel questions and assign who answers each","owner":"","status":"todo"},{"id":"f2","text":"Confirm attire and arrival time","owner":"","status":"todo"}]}],"links":[{"id":"drive","label":"Shared Drive folder","hint":"Main Google Drive folder for everything","kind":"drive","url":""},{"id":"srs","label":"SRS document","hint":"Google Doc of the finals paper","kind":"doc","url":""},{"id":"canva","label":"Canva presentation deck","hint":"Edit link to the deck","kind":"canva","url":""},{"id":"figma","label":"Figma file","hint":"High-fidelity screens and prototype","kind":"figma","url":""},{"id":"video","label":"Promotional video","hint":"Drive folder for raw clips and final export","kind":"video","url":""},{"id":"survey","label":"Elicitation survey","hint":"Google Form + responses sheet","kind":"form","url":""},{"id":"diagrams","label":"Diagrams (UCD, DFD)","hint":"draw.io / Lucidchart / Figma board","kind":"diagram","url":""},{"id":"recording","label":"Recorded presentation","hint":"Teams / Loom link for submission","kind":"video","url":""}],"log":[{"id":"l1","date":"2026-11-14","by":"tarra","text":"Portal set up. 3 project options drafted: AgosAlert, TindaSmart, KonsultaQ."}]}</script>
+<script type="application/json" id="portal-state">{"course":"","finalDate":"","chosen":"","members":[{"id":"arradaza","last":"Arradaza","first":"Maynard","role":"Project Manager / Business Analyst","focus":"Problem definition, objectives, SWOT, keeps deadlines"},{"id":"barba","last":"Barba","first":"Raymond","role":"Requirements Analyst","focus":"Elicitation (survey + interviews), user stories, FR/NFR"},{"id":"grefaldeo","last":"Grefaldeo","first":"Shawn","role":"Systems Analyst","focus":"Use case diagram, DFD (Context, L1, L2), data dictionary"},{"id":"tarra","last":"Tarra","first":"Victor","role":"UI/UX Designer & Media Lead","focus":"High-fidelity Figma, promotional video"}],"options":[{"id":"agos","name":"AgosAlert","what":"Barangay flood risk & response","desc":"Residents report flooding on their street with photos; the system combines this with rainfall data to predict risk per barangay and push early warnings. Officials get a dashboard for evacuation and relief.","solves":["Late or overly general flood warnings","No street-level flood data","Disorganized evacuation and relief"],"ai":"Risk prediction, photo-based water depth estimate, flood heatmaps","sdg":["SDG 11","SDG 13"],"votes":[]},{"id":"tinda","name":"TindaSmart","what":"AI assistant for sari-sari stores","desc":"Store owners log sales and expenses. The app forecasts what will run out, suggests restock amounts, tracks utang, and builds a record owners can show when applying for microloans.","solves":["Overstock and stockouts","Unrecorded customer credit (utang)","No records to qualify for formal loans"],"ai":"Demand forecasting, restock suggestions, credit risk scoring","sdg":["SDG 8","SDG 1"],"votes":[]},{"id":"konsulta","name":"KonsultaQ","what":"Smart queue for health centers","desc":"Patients book a slot and answer guided symptom questions before arriving. Urgent cases are flagged first. Health workers see illness trends per area to catch outbreaks early.","solves":["Long queues at barangay health centers","Urgent cases waiting behind routine ones","Slow detection of local outbreaks"],"ai":"Urgency triage support, outbreak spike detection, volume forecasting","sdg":["SDG 3"],"votes":[]}],"milestones":[{"id":"m1","title":"Feasible project options","due":"2026-11-14","note":"","items":[{"id":"t1","text":"Write 3 project options: name, description, benefits (issues solved)","owner":"arradaza","status":"doing"},{"id":"t2","text":"Run elicitation: short survey + 2–3 stakeholder interviews","owner":"barba","status":"todo"},{"id":"t3","text":"Check each option uses AI & analytics and maps to an SDG","owner":"grefaldeo","status":"todo"},{"id":"t4","text":"Make the slides for the 3 options","owner":"tarra","status":"todo"},{"id":"t5","text":"Vote and lock in the final project","owner":"","status":"todo"}]},{"id":"m2","title":"Promotional video + Canva deck","due":"2026-12-06","note":"The deck needs user stories, use case, DFD, data dictionary and Figma, so those SRS artifacts must be <strong>drafted before Dec 6</strong>, not Dec 28.","items":[{"id":"v1","text":"Video script + storyboard (current issue → system → how it solves it)","owner":"tarra","status":"todo"},{"id":"v2","text":"Record footage, screen captures of the Figma prototype, voice-over","owner":"tarra","status":"todo"},{"id":"v3","text":"Edit to 1–2 minutes, professional look, captions","owner":"tarra","status":"todo"},{"id":"d1","text":"Deck: Project introduction (embed promo video) + Meet the Team","owner":"arradaza","status":"todo"},{"id":"d2","text":"Deck: Problem definition + General & specific objectives","owner":"arradaza","status":"todo"},{"id":"d3","text":"Deck: User stories","owner":"barba","status":"todo"},{"id":"d4","text":"Deck: Use case diagram, DFD, data dictionary","owner":"grefaldeo","status":"todo"},{"id":"d5","text":"Deck: Figma design screens","owner":"tarra","status":"todo"}]},{"id":"m3","title":"Recorded group presentation","due":"rec","note":"Teams or Loom, max 20 minutes, every member presents. Due 1 week before the final presentation.","items":[{"id":"r1","text":"Assign speaking parts for all 4 members","owner":"arradaza","status":"todo"},{"id":"r2","text":"Rehearse once with a timer (stay under 20 min)","owner":"","status":"todo"},{"id":"r3","text":"Record and submit the video","owner":"","status":"todo"}]},{"id":"m4","title":"Software Requirements Specification (SRS)","due":"2026-12-28","note":"Finals paper, 30% of the grade.","items":[{"id":"s1","text":"SWOT analysis","owner":"arradaza","status":"todo"},{"id":"s2","text":"User stories → functional & non-functional requirements (from Weaknesses and Opportunities)","owner":"barba","status":"todo"},{"id":"s3","text":"Figma design (high fidelity)","owner":"tarra","status":"todo"},{"id":"s4","text":"Use case diagram (high level)","owner":"grefaldeo","status":"todo"},{"id":"s5","text":"Data flow diagrams: Context, Level 1, Level 2","owner":"grefaldeo","status":"todo"},{"id":"s6","text":"Data dictionaries","owner":"grefaldeo","status":"todo"},{"id":"s7","text":"Compile, format and proofread the SRS document","owner":"arradaza","status":"todo"}]},{"id":"m5","title":"Final presentation & defense","due":"final","note":"On-site, semi-formal attire, 20-minute Q&A defense.","items":[{"id":"f1","text":"List likely panel questions and assign who answers each","owner":"","status":"todo"},{"id":"f2","text":"Confirm attire and arrival time","owner":"","status":"todo"}]}],"links":[{"id":"drive","label":"Shared Drive folder","hint":"Main Google Drive folder for everything","kind":"drive","url":"https://drive.google.com/drive/folders/1srYTxG93hur_ajfWmzoAioF5NctVHisc?usp=sharing"},{"id":"srs","label":"SRS document","hint":"Google Doc of the finals paper","kind":"doc","url":""},{"id":"canva","label":"Canva presentation deck","hint":"Edit link to the deck","kind":"canva","url":""},{"id":"figma","label":"Figma file","hint":"High-fidelity screens and prototype","kind":"figma","url":""},{"id":"video","label":"Promotional video","hint":"Drive folder for raw clips and final export","kind":"video","url":""},{"id":"survey","label":"Elicitation survey","hint":"Google Form + responses sheet","kind":"form","url":""},{"id":"diagrams","label":"Diagrams (UCD, DFD)","hint":"draw.io / Lucidchart / Figma board","kind":"diagram","url":""},{"id":"recording","label":"Recorded presentation","hint":"Teams / Loom link for submission","kind":"video","url":""}],"log":[{"id":"l1","date":"2026-11-14","by":"tarra","text":"Portal set up. 3 project options drafted: AgosAlert, TindaSmart, KonsultaQ."}]}</script>
 <div id="app"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script id="app-script">
@@ -317,6 +382,54 @@ nav.index .help:hover{border-color:var(--ink)}
     diagram:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="5"/><rect x="14" y="16" width="7" height="5"/><rect x="14" y="3" width="7" height="5"/><path d="M10 5.5h4M17.5 8v8"/></svg>'
   };
 
+  var IC = {
+    calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+    bulb:'<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>',
+    tasks:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="m8 12 3 3 5-6"/>',
+    users:'<circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7M16 4a4 4 0 0 1 0 8M22 21c0-3-1.8-5.6-4.5-6.6"/>',
+    folder:'<path d="M3 6a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+    award:'<circle cx="12" cy="9" r="6"/><path d="m8.5 14.5-1.5 7.5 5-3 5 3-1.5-7.5"/>',
+    message:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/>',
+    help:'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    monitor:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>',
+    external:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    flag:'<path d="M4 22V4M4 4h13l-2 4 2 4H4"/>',
+    bot:'<rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 4v4M9 14h.01M15 14h.01M2 13v2M22 13v2"/>',
+    checkc:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+    link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+    edit:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
+    globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>',
+    chart:'<path d="M3 3v18h18M7 15l4-4 3 3 6-6"/>',
+    alert:'<path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+    search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+    vote:'<path d="M7 10v11H4V10zM7 10l4-8a3 3 0 0 1 3 3v4h5.5a2 2 0 0 1 2 2.3l-1.3 8A2 2 0 0 1 18.2 21H7"/>',
+    grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'
+  };
+  function ic(n, cls){ return '<svg class="ic'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(IC[n]||'')+'</svg>'; }
+  var HUES = {arradaza:'#2347D6', barba:'#0F8A6A', grefaldeo:'#C2410C', tarra:'#9333EA'};
+
+  /* ---------- theme ---------- */
+  var ROOT = document.documentElement, HOST_THEME = ROOT.getAttribute('data-theme'), THEME_KEY='finals-portal-theme';
+  var themePref = 'auto';
+  try{ themePref = localStorage.getItem(THEME_KEY) || 'auto'; }catch(e){}
+  function applyTheme(){
+    if(themePref==='light'||themePref==='dark') ROOT.setAttribute('data-theme', themePref);
+    else if(HOST_THEME) ROOT.setAttribute('data-theme', HOST_THEME); else ROOT.removeAttribute('data-theme');
+  }
+  applyTheme();
+  function themeSwitch(){
+    return '<div class="theme" role="group" aria-label="Color theme">'+
+      [['light','sun','Light'],['dark','moon','Dark'],['auto','monitor','Auto']].map(function(t){
+        return '<button data-theme-set="'+t[0]+'" aria-pressed="'+(themePref===t[0])+'" title="'+t[2]+' theme">'+ic(t[1])+'<span>'+t[2]+'</span></button>';
+      }).join('')+'</div>';
+  }
+
   /* ---------- render ---------- */
   function render(){
     var t = today();
@@ -326,15 +439,11 @@ nav.index .help:hover{border-color:var(--ink)}
 
     var h = '';
     h += '<div class="shell">';
-    h += '<nav class="index" aria-label="Sections"><div class="brand">Finals Portal</div>'+
-      '<a href="#timeline"><span>00</span>Timeline</a>'+
-      '<a href="#project"><span>01</span>Project</a>'+
-      '<a href="#tasks"><span>02</span>Deliverables</a>'+
-      '<a href="#team"><span>03</span>Team</a>'+
-      '<a href="#files"><span>04</span>Drive &amp; files</a>'+
-      '<a href="#rules"><span>05</span>Rules &amp; grading</a>'+
-      '<a href="#log"><span>06</span>Team log</a>'+
-      '<button class="help" data-guide="1">How to use this portal</button>'+
+    var NAV = [['timeline','calendar','Timeline'],['project','bulb','Project ideas'],['tasks','tasks','Deliverables'],['team','users','Team'],['files','folder','Drive & files'],['rules','award','Rules & grading'],['log','message','Team log']];
+    h += '<nav class="index" aria-label="Sections"><div class="brand"><span class="logo">'+ic('grid')+'</span><span>Finals Portal<small>Group project hub</small></span></div>'+
+      NAV.map(function(n){ return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ic(n[1])+'<span class="nl">'+esc(n[2])+'</span></a>'; }).join('')+
+      '<button class="help" data-guide="1">'+ic('help')+'<span>How to use</span></button>'+
+      themeSwitch()+
       '<div class="sync">'+syncChip()+'</div></nav>';
 
     h += '<main>';
@@ -345,8 +454,8 @@ nav.index .help:hover{border-color:var(--ink)}
       '<label>Final presentation <input id="f-final" type="date" value="'+esc(state.finalDate)+'" style="min-width:140px"></label>'+
       '</div>'+
       '<h1>'+(chosen?'<em>'+esc(chosen.name)+'</em> finals project':'Finals project <em>portal</em>')+'</h1>'+
-      '<div class="roster">'+state.members.map(function(m){return '<span>'+esc(m.last.toUpperCase())+'</span>';}).join('')+
-      '<span style="background:transparent;border-style:dashed">'+doneItems+' / '+allItems.length+' tasks done</span></div>'+
+      '<div class="roster">'+state.members.map(function(m){return '<span><i style="background:'+(HUES[m.id]||'var(--ink)')+'"></i>'+esc(m.last.toUpperCase())+'</span>';}).join('')+'</div>'+
+      statTiles(allItems.length, doneItems, chosen)+
       '</header>';
 
     h += renderTimeline();
@@ -358,6 +467,28 @@ nav.index .help:hover{border-color:var(--ink)}
     h += renderLog();
     h += '</main></div>';
     document.getElementById('app').innerHTML = h;
+    spy();
+  }
+  var spyObs = null;
+  function spy(){
+    if(!('IntersectionObserver' in window)) return;
+    if(spyObs) spyObs.disconnect();
+    spyObs = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ document.querySelectorAll('[data-nav]').forEach(function(a){ a.classList.toggle('active', a.dataset.nav===e.target.id); }); } });
+    }, {rootMargin:'-30% 0px -60% 0px'});
+    ['timeline','project','tasks','team','files','rules','log'].forEach(function(id){ var el=document.getElementById(id); if(el) spyObs.observe(el); });
+  }
+
+  function statTiles(total, done, chosen){
+    var pins = state.milestones.map(function(m){return {m:m,d:dueOf(m)};}).filter(function(p){return p.d && p.d>=today();}).sort(function(a,b){return a.d-b.d;});
+    var nx = pins[0], pct = total?Math.round(done/total*100):0, ideas=(state.ideas||[]).length;
+    var nl = nx ? leftText(nx.d) : null;
+    return '<div class="stats">'+
+      '<a class="stat" href="#timeline"><span class="si">'+ic('clock')+'</span><span><b class="'+(nl&&nl.c?nl.c:'')+'">'+(nx?(daysTo(nx.d)===0?'Today':daysTo(nx.d)+'d'):'—')+'</b><small>'+(nx?'Next: '+esc(nx.m.title):'No upcoming deadline')+'</small></span></a>'+
+      '<a class="stat" href="#tasks"><span class="si">'+ic('tasks')+'</span><span><b>'+pct+'%</b><small>'+done+' of '+total+' tasks done</small></span><span class="ring" style="--p:'+pct+'"></span></a>'+
+      '<a class="stat" href="#project"><span class="si">'+ic('bulb')+'</span><span><b>'+ideas+'</b><small>Team idea'+(ideas===1?'':'s')+' posted</small></span></a>'+
+      '<a class="stat" href="#project"><span class="si">'+ic('flag')+'</span><span><b class="sm">'+(chosen?esc(chosen.name):'Not yet')+'</b><small>Chosen project</small></span></a>'+
+      '</div>';
   }
 
   function syncChip(){
@@ -406,28 +537,28 @@ nav.index .help:hover{border-color:var(--ink)}
   function projectCard(o, isIdea){
     var on = state.chosen===o.id, by = isIdea ? member(o.by) : null;
     var h = '<article class="opt'+(on?' chosen':'')+(isIdea?' idea':'')+'">';
-    h += '<div class="what">'+(isIdea?'<span class="by">'+esc(by?by.last:'Team')+'</span> · ':'')+esc(o.what||'Project idea')+'</div><h3>'+esc(o.name)+'</h3>';
+    h += '<div class="what">'+(isIdea?'<span class="by" style="color:'+(by&&HUES[by.id]||'var(--accent)')+'">'+esc(by?by.last:'Team')+'</span> · ':'')+esc(o.what||'Project idea')+'</div><h3>'+esc(o.name)+'</h3>';
     if(o.desc) h += '<p>'+esc(o.desc)+'</p>';
-    if(o.solves && o.solves.length) h += '<div><div class="what" style="margin-bottom:4px">Solves</div><ul>'+o.solves.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
-    if(o.ai) h += '<div><div class="what" style="margin-bottom:4px">AI &amp; analytics</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.ai)+'</p></div>';
-    if(o.elicit) h += '<div><div class="what" style="margin-bottom:4px">Elicitation done</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.elicit)+'</p></div>';
-    if(o.sdg && o.sdg.length) h += '<div class="sdg">'+o.sdg.map(function(x){return '<span>'+esc(x)+'</span>';}).join('')+'</div>';
+    if(o.solves && o.solves.length) h += '<div><div class="what lbl-i" style="margin-bottom:4px">'+ic('alert')+'Solves</div><ul>'+o.solves.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
+    if(o.ai) h += '<div><div class="what lbl-i" style="margin-bottom:4px">'+ic('chart')+'AI &amp; analytics</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.ai)+'</p></div>';
+    if(o.elicit) h += '<div><div class="what lbl-i" style="margin-bottom:4px">'+ic('search')+'Elicitation done</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.elicit)+'</p></div>';
+    if(o.sdg && o.sdg.length) h += '<div class="sdg">'+ic('globe','tiny')+o.sdg.map(function(x){return '<span>'+esc(x)+'</span>';}).join('')+'</div>';
     h += '<div class="votes"><div class="row">'+state.members.map(function(m){
       var v = o.votes.indexOf(m.id)>-1;
       return '<button class="vote'+(v?' on':'')+'" data-vote="'+o.id+'" data-m="'+m.id+'" aria-pressed="'+v+'">'+esc(m.last)+'</button>';
     }).join('')+'</div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">';
-    h += '<button class="pick" data-pick="'+o.id+'">'+(on?'Chosen project':'Choose this')+'</button>';
-    h += '<span class="mono" style="font-size:11px;color:var(--muted)">'+o.votes.length+' vote'+(o.votes.length===1?'':'s')+'</span>';
-    if(isIdea) h += '<button class="x" data-delidea="'+o.id+'" style="margin-left:auto;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline">Remove</button>';
+    h += '<button class="pick" data-pick="'+o.id+'">'+ic('checkc')+(on?'Chosen project':'Choose this')+'</button>';
+    h += '<span class="mono" style="font-size:11px;color:var(--muted)">'+ic('vote','tiny')+' '+o.votes.length+' vote'+(o.votes.length===1?'':'s')+'</span>';
+    if(isIdea) h += '<button class="x" data-delidea="'+o.id+'" class="rm" title="Remove idea">'+ic('trash')+'Remove</button>';
     h += '</div></div></article>';
     return h;
   }
 
   function renderProject(){
     var ideas = state.ideas||[];
-    var h = '<section class="part" id="project"><div class="tab"><i>01</i>Project</div>';
+    var h = '<section class="part" id="project"><div class="tab">'+ic('bulb')+'<i>01</i>Project</div>';
     h += '<div class="part-head"><div><h2>Team project ideas</h2><p>Each member adds at least one idea. It should be innovative, use AI &amp; analytics, solve a current societal issue, and map to an SDG. Then everyone votes and the group locks one in with “Choose this”.</p></div>'+
-      '<button class="btn" data-ideaform="1">'+(ideaFormOpen?'Close form':'Add your idea')+'</button></div>';
+      '<button class="btn" data-ideaform="1">'+(ideaFormOpen?'Close form':ic('plus')+'Add your idea')+'</button></div>';
     if(ideaFormOpen){
       h += '<form class="idea-form" id="idea-form">'+
         '<label><span>Your name</span><select id="i-by" required><option value="">Select</option>'+state.members.map(function(m){return '<option value="'+m.id+'">'+esc(m.last)+', '+esc(m.first)+'</option>';}).join('')+'</select></label>'+
@@ -438,7 +569,7 @@ nav.index .help:hover{border-color:var(--ink)}
         '<label><span>How it uses AI &amp; analytics</span><input id="i-ai" placeholder="e.g. demand forecasting, image recognition"></label>'+
         '<label><span>SDG(s)</span><input id="i-sdg" placeholder="e.g. SDG 3, SDG 11"></label>'+
         '<label class="wide"><span>Elicitation done (optional)</span><input id="i-elicit" placeholder="e.g. Interviewed 3 tricycle drivers, survey with 25 responses"></label>'+
-        '<div class="wide" style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" type="button" data-ideaform="1">Cancel</button><button class="btn" type="submit">Post idea</button></div>'+
+        '<div class="wide" style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" type="button" data-ideaform="1">Cancel</button><button class="btn" type="submit">'+ic('send')+'Post idea</button></div>'+
         '</form>';
     }
     if(ideas.length){
@@ -446,7 +577,7 @@ nav.index .help:hover{border-color:var(--ink)}
     } else {
       h += '<div class="idea-empty">No ideas from the team yet. Press “Add your idea” to post the first one.</div>';
     }
-    h += '<div class="ex-head"><span class="ex-badge">Examples by Claude AI</span><p>Drafted by Claude AI as reference. You can use, change or ignore them.</p></div>';
+    h += '<div class="ex-head"><span class="ex-badge">'+ic('bot')+'Examples by Claude AI</span><p>Drafted by Claude AI as reference. You can use, change or ignore them.</p></div>';
     h += '<div class="options examples">'+state.options.map(function(o){return projectCard(o,false);}).join('')+'</div>';
     h += '</section>';
     return h;
@@ -458,7 +589,7 @@ nav.index .help:hover{border-color:var(--ink)}
   }
 
   function renderTasks(){
-    var h = '<section class="part" id="tasks"><div class="tab"><i>02</i>Deliverables</div>';
+    var h = '<section class="part" id="tasks"><div class="tab">'+ic('tasks')+'<i>02</i>Deliverables</div>';
     h += '<div class="part-head"><div><h2>What’s due, and who owns it</h2><p>Click a status to move it along: To do, Doing, Done.</p></div></div>';
     state.milestones.forEach(function(m){
       var d = dueOf(m), l = leftText(d);
@@ -481,11 +612,11 @@ nav.index .help:hover{border-color:var(--ink)}
   function renderTeam(){
     var counts = {};
     state.milestones.forEach(function(m){ m.items.forEach(function(i){ if(i.owner){ counts[i.owner]=counts[i.owner]||{a:0,d:0}; counts[i.owner].a++; if(i.status==='done') counts[i.owner].d++; } }); });
-    var h = '<section class="part" id="team"><div class="tab"><i>03</i>Team</div>';
+    var h = '<section class="part" id="team"><div class="tab">'+ic('users')+'<i>03</i>Team</div>';
     h += '<div class="part-head"><div><h2>Meet the team</h2><p>Roles feed the “Meet the Team” slide. Click a role or focus line to edit it.</p></div></div><div class="team">';
     state.members.forEach(function(m){
       var c = counts[m.id]||{a:0,d:0};
-      h += '<div class="member"><div class="mono-badge" aria-hidden="true">'+esc(m.first[0]+m.last[0])+'</div><div>'+
+      h += '<div class="member"><div class="mono-badge" aria-hidden="true" style="background:'+(HUES[m.id]||'var(--ink)')+'">'+esc(m.first[0]+m.last[0])+'</div><div>'+
         '<div class="name">'+esc(m.last.toUpperCase())+'<small>'+esc(m.first)+'</small></div>'+
         '<input class="field role" data-mrole="'+m.id+'" value="'+esc(m.role)+'" aria-label="Role of '+esc(m.first)+'">'+
         '<input class="field focus" data-mfocus="'+m.id+'" value="'+esc(m.focus)+'" aria-label="Focus of '+esc(m.first)+'">'+
@@ -496,14 +627,14 @@ nav.index .help:hover{border-color:var(--ink)}
   }
 
   function renderLinks(){
-    var h = '<section class="part" id="files"><div class="tab"><i>04</i>Drive &amp; files</div>';
+    var h = '<section class="part" id="files"><div class="tab">'+ic('folder')+'<i>04</i>Drive &amp; files</div>';
     h += '<div class="part-head"><div><h2>Where everything lives</h2><p>Paste the share link once and the whole group can open it from here. Set Drive sharing to “Anyone in the group with the link can edit.”</p></div></div><div class="links">';
     state.links.forEach(function(k){
       var set = !!k.url;
       h += '<div class="link'+(set?' set':'')+'"><div class="ico">'+(ICONS[k.kind]||ICONS.doc)+'</div>'+
         '<div style="min-width:0"><div class="lbl">'+esc(k.label)+'</div><div class="hint">'+esc(set?k.url.replace(/^https?:\/\//,''):k.hint)+'</div></div>';
-      if(set) h += '<div style="display:flex;gap:6px;align-items:center"><a class="open" href="'+esc(k.url)+'" target="_blank" rel="noopener">Open</a><button class="edit" data-editlink="'+k.id+'">Edit</button></div>';
-      else h += '<button class="btn ghost" data-editlink="'+k.id+'">Add link</button>';
+      if(set) h += '<div style="display:flex;gap:6px;align-items:center"><a class="open" href="'+esc(k.url)+'" target="_blank" rel="noopener">'+ic('external')+'Open</a><button class="edit" data-editlink="'+k.id+'" title="Edit link" aria-label="Edit link">'+ic('edit')+'</button></div>';
+      else h += '<button class="btn ghost" data-editlink="'+k.id+'">'+ic('link')+'Add link</button>';
       if(editingLink===k.id){
         h += '<form data-linkform="'+k.id+'"><input id="link-'+k.id+'" type="url" value="'+esc(k.url)+'" placeholder="https://drive.google.com/…" aria-label="Link for '+esc(k.label)+'"><button class="btn" type="submit">Save</button><button class="btn ghost" type="button" data-cancel="1">Cancel</button></form>';
       }
@@ -514,7 +645,7 @@ nav.index .help:hover{border-color:var(--ink)}
   }
 
   function renderRules(){
-    var h = '<section class="part" id="rules"><div class="tab"><i>05</i>Rules &amp; grading</div>';
+    var h = '<section class="part" id="rules"><div class="tab">'+ic('award')+'<i>05</i>Rules &amp; grading</div>';
     h += '<div class="part-head"><div><h2>How we’re graded</h2></div></div><div class="two"><ul class="rules">'+
       '<li><b>Recording</b><span>Group presentation recorded on Teams or Loom, 20 minutes max. Every member must present.</span></li>'+
       '<li><b>Submit</b><span>Recording due 1 week before the final presentation.</span></li>'+
@@ -531,14 +662,14 @@ nav.index .help:hover{border-color:var(--ink)}
   }
 
   function renderLog(){
-    var h = '<section class="part" id="log"><div class="tab"><i>06</i>Team log</div>';
+    var h = '<section class="part" id="log"><div class="tab">'+ic('message')+'<i>06</i>Team log</div>';
     h += '<div class="part-head"><div><h2>Updates &amp; decisions</h2><p>Short notes so nobody has to scroll the group chat.</p></div></div>';
     h += '<form class="log-form" id="log-form"><select id="log-by" aria-label="Who"><option value="">Who?</option>'+state.members.map(function(m){return '<option value="'+m.id+'">'+esc(m.last)+'</option>';}).join('')+'</select>'+
-      '<input id="log-text" placeholder="e.g. Survey sent to 30 respondents" aria-label="Update"><button class="btn" type="submit">Post</button></form>';
+      '<input id="log-text" placeholder="e.g. Survey sent to 30 respondents" aria-label="Update"><button class="btn" type="submit">'+ic('send')+'Post</button></form>';
     if(!state.log.length) h += '<div class="empty">No updates yet.</div>';
     h += '<ul class="log">'+state.log.slice().reverse().map(function(e){
       var m = member(e.by), d = parse(e.date);
-      return '<li><span class="when">'+(d?MON[d.getMonth()]+' '+d.getDate():'')+'</span><span class="who">'+esc(m?m.last:'Team')+'</span><span class="txt">'+esc(e.text)+'</span><button class="x" data-dellog="'+e.id+'" aria-label="Delete update">Remove</button></li>';
+      return '<li><span class="when">'+(d?MON[d.getMonth()]+' '+d.getDate():'')+'</span><span class="who">'+esc(m?m.last:'Team')+'</span><span class="txt">'+esc(e.text)+'</span><button class="x" data-dellog="'+e.id+'" aria-label="Delete update" title="Remove">'+ic('trash')+'</button></li>';
     }).join('')+'</ul></section>';
     return h;
   }
@@ -589,6 +720,7 @@ nav.index .help:hover{border-color:var(--ink)}
     else if(b.dataset.cancel){ editingLink=null; var y2=window.scrollY; render(); window.scrollTo(0,y2); }
     else if(b.dataset.ideaform){ ideaFormOpen=!ideaFormOpen; var y3=window.scrollY; render(); window.scrollTo(0,y3); var f=document.getElementById('i-by'); if(f) f.focus(); }
     else if(b.dataset.delidea){ state.ideas=(state.ideas||[]).filter(function(x){return x.id!==b.dataset.delidea;}); if(state.chosen===b.dataset.delidea) state.chosen=''; commit('Idea removed'); }
+    else if(b.dataset.themeSet){ themePref=b.dataset.themeSet; try{ localStorage.setItem(THEME_KEY, themePref); }catch(e){} applyTheme(); document.querySelectorAll('[data-theme-set]').forEach(function(x){ x.setAttribute('aria-pressed', String(x.dataset.themeSet===themePref)); }); }
     else if(b.dataset.guide){ openGuide(0); }
     else if(b.dataset.g){ guideNav(b.dataset.g); }
     else if(b.dataset.dellog){ state.log = state.log.filter(function(x){return x.id!==b.dataset.dellog;}); commit('Update removed'); }
@@ -647,6 +779,7 @@ nav.index .help:hover{border-color:var(--ink)}
      d:function(){ return '<span class="status todo">To do</span>→<span class="status doing">Doing</span>→<span class="status done">Done</span>'; }},
     {t:'Keep links in Drive & files', p:'Paste the share link for the Drive folder, SRS doc, Canva deck, Figma and videos once. Everyone opens them from here instead of searching the group chat.',
      d:function(){ return '<span class="btn ghost" style="cursor:default">Add link</span> <span style="color:var(--muted)">https://drive.google.com/…</span>'; }},
+    {t:'Light or dark, your choice', p:'Use the Light, Dark or Auto switch in the sidebar (top bar on phones). Auto follows your device setting.', d:function(){ return themeSwitch(); }},
     {t:'How your changes are saved', p:'', d:function(){ return syncChip(); }}
   ];
   function savedText(){
