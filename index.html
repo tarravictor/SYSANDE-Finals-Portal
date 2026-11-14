@@ -110,6 +110,22 @@ section.part{position:relative;background:var(--sheet);border:1px solid var(--li
 .pick{align-self:flex-start;border:1px solid var(--ink);background:transparent;border-radius:4px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer}
 .opt.chosen .pick{background:var(--accent);border-color:var(--accent);color:#fff}
 
+/* ideas */
+.idea-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;border:1px solid var(--ink);border-radius:4px;padding:18px;margin-bottom:18px;background:var(--paper)}
+.idea-form label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--muted)}
+.idea-form .wide{grid-column:1/-1}
+.idea-form input,.idea-form select,.idea-form textarea{border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:var(--sheet);font-size:14px;font-weight:400;color:var(--ink);resize:vertical}
+.idea-form input:focus,.idea-form select:focus,.idea-form textarea:focus{outline:none;border-color:var(--accent)}
+.idea-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.idea-grid .opt{border:1px solid var(--ink);border-radius:4px}
+.idea-grid .opt.chosen{border-color:var(--accent)}
+.opt .by{color:var(--accent)}
+.idea-empty{border:1px dashed var(--line);border-radius:4px;padding:22px;color:var(--muted);font-size:14px;text-align:center}
+.ex-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:30px 0 12px;padding-top:20px;border-top:1px solid var(--line)}
+.ex-badge{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border:1px dashed var(--muted);border-radius:3px;color:var(--muted)}
+.ex-head p{margin:0;font-size:13px;color:var(--muted)}
+.examples .opt{opacity:.92}
+
 /* tasks */
 .ms{border-top:1px solid var(--line);padding:18px 0 6px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px}
 .ms:first-of-type{border-top:0;padding-top:0}
@@ -238,7 +254,7 @@ nav.index .help:hover{border-color:var(--ink)}
   nav.index{position:static;flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:4px}
   nav.index .brand,nav.index .sync{display:none}
   nav.index a{white-space:nowrap;background:var(--sheet);border:1px solid var(--line)}
-  .options,.team,.links,.two{grid-template-columns:1fr}
+  .options,.team,.links,.two,.idea-form{grid-template-columns:1fr}
   .opt{border-left:0;border-top:1px solid var(--line)} .opt:first-child{border-top:0}
   .member{border-left:0 !important;border-top:1px solid var(--line) !important} .member:first-child{border-top:0 !important}
   .ms{grid-template-columns:1fr;gap:8px}
@@ -258,9 +274,10 @@ nav.index .help:hover{border-color:var(--ink)}
   var SELF = document.currentScript;
   var STATE_EL = document.getElementById('portal-state');
   var state = JSON.parse(STATE_EL.textContent);
+  if(!state.ideas) state.ideas = [];
   var api = null, mode = 'connecting', timer = null;
   var LS_KEY = 'finals-portal-local';
-  var editingLink = null;
+  var editingLink = null, ideaFormOpen = false;
 
   var STATUSES = ['todo','doing','done'];
   var STATUS_LABEL = {todo:'To do', doing:'Doing', done:'Done'};
@@ -305,7 +322,7 @@ nav.index .help:hover{border-color:var(--ink)}
     var t = today();
     var allItems=[], doneItems=0;
     state.milestones.forEach(function(m){ m.items.forEach(function(i){ allItems.push(i); if(i.status==='done') doneItems++; }); });
-    var chosen = state.options.filter(function(o){return o.id===state.chosen;})[0];
+    var chosen = findProject(state.chosen);
 
     var h = '';
     h += '<div class="shell">';
@@ -383,25 +400,55 @@ nav.index .help:hover{border-color:var(--ink)}
     return h;
   }
 
+  function allProjects(){ return (state.ideas||[]).concat(state.options); }
+  function findProject(id){ return allProjects().filter(function(o){return o.id===id;})[0]; }
+
+  function projectCard(o, isIdea){
+    var on = state.chosen===o.id, by = isIdea ? member(o.by) : null;
+    var h = '<article class="opt'+(on?' chosen':'')+(isIdea?' idea':'')+'">';
+    h += '<div class="what">'+(isIdea?'<span class="by">'+esc(by?by.last:'Team')+'</span> · ':'')+esc(o.what||'Project idea')+'</div><h3>'+esc(o.name)+'</h3>';
+    if(o.desc) h += '<p>'+esc(o.desc)+'</p>';
+    if(o.solves && o.solves.length) h += '<div><div class="what" style="margin-bottom:4px">Solves</div><ul>'+o.solves.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
+    if(o.ai) h += '<div><div class="what" style="margin-bottom:4px">AI &amp; analytics</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.ai)+'</p></div>';
+    if(o.elicit) h += '<div><div class="what" style="margin-bottom:4px">Elicitation done</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.elicit)+'</p></div>';
+    if(o.sdg && o.sdg.length) h += '<div class="sdg">'+o.sdg.map(function(x){return '<span>'+esc(x)+'</span>';}).join('')+'</div>';
+    h += '<div class="votes"><div class="row">'+state.members.map(function(m){
+      var v = o.votes.indexOf(m.id)>-1;
+      return '<button class="vote'+(v?' on':'')+'" data-vote="'+o.id+'" data-m="'+m.id+'" aria-pressed="'+v+'">'+esc(m.last)+'</button>';
+    }).join('')+'</div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">';
+    h += '<button class="pick" data-pick="'+o.id+'">'+(on?'Chosen project':'Choose this')+'</button>';
+    h += '<span class="mono" style="font-size:11px;color:var(--muted)">'+o.votes.length+' vote'+(o.votes.length===1?'':'s')+'</span>';
+    if(isIdea) h += '<button class="x" data-delidea="'+o.id+'" style="margin-left:auto;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline">Remove</button>';
+    h += '</div></div></article>';
+    return h;
+  }
+
   function renderProject(){
+    var ideas = state.ideas||[];
     var h = '<section class="part" id="project"><div class="tab"><i>01</i>Project</div>';
-    h += '<div class="part-head"><div><h2>Pick one of three</h2><p>Each member taps their name under the option they back. Lock in the winner with “Choose this”. Due today: present all three with name, description and benefits.</p></div></div>';
-    h += '<div class="options">';
-    state.options.forEach(function(o){
-      var on = state.chosen===o.id;
-      h += '<article class="opt'+(on?' chosen':'')+'">';
-      h += '<div class="what">'+esc(o.what)+'</div><h3>'+esc(o.name)+'</h3><p>'+esc(o.desc)+'</p>';
-      h += '<div><div class="what" style="margin-bottom:4px">Solves</div><ul>'+o.solves.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul></div>';
-      h += '<div><div class="what" style="margin-bottom:4px">AI &amp; analytics</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.ai)+'</p></div>';
-      h += '<div class="sdg">'+o.sdg.map(function(s){return '<span>'+esc(s)+'</span>';}).join('')+'</div>';
-      h += '<div class="votes"><div class="row">'+state.members.map(function(m){
-        var v = o.votes.indexOf(m.id)>-1;
-        return '<button class="vote'+(v?' on':'')+'" data-vote="'+o.id+'" data-m="'+m.id+'" aria-pressed="'+v+'">'+esc(m.last)+'</button>';
-      }).join('')+'</div>';
-      h += '<button class="pick" data-pick="'+o.id+'">'+(on?'Chosen project':'Choose this')+'</button></div>';
-      h += '</article>';
-    });
-    h += '</div></section>';
+    h += '<div class="part-head"><div><h2>Team project ideas</h2><p>Each member adds at least one idea. It should be innovative, use AI &amp; analytics, solve a current societal issue, and map to an SDG. Then everyone votes and the group locks one in with “Choose this”.</p></div>'+
+      '<button class="btn" data-ideaform="1">'+(ideaFormOpen?'Close form':'Add your idea')+'</button></div>';
+    if(ideaFormOpen){
+      h += '<form class="idea-form" id="idea-form">'+
+        '<label><span>Your name</span><select id="i-by" required><option value="">Select</option>'+state.members.map(function(m){return '<option value="'+m.id+'">'+esc(m.last)+', '+esc(m.first)+'</option>';}).join('')+'</select></label>'+
+        '<label><span>Project name</span><input id="i-name" required maxlength="40" placeholder="e.g. BantayBaha"></label>'+
+        '<label class="wide"><span>One-line summary</span><input id="i-what" maxlength="60" placeholder="e.g. AI flood alerts for barangays"></label>'+
+        '<label class="wide"><span>Description</span><textarea id="i-desc" rows="3" placeholder="What does the system do, and who uses it?"></textarea></label>'+
+        '<label class="wide"><span>Issues it solves (one per line)</span><textarea id="i-solves" rows="3" placeholder="Long queues at…&#10;No data on…"></textarea></label>'+
+        '<label><span>How it uses AI &amp; analytics</span><input id="i-ai" placeholder="e.g. demand forecasting, image recognition"></label>'+
+        '<label><span>SDG(s)</span><input id="i-sdg" placeholder="e.g. SDG 3, SDG 11"></label>'+
+        '<label class="wide"><span>Elicitation done (optional)</span><input id="i-elicit" placeholder="e.g. Interviewed 3 tricycle drivers, survey with 25 responses"></label>'+
+        '<div class="wide" style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" type="button" data-ideaform="1">Cancel</button><button class="btn" type="submit">Post idea</button></div>'+
+        '</form>';
+    }
+    if(ideas.length){
+      h += '<div class="idea-grid">'+ideas.map(function(o){return projectCard(o,true);}).join('')+'</div>';
+    } else {
+      h += '<div class="idea-empty">No ideas from the team yet. Press “Add your idea” to post the first one.</div>';
+    }
+    h += '<div class="ex-head"><span class="ex-badge">Examples by Claude AI</span><p>Drafted by Claude AI as reference. You can use, change or ignore them.</p></div>';
+    h += '<div class="options examples">'+state.options.map(function(o){return projectCard(o,false);}).join('')+'</div>';
+    h += '</section>';
     return h;
   }
 
@@ -536,10 +583,12 @@ nav.index .help:hover{border-color:var(--ink)}
   document.addEventListener('click', function(e){
     var b = e.target.closest('button'); if(!b) return;
     if(b.dataset.status){ var it=findItem(b.dataset.status); it.status = STATUSES[(STATUSES.indexOf(it.status)+1)%3]; commit(); }
-    else if(b.dataset.vote){ var o=state.options.filter(function(x){return x.id===b.dataset.vote;})[0]; var i=o.votes.indexOf(b.dataset.m); if(i>-1) o.votes.splice(i,1); else o.votes.push(b.dataset.m); commit(); }
+    else if(b.dataset.vote){ var o=findProject(b.dataset.vote); var i=o.votes.indexOf(b.dataset.m); if(i>-1) o.votes.splice(i,1); else o.votes.push(b.dataset.m); commit(); }
     else if(b.dataset.pick){ state.chosen = state.chosen===b.dataset.pick ? '' : b.dataset.pick; commit(state.chosen?'Project locked in':'Choice cleared'); }
     else if(b.dataset.editlink){ editingLink=b.dataset.editlink; var y=window.scrollY; render(); window.scrollTo(0,y); var inp=document.getElementById('link-'+editingLink); if(inp) inp.focus(); }
     else if(b.dataset.cancel){ editingLink=null; var y2=window.scrollY; render(); window.scrollTo(0,y2); }
+    else if(b.dataset.ideaform){ ideaFormOpen=!ideaFormOpen; var y3=window.scrollY; render(); window.scrollTo(0,y3); var f=document.getElementById('i-by'); if(f) f.focus(); }
+    else if(b.dataset.delidea){ state.ideas=(state.ideas||[]).filter(function(x){return x.id!==b.dataset.delidea;}); if(state.chosen===b.dataset.delidea) state.chosen=''; commit('Idea removed'); }
     else if(b.dataset.guide){ openGuide(0); }
     else if(b.dataset.g){ guideNav(b.dataset.g); }
     else if(b.dataset.dellog){ state.log = state.log.filter(function(x){return x.id!==b.dataset.dellog;}); commit('Update removed'); }
@@ -566,6 +615,17 @@ nav.index .help:hover{border-color:var(--ink)}
       if(v && !/^https?:\/\//i.test(v)) v = 'https://'+v;
       state.links.forEach(function(k){ if(k.id===f.dataset.linkform) k.url=v; });
       editingLink=null; commit(v?'Link saved':'Link removed');
+    } else if(f.id==='idea-form'){
+      function val(id){ return document.getElementById(id).value.trim(); }
+      var by=val('i-by'), name=val('i-name');
+      if(!by || !name){ toast('Add your name and a project name'); return; }
+      var idea = {id:uid(), by:by, name:name, what:val('i-what'), desc:val('i-desc'),
+        solves:val('i-solves').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean),
+        ai:val('i-ai'), sdg:val('i-sdg').split(/[,;]+/).map(function(x){return x.trim();}).filter(Boolean),
+        elicit:val('i-elicit'), votes:[by]};
+      state.ideas.push(idea);
+      state.log.push({id:uid(), date:iso(today()), by:by, text:'Posted project idea: '+name});
+      ideaFormOpen=false; commit('Idea posted');
     } else if(f.id==='log-form'){
       var txt = document.getElementById('log-text').value.trim();
       if(!txt){ toast('Write an update first'); return; }
@@ -581,7 +641,7 @@ nav.index .help:hover{border-color:var(--ink)}
      d:function(){ return state.members.map(function(m){return '<span class="vote on" style="cursor:default">'+esc(m.last)+'</span>';}).join(''); }},
     {t:'Check the timeline first', p:'The top strip shows every deadline against today. Diamonds turn yellow within 7 days. Set the final presentation date at the top so the recording deadline (1 week before) appears.',
      d:function(){ return '<span class="mono">Nov 14</span> Project options <span class="mono" style="margin-left:10px">Dec 6</span> Video + deck <span class="mono" style="margin-left:10px">Dec 28</span> SRS'; }},
-    {t:'Vote, then lock in the project', p:'Under each of the 3 options, tap your surname to vote. When the group agrees, press “Choose this”. The page title changes to the chosen project.',
+    {t:'Post your idea, then vote', p:'In Project, press “Add your idea” and fill in the form. Below the team’s ideas are 3 examples by Claude AI for reference. Tap your surname on any card to vote, then press “Choose this” once the group agrees.',
      d:function(){ return '<span class="vote on" style="cursor:default">Tarra</span><span class="vote" style="cursor:default">Barba</span><span class="pick" style="cursor:default">Choose this</span>'; }},
     {t:'Move your tasks along', p:'In Deliverables, click a task’s status to cycle it. Use the dropdown to change who owns it. The Team section counts how many of your tasks are done.',
      d:function(){ return '<span class="status todo">To do</span>→<span class="status doing">Doing</span>→<span class="status done">Done</span>'; }},
