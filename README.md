@@ -4,6 +4,6 @@ Team portal for our finals project: project options, deadlines, task owners, Dri
 
 **Team:** Arradaza, Maynard · Barba, Raymond · Grefaldeo, Shawn · Tarra, Victor
 
-Open the live site from the GitHub Pages link in this repo's About section.
+Live site: https://tarravictor.github.io/SYSANDE-Finals-Portal/
 
 > On GitHub Pages, edits (task status, links, votes) are saved in each visitor's own browser only.

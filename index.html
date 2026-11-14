@@ -414,6 +414,67 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 @media (max-width:1000px){.subs{grid-template-columns:1fr}.sub-list{position:static}}
 @media (max-width:640px){.sub-form{grid-template-columns:1fr}.sub-detail{padding:18px}}
 
+.t-btn{border:0;background:none;text-align:left;cursor:pointer;padding:0;font:inherit;color:inherit;min-width:0}
+.li .t-btn{flex:1}
+.t-btn:hover b,.tt.t-btn:hover,.kt.t-btn:hover{color:var(--accent-text)}
+.kt.t-btn{font-weight:500;line-height:1.35}
+.trow{grid-template-columns:24px minmax(0,1fr) 120px 150px 32px}
+.trow-empty,.col-empty{padding:14px 18px;color:var(--faint);font-size:13.5px}
+.col-empty{padding:10px 6px}
+.group-h .btn{margin-left:4px}
+a.card.stat{text-decoration:none;color:inherit}
+a.count-down{text-decoration:none;color:#fff;transition:filter .15s}
+a.count-down:hover{filter:brightness(1.08)}
+.li-link{text-decoration:none;color:inherit}
+.li-link > .ic{color:var(--faint)}
+.ri-s{width:30px;height:30px;border-radius:8px;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;flex:none}
+.ri-s .ic{width:16px;height:16px}
+.sub-h{padding:12px 18px 6px;font-size:12.5px;font-weight:500;color:var(--faint);border-top:1px solid var(--border)}
+.sub-detail{scroll-margin-top:72px}
+.sub-item .av{flex:none}
+.assign{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13.5px;color:var(--muted);flex-wrap:wrap}
+.assign select{height:34px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);padding:0 8px;color:var(--text)}
+.mem-bins{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--faint);font-weight:500}
+a.tag{text-decoration:none;transition:background-color .15s,color .15s}
+a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
+.me.ask{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.dot-new{width:8px;height:8px;border-radius:50%;background:var(--red);margin-left:auto}
+.news{padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.news a,.news .n{display:flex;gap:12px;padding:10px;border-radius:10px;text-decoration:none;color:inherit;align-items:flex-start}
+.news a:hover{background:var(--hover)}
+.news a > .ic{margin:6px 0 0 auto;color:var(--faint)}
+.news b{display:block;font-weight:600}
+.news .d{display:block;color:var(--muted);font-size:13.5px}
+.update-bar{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:85;display:flex;gap:10px;align-items:center;padding:8px 8px 8px 14px;background:var(--text);color:var(--surface);border-radius:12px;box-shadow:var(--shadow-lg);font-weight:500;font-size:13.5px;max-width:calc(100% - 24px)}
+.btn.danger{color:var(--red)}
+.sheet-f .danger{margin-right:auto}
+.tabbar{display:none}
+@media (max-width:860px){
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:34;background:var(--surface);border-top:1px solid var(--border);padding:6px 4px 8px}
+  .tabbar a,.tabbar button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:var(--muted);font:500 11px var(--font);text-decoration:none;padding:4px 0;cursor:pointer}
+  .tabbar .on{color:var(--accent-text)}
+  .tabbar .ic{width:21px;height:21px}
+  .page{padding-bottom:110px}
+  .toast{bottom:84px}
+  .consent{bottom:76px}
+  .hide-sm{display:none !important}
+  .top h1 .crumb{display:none}
+  .check{width:24px;height:24px}
+  .pill{height:28px}
+  .vote{width:34px;height:34px}
+  .btn{height:40px}
+  .btn.sm{height:34px}
+  .trow{grid-template-columns:28px minmax(0,1fr) auto;row-gap:6px}
+  .trow .owner{grid-column:2/-1;grid-row:2}
+  .toolbar .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px;max-width:100vw}
+  .toolbar .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;height:34px}
+  .group-h{flex-wrap:wrap}
+  .group-h .bar{display:none}
+  .group-h .btn{margin-left:auto}
+  .sheet-f{flex-wrap:wrap}
+}
+
 /* loader */
 .loader{position:fixed;inset:0;z-index:90;background:var(--bg);display:grid;place-items:center;transition:opacity .3s}
 .loader.hide{opacity:0;pointer-events:none}
@@ -487,9 +548,9 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     ];
     state.submissions.forEach(function(x){ x.status='not'; x.link=''; x.by=''; x.at=''; });
   }
-  ensureSubs();
+  ensureSubs(); fixSubs();
   var api=null, mode='connecting', timer=null, LS_KEY='sysande-portal-local';
-  var ui={view:'home', taskFilter:'all', taskView:'list', ideaTab:'team', editingLink:null, menu:false, subSel:'s1', subForm:false};
+  var ui={view:'home', taskFilter:'all', taskView:'list', ideaTab:'team', editingLink:null, menu:false, subSel:'s1', subForm:false, subFilter:'all'};
   var me=''; try{ me=localStorage.getItem('sysande-me')||''; }catch(e){}
   var lastView=null, popKey=null;
   function countUp(){
@@ -516,6 +577,16 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
   function dueOf(ms){ if(ms.due==='final') return parse(state.finalDate); if(ms.due==='rec'){ var f=parse(state.finalDate); if(!f) return null; var r=new Date(f); r.setDate(r.getDate()-7); return r; } return parse(ms.due); }
   function rel(dt){ if(!dt) return {t:'Needs presentation date',c:'soon'}; var d=daysTo(dt); if(d<0) return {t:'Passed',c:'past'}; if(d===0) return {t:'Due today',c:'soon'}; if(d===1) return {t:'Due tomorrow',c:'soon'}; return {t:'In '+d+' days',c:d<=7?'soon':''}; }
   function sdgList(t){ return String(t||'').split(/[,;\n]+|\s+(?:and|&)\s+(?=SDG\b)/i).map(function(x){return x.trim().replace(/^(?:and|&)\s+/i,'').replace(/\.$/,'');}).filter(Boolean); }
+  function fixSubs(){ var D={s1:'arradaza',s2:'tarra',s3:'barba',s4:'grefaldeo',s5:'arradaza',s6:''}; state.submissions.forEach(function(x){ if(x.owner===undefined) x.owner=D[x.id]||''; }); }
+  var APP_VERSION='2026.11.14-3', VK='sysande-seen-version';
+  var CHANGELOG={date:'November 14', items:[
+    ['inbox','Every submission has an owner','Each deliverable is assigned to a member. Filter to yours, tick the checklist, and upload the file straight to our Google Drive.','submissions'],
+    ['pen','Edit, add and delete tasks','Click any task to change its text, owner, status or deadline. Press New task to add one.','tasks'],
+    ['users','More things are clickable','The countdown, the stat cards and each member card now open the matching page. See tasks on a member card shows only their tasks.','team'],
+    ['menu','Easier on phones','A tab bar at the bottom opens Home, Ideas, Tasks and Submissions in one tap.','home'],
+    ['spark','Update notices','If the portal is updated while you have it open, a Refresh notice appears. This list shows what changed.','']
+  ]};
+  function newsSeen(){ try{ return localStorage.getItem(VK)===APP_VERSION; }catch(e){ return true; } }
   function allProjects(){ return state.ideas.concat(state.options); }
   function findProject(id){ return allProjects().filter(function(o){return o.id===id;})[0]; }
   function allTasks(){ var a=[]; state.milestones.forEach(function(m){ m.items.forEach(function(i){ a.push({i:i,m:m}); }); }); return a; }
@@ -541,6 +612,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', calendar:'<rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/>',
     list:'<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>', board:'<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/>',
     inbox:'<path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"/>',
+    chev:'<path d="m9 6 6 6-6 6"/>',
     menu:'<path d="M4 7h16M4 12h16M4 17h16"/>', trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', help:'<circle cx="12" cy="12" r="9"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.5-2.7 2.5M12 16.5h.01"/>',
     drive:'<path d="M8.5 3h7l6 10.5-3.5 6H6l-3.5-6z"/><path d="M8.5 3 15 14.5H2.5M15.5 3l-6.5 11.5M14.8 14.5h6.7M6 19.5l3-5"/>',
     doc:'<path d="M6 2.5h8.5l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h5M9 12h7M9 15.5h7"/>', slides:'<rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M12 17v3.5M8 20.5h8"/>',
@@ -571,21 +643,26 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
   function render(){
     var c=counts();
     var side='<aside class="side'+(ui.menu?' open':'')+'" aria-label="Main menu"><div class="ws"><div class="logo">S</div><div><b>SYSANDE Finals</b><small>Group of '+state.members.length+(state.course?'':'')+'</small></div></div>'+
-      '<div class="me">'+(me?av(me,'sm'):'<span class="av sm empty">?</span>')+'<select id="me-select" aria-label="Who are you?"><option value="">Who are you?</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(me===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></div>'+
+      '<div class="me'+(me?'':' ask')+'">'+(me?av(me,'sm'):'<span class="av sm empty">?</span>')+'<select id="me-select" aria-label="Who are you?"><option value="">Who are you?</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(me===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></div>'+
       NAV.map(function(n){ var cnt=c[n[0]]; return '<a class="nav-i'+(ui.view===n[0]?' on':'')+'" href="#'+n[0]+'"'+(ui.view===n[0]?' aria-current="page"':'')+'>'+ic(n[1])+'<span>'+n[2]+'</span>'+(cnt?'<span class="count">'+cnt+'</span>':'')+'</a>'; }).join('')+
-      '<div class="side-foot"><button class="link-btn" data-guide="1">'+ic('help')+'How to use the portal</button><div class="legal-links"><a href="#terms"'+(ui.view==='terms'?' aria-current="page"':'')+'>Terms</a><a href="#privacy"'+(ui.view==='privacy'?' aria-current="page"':'')+'>Privacy notice</a></div>'+themeSwitch()+'<div class="sync">'+syncText()+'</div></div></aside><div class="scrim'+(ui.menu?' open':'')+'" data-menu="0"></div>';
+      '<div class="side-foot"><button class="link-btn" data-news="1">'+ic('spark')+'What’s new'+(newsSeen()?'':'<span class="dot-new" title="New"></span>')+'</button><button class="link-btn" data-guide="1">'+ic('help')+'How to use the portal</button><div class="legal-links"><a href="#terms"'+(ui.view==='terms'?' aria-current="page"':'')+'>Terms</a><a href="#privacy"'+(ui.view==='privacy'?' aria-current="page"':'')+'>Privacy notice</a></div>'+themeSwitch()+'<div class="sync">'+syncText()+'</div></div></aside><div class="scrim'+(ui.menu?' open':'')+'" data-menu="0"></div>';
     var action='';
     if(ui.view==='ideas') action='<button class="btn primary" data-newidea="1">'+ic('plus')+'New idea</button>';
-    else if(ui.view==='tasks') action='<div class="seg hide-sm" role="group" aria-label="Layout"><button data-tview="list" aria-pressed="'+(ui.taskView==='list')+'">'+ic('list')+'List</button><button data-tview="board" aria-pressed="'+(ui.taskView==='board')+'">'+ic('board')+'Board</button></div>';
+    else if(ui.view==='tasks') action='<button class="btn primary" data-newtask="1">'+ic('plus')+'New task</button>';
     else if(ui.view==='home') action='<button class="btn hide-sm" data-newidea="1">'+ic('plus')+'New idea</button>';
     var top='<header class="top"><button class="menu-btn" data-menu="1" aria-label="Open menu">'+ic('menu')+'</button><h1><span class="crumb">'+esc(state.course||'Finals')+' / </span>'+TITLES[ui.view]+'</h1><div class="top-actions">'+action+'</div></header>';
     var body={home:home,ideas:ideasView,tasks:tasksView,submissions:subsView,files:filesView,team:teamView,rules:rulesView,updates:updatesView,terms:termsView,privacy:privacyView}[ui.view]();
     var entering = ui.view!==lastView; lastView=ui.view;
-    document.getElementById('app').innerHTML='<div class="app">'+side+'<div class="main">'+top+'<div class="page'+(entering?' enter':'')+'">'+body+'</div></div></div>';
+    document.getElementById('app').innerHTML='<div class="app">'+side+'<div class="main">'+top+'<div class="page'+(entering?' enter':'')+'">'+body+'</div></div></div>'+tabbar();
     document.querySelectorAll('.ideas-grid > *, .team > *, .col .kc, .frow, .rule').forEach(function(el,i){ el.style.setProperty('--i', i%12); });
     if(entering) countUp();
     drawConsent();
     if(popKey){ document.querySelectorAll(popKey).forEach(function(el){ el.classList.add('pop'); }); popKey=null; }
+  }
+  function tabbar(){
+    var T=[['home','home','Home'],['ideas','bulb','Ideas'],['tasks','tasks','Tasks'],['submissions','inbox','Submit']];
+    return '<nav class="tabbar" aria-label="Quick menu">'+T.map(function(t){ return '<a href="#'+t[0]+'" class="'+(ui.view===t[0]?'on':'')+'"'+(ui.view===t[0]?' aria-current="page"':'')+'>'+ic(t[1])+t[2]+'</a>'; }).join('')+
+      '<button data-menu="1" class="'+(T.every(function(t){return t[0]!==ui.view;})?'on':'')+'">'+ic('menu')+'More</button></nav>';
   }
   function syncText(){ if(mode==='shared') return '<i class="ok"></i>Saved for the whole group'; if(mode==='readonly') return '<i></i>View only'; if(mode==='local') return '<i></i>Saved on this device only'; return '<i></i>Connecting…'; }
 
@@ -595,28 +672,34 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     var m=member(me), nx=nextDue(), chosen=findProject(state.chosen), tasks=allTasks();
     var done=tasks.filter(function(x){return x.i.status==='done';}).length;
     var mine=tasks.filter(function(x){return x.i.owner===me && x.i.status!=='done';});
+    var myBins=state.submissions.filter(function(x){return me && x.owner===me && x.status!=='submitted';});
     var srs=state.milestones.filter(function(x){return x.code==='P4';})[0], srsD=srs?dueOf(srs):null;
     var days=nx?daysTo(nx.d):null;
+    var youHave=m?'You have '+mine.length+' open task'+(mine.length===1?'':'s')+(myBins.length?' and '+myBins.length+' submission'+(myBins.length===1?'':'s')+' to turn in':'')+'.':'Choose your name to see your own tasks and submissions here.';
+    var cdOpen=nx?'<a class="count-down" href="#tasks" data-goto-group="'+nx.m.id+'" title="Open the tasks for this deadline">':'<div class="count-down">';
     var h='<div class="card hello"><div class="hello-main"><h2>'+greet()+(m?', '+esc(m.first):'')+'</h2>'+
-      '<p>'+(chosen?'Our project is <b>'+esc(chosen.name)+'</b>. ':'We haven’t chosen a project yet. ')+(m?'You have '+mine.length+' open task'+(mine.length===1?'':'s')+'.':'Pick your name in the sidebar to see your tasks here.')+'</p>'+
-      '<div class="hello-actions">'+(chosen?'':'<a class="btn primary" href="#ideas">'+ic('bulb')+'Review ideas</a>')+'<a class="btn" href="#tasks">'+ic('tasks')+'Open tasks</a><a class="btn ghost" href="#files">'+ic('folder')+'Files</a></div></div>'+
-      '<div class="count-down"><small>Next deadline</small><div class="big">'+(nx?(days===0?'Today':'<em data-count="'+days+'" style="font-style:normal">'+days+'</em><span>day'+(days===1?'':'s')+'</span>'):'—')+'</div><div><b>'+(nx?esc(nx.m.title):'All done')+'</b><br><small>'+(nx?short(nx.d):'')+'</small></div></div></div>';
-    h+='<div class="stats"><div class="card stat"><span class="k">'+ic('check')+'Tasks done</span><span class="v"><span data-count="'+done+'">'+done+'</span> <small>of '+tasks.length+'</small></span><div class="bar"><b style="width:'+(tasks.length?Math.round(done/tasks.length*100):0)+'%"></b></div></div>'+
-      '<div class="card stat"><span class="k">'+ic('bulb')+'Team ideas</span><span class="v"><span data-count="'+state.ideas.length+'">'+state.ideas.length+'</span> <small>posted</small></span><div class="stack">'+state.members.map(function(mm){ var has=state.ideas.some(function(i){return i.by===mm.id;}); return has?av(mm.id,'sm'):'<span class="av sm empty" title="'+esc(mm.first)+' hasn’t posted">'+initials(mm)+'</span>'; }).join('')+'</div></div>'+
-      '<div class="card stat"><span class="k">'+ic('doc')+'SRS paper due</span><span class="v">'+(srsD?'<span data-count="'+daysTo(srsD)+'">'+daysTo(srsD)+'</span> <small>days left</small>':'—')+'</span><span class="muted" style="font-size:13px">'+short(srsD)+'</span></div></div>';
+      '<p>'+(chosen?'Our project is <b>'+esc(chosen.name)+'</b>. ':'We haven’t chosen a project yet. ')+youHave+'</p>'+
+      '<div class="hello-actions">'+(m?'':'<button class="btn primary" data-pickme="1">'+ic('users')+'Choose your name</button>')+
+      (chosen?'':'<a class="btn'+(m?' primary':'')+'" href="#ideas">'+ic('bulb')+'Review ideas</a>')+
+      '<a class="btn" href="#tasks" data-goto-group="'+(m?'mine':'all')+'">'+ic('tasks')+(m?'My tasks':'Open tasks')+'</a><a class="btn" href="#submissions">'+ic('inbox')+'Submissions</a></div></div>'+
+      cdOpen+'<small>Next deadline</small><div class="big">'+(nx?(days===0?'Today':'<em data-count="'+days+'" style="font-style:normal">'+days+'</em><span>day'+(days===1?'':'s')+'</span>'):'—')+'</div><div><b>'+(nx?esc(nx.m.title):'All done')+'</b><br><small>'+(nx?short(nx.d)+' · View tasks':'')+'</small></div>'+(nx?'</a>':'</div>')+'</div>';
+    h+='<div class="stats"><a class="card stat" href="#tasks" data-goto-group="all"><span class="k">'+ic('check')+'Tasks done</span><span class="v"><span data-count="'+done+'">'+done+'</span> <small>of '+tasks.length+'</small></span><div class="bar"><b style="width:'+(tasks.length?Math.round(done/tasks.length*100):0)+'%"></b></div></a>'+
+      '<a class="card stat" href="#ideas"><span class="k">'+ic('bulb')+'Team ideas</span><span class="v"><span data-count="'+state.ideas.length+'">'+state.ideas.length+'</span> <small>posted</small></span><div class="stack">'+state.members.map(function(mm){ var has=state.ideas.some(function(i){return i.by===mm.id;}); return has?av(mm.id,'sm'):'<span class="av sm empty" title="'+esc(mm.first)+' hasn’t posted">'+initials(mm)+'</span>'; }).join('')+'</div></a>'+
+      '<a class="card stat" href="#submissions" data-gosub="s5"><span class="k">'+ic('doc')+'SRS paper due</span><span class="v">'+(srsD?'<span data-count="'+daysTo(srsD)+'">'+daysTo(srsD)+'</span> <small>days left</small>':'—')+'</span><span class="muted" style="font-size:13px">'+short(srsD)+'</span></a></div>';
     h+='<div class="card"><div class="card-h"><h2>Timeline</h2><label class="muted" style="font-size:13px;display:flex;gap:8px;align-items:center;font-weight:500">Final presentation<input type="date" id="f-final" class="input" style="height:30px;flex:none" value="'+esc(state.finalDate)+'"></label></div><div class="steps">'+state.milestones.map(function(ms,i){
-      var d=dueOf(ms), r=rel(d), md=ms.items.every(function(x){return x.status==='done';});
+      var d=dueOf(ms), r=rel(d), md=ms.items.length&&ms.items.every(function(x){return x.status==='done';});
       var cls=(md||r.c==='past')?'past':((nx&&nx.m.id===ms.id)?'now':'');
       return '<a class="step '+cls+'" href="#tasks" data-goto-group="'+ms.id+'"><span class="node">'+(cls==='past'?ic('check',2.6):(i+1))+'</span><span class="s-txt"><b>'+esc(ms.title)+'</b><small class="'+(r.c==='soon'?'soon':'')+'">'+short(d)+(r.c==='soon'?' · '+r.t:'')+'</small></span></a>';
     }).join('')+'</div></div>';
     var myList = m ? (mine.length? mine.slice(0,6).map(taskLine).join('') : '<div class="empty-state">'+ic('check')+'<span>You’re all caught up.</span></div>')
-                   : '<div class="empty-state">'+ic('users')+'<span>Choose your name in the sidebar to see your tasks.</span></div>';
-    h+='<div class="home-grid"><div class="card"><div class="card-h"><h2>'+(m?'Your open tasks':'Your tasks')+'</h2><a href="#tasks">All tasks</a></div><div class="list" style="margin-top:10px">'+myList+'</div></div>'+
+                   : '<div class="empty-state">'+ic('users')+'<span>Choose your name to see your tasks.</span><button class="btn" data-pickme="1">Choose your name</button></div>';
+    var binRows = myBins.length ? '<div class="sub-h">Your submissions</div>'+myBins.map(function(x){ var d=dueOf(subMs(x)); return '<a class="li li-link" href="#submissions" data-gosub="'+x.id+'"><span class="ri-s">'+ic('inbox')+'</span><div class="t"><b>'+esc(x.title)+'</b><small>'+(d?'Due '+short(d):'Date not set')+', '+SUBL[subState(x)].toLowerCase()+'</small></div>'+ic('chev')+'</a>'; }).join('') : '';
+    h+='<div class="home-grid"><div class="card"><div class="card-h"><h2>'+(m?'Your open tasks':'Your tasks')+'</h2><a href="#tasks" data-goto-group="'+(m?'mine':'all')+'">'+(mine.length>6?'All '+mine.length:'All tasks')+'</a></div><div class="list" style="margin-top:10px">'+myList+binRows+'</div></div>'+
       '<div class="card feed"><div class="card-h"><h2>Recent updates</h2><a href="#updates">View all</a></div><div class="list" style="margin-top:10px">'+(state.log.length?state.log.slice(-4).reverse().map(feedLine).join(''):'<div class="empty-state">No updates yet.</div>')+'</div></div></div>';
     return h;
   }
-  function checkBtn(i){ return '<button class="check '+i.status+'" data-status="'+i.id+'" aria-label="'+SL[i.status]+'. Change status" title="'+SL[i.status]+'">'+(i.status==='done'?ic('check',3):'')+'</button>'; }
-  function taskLine(x){ return '<div class="li'+(x.i.status==='done'?' done':'')+'">'+checkBtn(x.i)+'<div class="t"><b>'+esc(x.i.text)+'</b><small>'+esc(x.m.title)+', '+short(dueOf(x.m))+'</small></div><button class="pill '+x.i.status+'" data-status="'+x.i.id+'">'+SL[x.i.status]+'</button></div>'; }
+  function checkBtn(i){ return '<button class="check '+i.status+'" data-status="'+i.id+'" aria-label="'+SL[i.status]+'. Change status" title="'+SL[i.status]+'. Click to change">'+(i.status==='done'?ic('check',3):'')+'</button>'; }
+  function taskLine(x){ return '<div class="li'+(x.i.status==='done'?' done':'')+'">'+checkBtn(x.i)+'<button class="t t-btn" data-edittask="'+x.i.id+'" title="Edit task"><b>'+esc(x.i.text)+'</b><small>'+esc(x.m.title)+', '+short(dueOf(x.m))+'</small></button><button class="pill '+x.i.status+'" data-status="'+x.i.id+'">'+SL[x.i.status]+'</button></div>'; }
   function feedLine(e){ var m=member(e.by), d=parse(e.date); return '<div class="li">'+(m?av(m.id):'<span class="av empty">T</span>')+'<div class="t"><b>'+esc(e.text)+'</b><small>'+esc(m?m.first:'Team')+', '+short(d)+'</small></div></div>'; }
 
   function ideaCard(o,isIdea){
@@ -647,25 +730,57 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
   }
   function tasksView(){
     var chips=[['all','All'],['mine','Mine'],['open','Not done']].concat(state.milestones.map(function(m){return [m.id,m.title];}));
-    var h='<div class="toolbar"><div class="chips">'+chips.map(function(c){ return '<button class="chip" data-tfilter="'+c[0]+'" aria-pressed="'+(ui.taskFilter===c[0])+'">'+esc(c[1])+'</button>'; }).join('')+'</div></div>';
-    if(ui.taskFilter==='mine'&&!me) return h+'<div class="card empty-state">'+ic('users')+'<span>Choose your name in the sidebar first.</span></div>';
-    function keep(x){ if(ui.taskFilter==='mine') return x.i.owner===me; if(ui.taskFilter==='open') return x.i.status!=='done'; if(ui.taskFilter!=='all') return x.m.id===ui.taskFilter; return true; }
+    var mf=ui.taskFilter.indexOf('m:')===0?member(ui.taskFilter.slice(2)):null;
+    var h='<div class="toolbar"><div class="chips">'+(mf?'<button class="chip" data-tfilter="all" aria-pressed="true" title="Clear this filter">'+esc(mf.first)+'’s tasks '+ic('x')+'</button>':'')+chips.map(function(c){ return '<button class="chip" data-tfilter="'+c[0]+'" aria-pressed="'+(ui.taskFilter===c[0])+'">'+esc(c[1])+'</button>'; }).join('')+'</div><span class="spacer"></span>'+
+      '<div class="seg" role="group" aria-label="Layout"><button data-tview="list" aria-pressed="'+(ui.taskView==='list')+'">'+ic('list')+'List</button><button data-tview="board" aria-pressed="'+(ui.taskView==='board')+'">'+ic('board')+'Board</button></div></div>';
+    if(ui.taskFilter==='mine'&&!me) return h+'<div class="card empty-state">'+ic('users')+'<span>Choose your name first.</span><button class="btn" data-pickme="1">Choose your name</button></div>';
+    function keep(x){ var f=ui.taskFilter; if(f==='mine') return x.i.owner===me; if(f==='open') return x.i.status!=='done'; if(mf) return x.i.owner===mf.id; if(f!=='all') return x.m.id===f; return true; }
     if(ui.taskView==='board'){
       var all=allTasks().filter(keep);
       return h+'<div class="board">'+STATUSES.map(function(s){ var items=all.filter(function(x){return x.i.status===s;});
-        return '<div class="col"><div class="col-h"><span class="pill '+s+'" style="cursor:default">'+SL[s]+'</span><span class="n">'+items.length+'</span></div>'+items.map(function(x){
-          return '<div class="kc"><div class="kt">'+esc(x.i.text)+'</div><div class="kf">'+av(x.i.owner,'sm')+'<span class="tag">'+esc(x.m.title)+'</span><button class="pill '+s+'" data-status="'+x.i.id+'" title="Move to next status">'+(s==='done'?'Reopen':'Move on')+'</button></div></div>'; }).join('')+'</div>'; }).join('')+'</div>';
+        return '<div class="col"><div class="col-h"><span class="pill '+s+'" style="cursor:default">'+SL[s]+'</span><span class="n">'+items.length+'</span></div>'+(items.length?'':'<div class="col-empty">Nothing here</div>')+items.map(function(x){
+          return '<div class="kc"><button class="kt t-btn" data-edittask="'+x.i.id+'" title="Edit task">'+esc(x.i.text)+'</button><div class="kf">'+av(x.i.owner,'sm')+'<span class="tag">'+esc(x.m.title)+'</span><button class="pill '+s+'" data-status="'+x.i.id+'" title="Move to the next status">'+(s==='done'?'Reopen':'Move on')+'</button></div></div>'; }).join('')+'</div>'; }).join('')+'</div>';
     }
+    var shown=0;
     state.milestones.forEach(function(m){
-      var items=m.items.filter(function(i){return keep({i:i,m:m});}); if(!items.length) return;
+      var items=m.items.filter(function(i){return keep({i:i,m:m});});
+      if(!items.length && !(ui.taskFilter==='all'||ui.taskFilter===m.id)) return;
+      shown++;
       var d=dueOf(m), r=rel(d), dn=m.items.filter(function(i){return i.status==='done';}).length;
-      h+='<div class="card group" id="g-'+m.id+'"><div class="group-h"><h2>'+esc(m.title)+'</h2><span class="tag'+(r.c==='soon'?' red':'')+'">'+short(d)+(d?', '+r.t.toLowerCase():'')+'</span><span class="muted">'+dn+'/'+m.items.length+'</span><div class="bar"><b style="width:'+Math.round(dn/m.items.length*100)+'%"></b></div></div>'+
-        (m.note?'<p class="group-note">'+m.note+'</p>':'')+items.map(function(i){
-          return '<div class="trow'+(i.status==='done'?' done':'')+'">'+checkBtn(i)+'<span class="tt">'+esc(i.text)+'</span><button class="pill '+i.status+'" data-status="'+i.id+'">'+SL[i.status]+'</button><span class="owner">'+av(i.owner,'sm')+'<select data-owner="'+i.id+'" aria-label="Owner"><option value="">Unassigned</option>'+state.members.map(function(mm){return '<option value="'+mm.id+'"'+(i.owner===mm.id?' selected':'')+'>'+esc(mm.first)+'</option>';}).join('')+'</select></span></div>';
+      h+='<div class="card group" id="g-'+m.id+'"><div class="group-h"><h2>'+esc(m.title)+'</h2><span class="tag'+(r.c==='soon'?' red':'')+'">'+short(d)+(d?', '+r.t.toLowerCase():'')+'</span><span class="muted">'+dn+'/'+m.items.length+'</span><div class="bar"><b style="width:'+(m.items.length?Math.round(dn/m.items.length*100):0)+'%"></b></div><button class="btn sm ghost" data-newtask="'+m.id+'" title="Add a task to '+esc(m.title)+'">'+ic('plus')+'<span class="hide-sm">Add task</span></button></div>'+
+        (m.note?'<p class="group-note">'+m.note+'</p>':'')+(items.length?'':'<div class="trow-empty">No tasks here yet.</div>')+items.map(function(i){
+          return '<div class="trow'+(i.status==='done'?' done':'')+'">'+checkBtn(i)+'<button class="tt t-btn" data-edittask="'+i.id+'" title="Edit task">'+esc(i.text)+'</button><button class="pill '+i.status+'" data-status="'+i.id+'">'+SL[i.status]+'</button><span class="owner">'+av(i.owner,'sm')+'<select data-owner="'+i.id+'" aria-label="Owner"><option value="">Unassigned</option>'+state.members.map(function(mm){return '<option value="'+mm.id+'"'+(i.owner===mm.id?' selected':'')+'>'+esc(mm.first)+'</option>';}).join('')+'</select></span><button class="btn sm ghost hide-sm" data-edittask="'+i.id+'" aria-label="Edit task" title="Edit task">'+ic('pen')+'</button></div>';
         }).join('')+'</div>';
     });
+    if(!shown) h+='<div class="card empty-state">'+ic('tasks')+'<span>No tasks match this filter.</span><button class="btn" data-tfilter="all">Show all tasks</button></div>';
     return h;
   }
+  function openTask(id, msId){
+    closeModal();
+    var x=null; allTasks().forEach(function(t){ if(t.i.id===id) x=t; });
+    var nd=nextDue(), i=x?x.i:{id:'',text:'',owner:me||'',status:'todo'}, mid=x?x.m.id:(state.milestones.some(function(m){return m.id===msId;})?msId:(nd?nd.m.id:state.milestones[0].id));
+    var mo=document.createElement('div'); mo.className='modal'; mo.id='app-modal';
+    mo.innerHTML='<form class="sheet" id="task-form" data-task="'+i.id+'" role="dialog" aria-modal="true" aria-labelledby="tm-t"><div class="sheet-h"><h2 id="tm-t">'+(x?'Edit task':'New task')+'</h2><button type="button" class="btn sm ghost" data-closemodal="1" aria-label="Close">'+ic('x')+'</button></div><div class="sheet-b">'+
+      '<label class="wide" for="t-text">Task<textarea id="t-text" rows="2" required placeholder="What needs to be done?">'+esc(i.text)+'</textarea></label>'+
+      '<label for="t-ms">Deadline<select id="t-ms">'+state.milestones.map(function(m){ var d=dueOf(m); return '<option value="'+m.id+'"'+(m.id===mid?' selected':'')+'>'+esc(m.title)+(d?' ('+short(d)+')':'')+'</option>'; }).join('')+'</select></label>'+
+      '<label for="t-owner">Owner<select id="t-owner"><option value="">Unassigned</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(i.owner===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>'+
+      '<label class="wide" for="t-status">Status<select id="t-status">'+STATUSES.map(function(st){return '<option value="'+st+'"'+(i.status===st?' selected':'')+'>'+SL[st]+'</option>';}).join('')+'</select></label>'+
+      '</div><div class="sheet-f">'+(x?'<button type="button" class="btn ghost danger" data-deltask="'+i.id+'">'+ic('trash')+'Delete task</button>':'')+'<button type="button" class="btn" data-closemodal="1">Cancel</button><button type="submit" class="btn primary">'+(x?'Save changes':'Add task')+'</button></div></form>';
+    document.body.appendChild(mo);
+    mo.addEventListener('mousedown',function(e){ if(e.target===mo) closeModal(); });
+    var t=document.getElementById('t-text'); if(t){ t.focus(); t.setSelectionRange(t.value.length,t.value.length); }
+  }
+  function openNews(){
+    closeModal();
+    var mo=document.createElement('div'); mo.className='modal'; mo.id='app-modal'; mo.dataset.news='1';
+    mo.innerHTML='<div class="sheet" style="width:min(520px,100%)" role="dialog" aria-modal="true" aria-labelledby="nw-t"><div class="sheet-h"><div><h2 id="nw-t">What’s new in the portal</h2><small class="muted">Updated '+CHANGELOG.date+'</small></div><button class="btn sm ghost" data-closenews="1" aria-label="Close">'+ic('x')+'</button></div><div class="news">'+
+      CHANGELOG.items.map(function(n){ var inner='<span class="ri-s">'+ic(n[0])+'</span><span><b>'+n[1]+'</b><span class="d">'+n[2]+'</span></span>'+(n[3]?ic('chev'):''); return n[3]?'<a href="#'+n[3]+'" data-closenews="1">'+inner+'</a>':'<div class="n">'+inner+'</div>'; }).join('')+
+      '</div><div class="sheet-f"><button class="btn primary" data-closenews="1" id="nw-ok">Got it</button></div></div>';
+    document.body.appendChild(mo);
+    mo.addEventListener('mousedown',function(e){ if(e.target===mo) closeNews(); });
+    var ok=document.getElementById('nw-ok'); if(ok) ok.focus();
+  }
+  function closeNews(){ closeModal(); re(function(){}); }
   var FK={drive:['drive','#E8F7EE','#16A34A'],doc:['doc','#EEF2FF','#3B5BDB'],canva:['slides','#E6F7FB','#0891B2'],figma:['figma','#F6EEFB','#9C36B5'],video:['video','#FDECEC','#DC2626'],form:['form','#F3EEFF','#7048E8'],diagram:['diagram','#FEF3E2','#D97706']};
   function filesView(){
     var set=state.links.filter(function(k){return k.url;}).length;
@@ -681,10 +796,11 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
   }
   function teamView(){
     var c={}; allTasks().forEach(function(x){ var o=x.i.owner; if(o){ c[o]=c[o]||{a:0,d:0}; c[o].a++; if(x.i.status==='done') c[o].d++; } });
-    return '<div class="toolbar"><span class="muted">Roles for the Meet the Team slide. Click a field to edit it.</span></div><div class="team">'+state.members.map(function(m){
-      var k=c[m.id]||{a:0,d:0};
-      return '<div class="card mem"><div class="mem-top">'+av(m.id,'lg')+'<div><b>'+esc(m.first+' '+m.last)+'</b><small>'+(m.id===me?'You':'Member')+'</small></div></div>'+
+    return '<div class="toolbar"><span class="muted">Roles for the Meet the Team slide. Click a role or focus to edit it.</span></div><div class="team">'+state.members.map(function(m){
+      var k=c[m.id]||{a:0,d:0}, bins=state.submissions.filter(function(x){return x.owner===m.id;});
+      return '<div class="card mem"><div class="mem-top">'+av(m.id,'lg')+'<div><b>'+esc(m.first+' '+m.last)+'</b><small>'+(m.id===me?'You':'Member')+'</small></div><a class="btn sm" style="margin-left:auto" href="#tasks" data-goto-group="m:'+m.id+'">'+ic('tasks')+'See tasks</a></div>'+
         '<label>Role<input data-mrole="'+m.id+'" value="'+esc(m.role)+'"></label><label>Focus<input data-mfocus="'+m.id+'" value="'+esc(m.focus)+'"></label>'+
+        (bins.length?'<div class="mem-bins"><span>Submits</span>'+bins.map(function(x){return '<a class="tag" href="#submissions" data-gosub="'+x.id+'">'+esc(x.title)+'</a>';}).join('')+'</div>':'')+
         '<div class="mem-prog"><span>'+k.d+'/'+k.a+' tasks</span><div class="bar"><b style="width:'+(k.a?Math.round(k.d/k.a*100):0)+'%;background:'+col(m.id)+'"></b></div></div></div>';
     }).join('')+'</div>';
   }
@@ -709,15 +825,20 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
   function subState(x){ if(x.status==='submitted') return 'submitted'; if(x.status==='review') return 'review'; return x.reqs.some(function(r){return r.d;})?'work':'not'; }
   function subMs(x){ return state.milestones.filter(function(m){return m.id===x.ms;})[0]; }
   function subsView(){
-    var subs=state.submissions, done=subs.filter(function(x){return x.status==='submitted';}).length;
+    var all=state.submissions, done=all.filter(function(x){return x.status==='submitted';}).length, f=ui.subFilter||'all';
+    if(f==='mine'&&!me) f='all';
+    var subs=all.filter(function(x){ return f==='all' || (f==='mine'?x.owner===me:x.owner===f); });
+    var chips=[['all','All']].concat(me?[['mine','Mine']]:[]).concat(state.members.filter(function(m){return m.id!==me;}).map(function(m){return [m.id,m.first];}));
+    var h='<div class="toolbar"><div class="chips">'+chips.map(function(c){ return '<button class="chip" data-subfilter="'+c[0]+'" aria-pressed="'+(f===c[0])+'">'+esc(c[1])+'</button>'; }).join('')+'</div><span class="spacer"></span><span class="muted" style="font-size:13px">'+done+' of '+all.length+' submitted</span></div>';
+    if(!subs.length) return h+'<div class="card empty-state">'+ic('inbox')+'<span>No submissions are assigned to '+(f==='mine'?'you':esc(member(f).first))+' yet. Open one under All and change “Assigned to”.</span><button class="btn" data-subfilter="all">Show all</button></div>';
     var sel=subs.filter(function(x){return x.id===ui.subSel;})[0]||subs[0];
-    var h='<div class="toolbar"><span class="muted">'+done+' of '+subs.length+' deliverables submitted. Tick off each requirement, then mark it submitted with the link you turned in.</span></div>';
     h+='<div class="subs"><div class="card sub-list" role="list">'+subs.map(function(x){
       var st=subState(x), d=dueOf(subMs(x)), r=rel(d), n=x.reqs.filter(function(q){return q.d;}).length;
-      return '<button class="sub-item'+(x.id===sel.id?' on':'')+'" data-subsel="'+x.id+'" role="listitem"><span class="sub-dot '+st+'">'+(st==='submitted'?ic('check',3):'')+'</span><span class="sub-t"><b>'+esc(x.title)+'</b><small>'+(st==='submitted'?'Submitted '+short(parse(x.at)):short(d)+(r.c==='soon'?', '+r.t.toLowerCase():''))+'</small></span><span class="sub-n">'+n+'/'+x.reqs.length+'</span></button>';
+      return '<button class="sub-item'+(x.id===sel.id?' on':'')+'" data-subsel="'+x.id+'" role="listitem"><span class="sub-dot '+st+'">'+(st==='submitted'?ic('check',3):'')+'</span><span class="sub-t"><b>'+esc(x.title)+'</b><small>'+(st==='submitted'?'Submitted '+short(parse(x.at)):short(d)+(r.c==='soon'?', '+r.t.toLowerCase():''))+' · '+n+'/'+x.reqs.length+'</small></span>'+av(x.owner,'sm')+'</button>';
     }).join('')+'</div>';
     var st=subState(sel), d=dueOf(subMs(sel)), r=rel(d), n=sel.reqs.filter(function(q){return q.d;}).length, pct=Math.round(n/sel.reqs.length*100), by=member(sel.by);
-    h+='<div class="card sub-detail"><div class="sub-head"><div><span class="tag">'+esc(sel.kind)+'</span><h2>'+esc(sel.title)+'</h2><p class="muted">'+(d?'Due '+short(d)+', '+r.t.toLowerCase():'Due date depends on the final presentation date')+'</p></div><span class="sstat '+st+'">'+SUBL[st]+'</span></div>';
+    h+='<div class="card sub-detail" id="sub-detail"><div class="sub-head"><div><span class="tag">'+esc(sel.kind)+'</span>'+(me&&sel.owner===me?' <span class="tag accent">Yours</span>':'')+'<h2>'+esc(sel.title)+'</h2><p class="muted">'+(d?'Due '+short(d)+', '+r.t.toLowerCase():'Due date depends on the final presentation date')+'</p></div><span class="sstat '+st+'">'+SUBL[st]+'</span></div>';
+    h+='<label class="assign">Assigned to '+av(sel.owner,'sm')+'<select data-subowner="'+sel.id+'" aria-label="Assigned to"><option value="">Whole team</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(sel.owner===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>';
     h+='<div class="sub-prog"><div class="bar"><b style="width:'+pct+'%"></b></div><span>'+n+' of '+sel.reqs.length+' requirements met</span></div>';
     h+='<ul class="reqs">'+sel.reqs.map(function(q,i){ return '<li><button class="check '+(q.d?'done':'')+'" data-req="'+sel.id+'" data-ri="'+i+'" aria-label="'+(q.d?'Met':'Not met')+': '+esc(q.t)+'">'+(q.d?ic('check',3):'')+'</button><span class="'+(q.d?'met':'')+'">'+esc(q.t)+'</span></li>'; }).join('')+'</ul>';
     if(st==='submitted'){
@@ -731,16 +852,16 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
       } else if(UPLOAD_URL){
         upl='<div class="upl wide-f"><a class="btn" href="'+esc(UPLOAD_URL)+'?d='+sel.id+'" target="_blank" rel="noopener">'+ic('inbox')+'Open the Drive upload page</a><small class="muted">Upload there, then paste the link it gives you below.</small></div>';
       }
-      h+='<form class="sub-form" id="sub-form" data-sub="'+sel.id+'">'+upl+'<label for="sf-link">Link to what you submitted<input class="input" id="sf-link" type="text" inputmode="url" autocomplete="off" placeholder="Drive, Canva, YouTube or Loom link" value="'+esc(ui.upLink||sel.link)+'"></label><label for="sf-by">Submitted by<select class="input" id="sf-by"><option value="">Choose</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===me?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>'+
+      var who=me||sel.owner;
+      h+='<form class="sub-form" id="sub-form" data-sub="'+sel.id+'">'+upl+'<label for="sf-link">Link to what you submitted<input class="input" id="sf-link" type="text" inputmode="url" autocomplete="off" placeholder="Drive, Canva, YouTube or Loom link" value="'+esc(ui.upLink||sel.link)+'"></label><label for="sf-by">Submitted by<select class="input" id="sf-by"><option value="">Choose</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===who?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></label>'+
         (n<sel.reqs.length?'<p class="warn">'+ic('help')+(sel.reqs.length-n)+' requirement'+(sel.reqs.length-n===1?' is':'s are')+' not ticked yet. You can still mark it submitted.</p>':'')+
         '<div class="sub-acts"><button type="button" class="btn" data-subform="0">Cancel</button><button type="submit" class="btn primary">'+ic('send')+'Mark as submitted</button></div></form>';
     } else {
-      h+='<div class="sub-acts">'+(st==='review'?'<button class="btn" data-subreview="'+sel.id+'">Back to in progress</button>':'<button class="btn" data-subreview="'+sel.id+'">'+ic('users')+'Ready for review</button>')+'<button class="btn primary" data-subform="1">'+ic('send')+'Mark as submitted</button></div>';
+      h+='<div class="sub-acts">'+(st==='review'?'<button class="btn" data-subreview="'+sel.id+'">Back to in progress</button>':'<button class="btn" data-subreview="'+sel.id+'">'+ic('users')+'Ready for review</button>')+'<button class="btn primary" data-subform="1">'+ic('send')+'Upload and submit</button></div>';
     }
     h+='</div></div>';
     return h;
   }
-
 
   function pickUp(file){ if(!file) return; upFile=file; var n=document.getElementById('sf-fname'), dz=document.getElementById('sf-drop'); if(n) n.textContent=file.name+' ('+(file.size/1048576).toFixed(1)+' MB)'; if(dz) dz.classList.add('has'); var m=document.getElementById('sf-msg'); if(m){ m.textContent=''; m.className='upl-msg'; } }
   function doUpload(sid){
@@ -798,7 +919,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
       ['Who is responsible','<p>Victor Tarra manages the portal for the group and acts as the contact person for privacy concerns. The other members, '+state.members.filter(function(m){return m.id!=='tarra';}).map(function(m){return esc(m.first+' '+m.last);}).join(', ')+', can also view and edit the information.</p>'],
       ['What information we process','<ul><li><b>Member information:</b> first and last names, project roles and focus areas, and initials shown on avatars.</li><li><b>Project activity:</b> task owners and status, project ideas, votes, updates you post, and links to project files.</li><li><b>Preferences on your device:</b> your selected name (“Who are you?”), light or dark theme, and whether you have seen the tour. These are saved in your browser’s local storage and are not sent to us.</li></ul><p>We do not ask for and do not want sensitive personal information, such as health, religion, government ID numbers or financial details. Please don’t enter it.</p>'],
       ['Why we process it','<p>Only to plan, divide and track work on our SYSANDE finals project, and to prepare the SRS, promotional video and presentation. We will not use the information for any other purpose, sell it, or use it for marketing.</p>'],
-      ['Where it is stored and who can see it','<ul><li><b>Claude-hosted version:</b> the shared data is stored inside the page on Anthropic’s Claude service and is visible only to people the owner shares it with.</li><li><b>GitHub Pages version:</b> the page itself is public. Member names and roles shown on the page can be seen by anyone with the link. Changes you make are saved only in your own browser.</li><li><b>Third-party services:</b> loading the page contacts GitHub (hosting) and Google Fonts (typeface), which may receive your IP address and browser details under their own privacy policies. Linked files on Google Drive, Canva and Figma follow those services’ policies.</li></ul>'],
+      ['Where it is stored and who can see it','<ul><li><b>Claude-hosted version:</b> the shared data is stored inside the page on Anthropic’s Claude service and is visible only to people the owner shares it with.</li><li><b>GitHub Pages version:</b> the page itself is public. Member names and roles shown on the page can be seen by anyone with the link. Changes you make are saved only in your own browser.</li><li><b>Uploaded files:</b> files you upload under Submissions pass through a Google Apps Script web app and are stored in the group’s Google Drive folder, owned by Victor Tarra’s Google account. They follow that folder’s sharing settings.</li><li><b>Third-party services:</b> loading the page contacts GitHub (hosting) and Google Fonts (typeface), which may receive your IP address and browser details under their own privacy policies. Linked files on Google Drive, Canva and Figma follow those services’ policies.</li></ul>'],
       ['How long we keep it','<p>We keep the information until the end of the current term, after final grades are released. After that, the group will delete the shared data or archive the repository, unless all members agree to keep it for a portfolio.</p>'],
       ['How we protect it','<p>Edit access is limited to group members. We keep the information to the minimum needed for the project, in line with the principles of transparency, legitimate purpose and proportionality. Members agree not to copy portal data outside the group without permission.</p>'],
       ['Survey and interview data (elicitation)','<p>For our elicitation, we will tell respondents what the survey is for and ask for their consent before collecting answers. We will collect only what we need, keep raw responses in a restricted Drive folder, and share only anonymized or summarized results in the portal, the SRS and the presentation.</p>'],
@@ -835,7 +956,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     mo.addEventListener('mousedown',function(e){ if(e.target===mo) closeModal(); });
     var f=document.getElementById(me?'i-name':'i-by'); if(f) f.focus();
   }
-  function closeModal(){ var m=document.getElementById('idea-modal'); if(m) m.remove(); }
+  function closeModal(){ document.querySelectorAll('#idea-modal,#app-modal').forEach(function(m){ if(m.dataset.news){ try{ localStorage.setItem(VK,APP_VERSION); }catch(e){} } m.remove(); }); }
 
   /* ---------- saving ---------- */
   function commit(msg){ var y=window.scrollY; render(); window.scrollTo(0,y);
@@ -853,6 +974,8 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 
   document.addEventListener('click',function(e){
     var a=e.target.closest('[data-goto-group]'); if(a){ ui.taskFilter=a.dataset.gotoGroup; }
+    var gs=e.target.closest('[data-gosub]'); if(gs){ ui.subSel=gs.dataset.gosub; ui.subFilter='all'; ui.subForm=false; }
+    var cn=e.target.closest('a[data-closenews]'); if(cn){ closeNews(); }
     var j=e.target.closest('[data-jump]'); if(j){ e.preventDefault(); var t=document.getElementById(j.dataset.jump); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); return; }
     var b=e.target.closest('button,[data-menu]'); if(!b) return; var d=b.dataset;
     if(d.status){ popKey='[data-status="'+d.status+'"]'; var it=findItem(d.status); it.status=STATUSES[(STATUSES.indexOf(it.status)+1)%3]; commit(it.status==='done'?'Marked done':''); }
@@ -870,11 +993,19 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     else if(d.menu){ re(function(){ ui.menu=d.menu==='1'; }); }
     else if(d.themeSet){ themePref=d.themeSet; try{ localStorage.setItem(TK,themePref); }catch(err){} applyTheme(); document.querySelectorAll('[data-theme-set]').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.themeSet===themePref)); }); }
     else if(d.consent){ try{ localStorage.setItem(CK,'1'); }catch(err){} var c=document.getElementById('consent'); if(c){ c.classList.add('out'); setTimeout(function(){ c.remove(); },250); } }
-    else if(d.subsel){ re(function(){ ui.subSel=d.subsel; ui.subForm=false; ui.upLink=''; upFile=null; }); }
+    else if(d.subsel){ re(function(){ ui.subSel=d.subsel; ui.subForm=false; ui.upLink=''; upFile=null; }); if(window.innerWidth<=1000){ var sd=document.getElementById('sub-detail'); if(sd) sd.scrollIntoView({behavior:'smooth',block:'start'}); } }
     else if(d.req){ var sb=state.submissions.filter(function(x){return x.id===d.req;})[0]; sb.reqs[+d.ri].d=!sb.reqs[+d.ri].d; popKey='[data-req="'+d.req+'"][data-ri="'+d.ri+'"]'; commit(); }
     else if(d.subform){ re(function(){ ui.subForm=d.subform==='1'; }); var lf=document.getElementById('sf-link'); if(lf) lf.focus(); }
     else if(d.subreview){ var sr=state.submissions.filter(function(x){return x.id===d.subreview;})[0]; sr.status=sr.status==='review'?'not':'review'; commit(sr.status==='review'?'Marked ready for review':'Back to in progress'); }
     else if(d.subundo){ var su=state.submissions.filter(function(x){return x.id===d.subundo;})[0]; su.status='not'; su.at=''; commit('Submission undone'); }
+    else if(d.edittask){ openTask(d.edittask); }
+    else if(d.newtask){ openTask('', d.newtask==='1'?ui.taskFilter:d.newtask); }
+    else if(d.deltask){ if(!d.armed){ d.armed='1'; b.textContent='Click again to delete'; return; } state.milestones.forEach(function(ms){ ms.items=ms.items.filter(function(i){return i.id!==d.deltask;}); }); closeModal(); commit('Task deleted'); }
+    else if(d.subfilter){ re(function(){ ui.subFilter=d.subfilter; ui.subForm=false; }); }
+    else if(d.news){ openNews(); }
+    else if(d.closenews){ closeNews(); }
+    else if(d.pickme){ if(window.innerWidth<=860){ re(function(){ ui.menu=true; }); } var msel=document.getElementById('me-select'); if(msel){ msel.focus(); try{ if(msel.showPicker) msel.showPicker(); }catch(err){} } }
+    else if(d.reload){ location.replace(location.pathname+'?v='+encodeURIComponent(d.reload)+location.hash); }
     else if(d.guide){ openGuide(0); }
     else if(d.g){ guideNav(d.g); }
   });
@@ -882,6 +1013,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     var el=e.target, d=el.dataset;
     if(el.id==='f-final'){ state.finalDate=el.value; commit('Presentation date set'); }
     else if(el.id==='me-select'){ me=el.value; try{ localStorage.setItem('sysande-me',me); }catch(err){} re(function(){}); if(me) toast('Hi, '+member(me).first); }
+    else if(d.subowner){ var so=state.submissions.filter(function(x){return x.id===d.subowner;})[0]; so.owner=el.value; commit(el.value?'Assigned to '+member(el.value).first:'Assigned to the whole team'); }
     else if(d.owner){ findItem(d.owner).owner=el.value; commit(); }
     else if(d.mrole){ member(d.mrole).role=el.value.trim(); commit('Role saved'); }
     else if(d.mfocus){ member(d.mfocus).focus=el.value.trim(); commit('Saved'); }
@@ -893,6 +1025,17 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
   document.addEventListener('submit',function(e){
     e.preventDefault(); var f=e.target;
     if(f.dataset.linkform){ var v=document.getElementById('link-'+f.dataset.linkform).value.trim(); if(v&&!/^https?:\/\//i.test(v)) v='https://'+v; state.links.forEach(function(k){ if(k.id===f.dataset.linkform) k.url=v; }); ui.editingLink=null; commit(v?'Link saved':'Link removed'); }
+    else if(f.id==='task-form'){
+      var tx=document.getElementById('t-text').value.trim(); if(!tx){ toast('Write the task first'); return; }
+      var tid=f.dataset.task, tms=document.getElementById('t-ms').value, tow=document.getElementById('t-owner').value, tst=document.getElementById('t-status').value;
+      var target=state.milestones.filter(function(m){return m.id===tms;})[0];
+      if(tid){ var cur=null, curM=null; allTasks().forEach(function(t){ if(t.i.id===tid){ cur=t.i; curM=t.m; } });
+        if(!cur){ closeModal(); return; }
+        cur.text=tx; cur.owner=tow; cur.status=tst;
+        if(curM.id!==tms){ curM.items=curM.items.filter(function(i){return i!==cur;}); target.items.push(cur); }
+        closeModal(); commit('Task saved');
+      } else { target.items.push({id:uid(),text:tx,owner:tow,status:tst}); closeModal(); commit('Task added'); }
+    }
     else if(f.id==='sub-form'){
       var sx=state.submissions.filter(function(x){return x.id===f.dataset.sub;})[0];
       var lk=document.getElementById('sf-link').value.trim(); if(lk&&!/^https?:\/\//i.test(lk)) lk='https://'+lk;
@@ -916,7 +1059,8 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     {t:'Welcome to the SYSANDE portal',p:'Everything for our finals in one place: ideas, tasks, deadlines and files. This takes 30 seconds.',d:function(){ return '<div class="stack">'+state.members.map(function(m){return av(m.id);}).join('')+'</div><b>Arradaza, Barba, Grefaldeo, Tarra</b>'; }},
     {t:'Tell the portal who you are',p:'Pick your name at the top of the sidebar. Home will then show your own tasks first.',d:function(){ return '<span class="av sm empty">?</span><b>Who are you?</b>'; }},
     {t:'Post ideas and support them',p:'Go to Ideas and press New idea. Tap your initials on an idea to support it. When we agree, press Choose. Claude AI’s examples have their own tab.',d:function(){ return '<span class="btn primary sm">'+ic('plus')+'New idea</span><button class="vote" style="--c:var(--m-tarra)" aria-pressed="true">VT</button>'; }},
-    {t:'Update your tasks',p:'Click a task’s checkbox or status to move it from To do, to In progress, to Done. Switch to Board view to see everything at a glance.',d:function(){ return '<span class="pill todo">To do</span><span class="pill doing">In progress</span><span class="pill done">Done</span>'; }},
+    {t:'Update and edit your tasks',p:'Click a task’s checkbox or status to move it from To do, to In progress, to Done. Click the task itself to edit it, and press New task to add one.',d:function(){ return '<span class="pill todo">To do</span><span class="pill doing">In progress</span><span class="pill done">Done</span>'; }},
+    {t:'Turn in work under Submissions',p:'Each deliverable has an owner and a checklist from the finals guide. Upload the file to our Google Drive with the team code, then mark it submitted.',d:function(){ return '<span class="sstat review">Ready for review</span><span class="sstat submitted">Submitted</span>'; }},
     {t:'Light or dark',p:'Switch themes at the bottom of the sidebar. Auto follows your device.',d:function(){ return themeSwitch(); }},
     {t:'How saving works',p:'',d:function(){ return '<span class="sync" style="padding:0">'+syncText()+'</span>'; }}
   ];
@@ -938,13 +1082,17 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
       '<div class="g-foot"><div class="g-dots">'+STEPS.map(function(_,i){return '<i class="'+(i===step?'on':'')+'"></i>';}).join('')+'</div><div style="display:flex;gap:8px">'+(last?'':'<button class="btn ghost" data-g="skip">Skip</button>')+(step?'<button class="btn" data-g="back">Back</button>':'')+'<button class="btn primary" data-g="next" id="g-next">'+(last?'Get started':'Next')+'</button></div></div></div>';
     var n=document.getElementById('g-next'); if(n) n.focus(); }
   function openGuide(i){ lastFocus=document.activeElement; step=i||0; gEl().hidden=false; drawGuide(); }
-  function closeGuide(){ gEl().hidden=true; try{ localStorage.setItem(GK,'1'); }catch(e){} if(lastFocus&&lastFocus.focus) lastFocus.focus(); }
+  function closeGuide(){ gEl().hidden=true; try{ localStorage.setItem(GK,'1'); localStorage.setItem(VK,APP_VERSION); }catch(e){} if(lastFocus&&lastFocus.focus) lastFocus.focus(); }
   function guideNav(a){ if(a==='skip') return closeGuide(); if(a==='back'){ step=Math.max(0,step-1); return drawGuide(); } if(step===STEPS.length-1) return closeGuide(); step++; drawGuide(); }
   document.addEventListener('keydown',function(e){ var g=document.getElementById('guide'); if(!g||g.hidden) return; if(e.key==='Escape') closeGuide(); else if(e.key==='ArrowRight') guideNav('next'); else if(e.key==='ArrowLeft') guideNav('back'); });
 
+  function showUpdate(v){ if(document.getElementById('update-bar')) return; var el=document.createElement('div'); el.id='update-bar'; el.className='update-bar'; el.setAttribute('role','status'); el.innerHTML=ic('spark')+'<span>The portal was just updated.</span><button class="btn sm" data-reload="'+esc(v)+'">Refresh</button>'; document.body.appendChild(el); }
+  function checkUpdate(){ if(window.claude||!/^https?:$/.test(location.protocol)) return; fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){ if(j&&j.version&&j.version!==APP_VERSION) showUpdate(j.version); }).catch(function(){}); }
+  setInterval(checkUpdate,120000); setTimeout(checkUpdate,5000);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) checkUpdate(); });
   render();
-  showLoader().then(function(){ lastView=null; render(); var s=false; try{ s=!!localStorage.getItem(GK); }catch(e){} if(!s) openGuide(0); });
-  function loadLocal(){ try{ var s=localStorage.getItem(LS_KEY); if(s){ state=JSON.parse(s); if(!state.ideas) state.ideas=[]; ensureSubs(); } }catch(e){} }
+  showLoader().then(function(){ lastView=null; render(); var s=false; try{ s=!!localStorage.getItem(GK); }catch(e){} if(!s) openGuide(0); else if(!newsSeen()) openNews(); });
+  function loadLocal(){ try{ var s=localStorage.getItem(LS_KEY); if(s){ state=JSON.parse(s); if(!state.ideas) state.ideas=[]; ensureSubs(); fixSubs(); } }catch(e){} }
   var cl=window.claude;
   if(cl&&typeof cl.use==='function'){ cl.use('artifact').then(function(a){ if(a){ api=a; mode='shared'; } else { mode='local'; loadLocal(); } render(); }).catch(function(){ mode='local'; loadLocal(); render(); }); }
   else { mode='local'; loadLocal(); render(); }
