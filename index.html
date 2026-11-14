@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Finals Project Portal</title>
+<title>SYSANDE Finals Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="app-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -689,7 +689,7 @@ nav.index .help:hover{border-color:var(--ink)}
 
   function buildDoc(){
     var json = JSON.stringify(state).replace(/</g,'\\u003c');
-    var head = '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Finals Project Portal</title>\n'+
+    var head = '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>SYSANDE Finals Portal</title>\n'+
       '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
       document.getElementById('app-fonts').outerHTML+'\n'+document.getElementById('app-style').outerHTML;
     return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'+head+'\n</head>\n<body>\n'+
