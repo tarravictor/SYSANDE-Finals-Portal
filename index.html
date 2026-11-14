@@ -330,6 +330,28 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 .btn:active,.chip:active,.vote:active,.check:active,.pill:active{transform:scale(.96)}
 .li,.trow,.frow{transition:background-color .15s}
 
+.legal{padding:30px 34px 26px;max-width:820px}
+.legal-head{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.legal-head h2{font-size:26px;letter-spacing:-.02em}
+.legal-head p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
+.legal-toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px;padding:16px 0;border-bottom:1px solid var(--border)}
+.legal-toc a{color:var(--muted);text-decoration:none;font-size:13.5px;padding:3px 0}
+.legal-toc a:hover{color:var(--accent-text)}
+.legal section{padding-top:22px;scroll-margin-top:76px}
+.legal h3{font-size:16px;margin-bottom:8px}
+.legal p,.legal li{max-width:68ch;color:var(--text);line-height:1.65}
+.legal p{margin:0 0 10px}
+.legal ul{margin:0 0 10px;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.legal-foot{margin-top:24px !important;padding-top:16px;border-top:1px solid var(--border);color:var(--muted) !important;font-size:13px}
+.legal-links{display:flex;gap:14px;padding:0 6px}
+.legal-links a{color:var(--faint);font-size:12.5px;text-decoration:none}
+.legal-links a:hover,.legal-links a[aria-current]{color:var(--text)}
+.consent{position:fixed;right:20px;bottom:20px;z-index:70;max-width:440px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);animation:rise .4s cubic-bezier(.2,.75,.25,1) both;transition:opacity .25s,transform .25s}
+.consent.out{opacity:0;transform:translateY(10px)}
+.consent p{margin:0;font-size:13.5px;color:var(--muted)}
+.consent .ri{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;flex:none}
+@media (max-width:860px){.consent{left:12px;right:12px;bottom:12px;max-width:none;flex-wrap:wrap}.legal{padding:22px 18px}.legal-toc{grid-template-columns:1fr}}
+
 /* loader */
 .loader{position:fixed;inset:0;z-index:90;background:var(--bg);display:grid;place-items:center;transition:opacity .3s}
 .loader.hide{opacity:0;pointer-events:none}
@@ -400,7 +422,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
       function f(t){ if(!t0) t0=t; var p=Math.min(1,(t-t0)/800), e=1-Math.pow(1-p,3); el.textContent=Math.round(to*e); if(p<1) requestAnimationFrame(f); }
       setTimeout(function(){ requestAnimationFrame(f); },200); });
   }
-  var VIEWS=['home','ideas','tasks','files','team','rules','updates'];
+  var VIEWS=['home','ideas','tasks','files','team','rules','updates','terms','privacy'];
   var STATUSES=['todo','doing','done'], SL={todo:'To do',doing:'In progress',done:'Done'};
   var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -466,24 +488,25 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 
   /* ---------- shell ---------- */
   var NAV=[['home','home','Home'],['ideas','bulb','Ideas'],['tasks','tasks','Tasks'],['files','folder','Files'],['team','users','Team'],['rules','award','Rules & grading'],['updates','message','Updates']];
-  var TITLES={home:'Home',ideas:'Project ideas',tasks:'Tasks',files:'Files',team:'Team',rules:'Rules & grading',updates:'Updates'};
+  var TITLES={home:'Home',ideas:'Project ideas',tasks:'Tasks',files:'Files',team:'Team',rules:'Rules & grading',updates:'Updates',terms:'Terms and Conditions',privacy:'Data Privacy Notice'};
   function counts(){ var open=allTasks().filter(function(x){return x.i.status!=='done';}).length; return {ideas:state.ideas.length, tasks:open, updates:state.log.length}; }
   function render(){
     var c=counts();
     var side='<aside class="side'+(ui.menu?' open':'')+'" aria-label="Main menu"><div class="ws"><div class="logo">S</div><div><b>SYSANDE Finals</b><small>Group of '+state.members.length+(state.course?'':'')+'</small></div></div>'+
       '<div class="me">'+(me?av(me,'sm'):'<span class="av sm empty">?</span>')+'<select id="me-select" aria-label="Who are you?"><option value="">Who are you?</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(me===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></div>'+
       NAV.map(function(n){ var cnt=c[n[0]]; return '<a class="nav-i'+(ui.view===n[0]?' on':'')+'" href="#'+n[0]+'"'+(ui.view===n[0]?' aria-current="page"':'')+'>'+ic(n[1])+'<span>'+n[2]+'</span>'+(cnt?'<span class="count">'+cnt+'</span>':'')+'</a>'; }).join('')+
-      '<div class="side-foot"><button class="link-btn" data-guide="1">'+ic('help')+'How to use the portal</button>'+themeSwitch()+'<div class="sync">'+syncText()+'</div></div></aside><div class="scrim'+(ui.menu?' open':'')+'" data-menu="0"></div>';
+      '<div class="side-foot"><button class="link-btn" data-guide="1">'+ic('help')+'How to use the portal</button><div class="legal-links"><a href="#terms"'+(ui.view==='terms'?' aria-current="page"':'')+'>Terms</a><a href="#privacy"'+(ui.view==='privacy'?' aria-current="page"':'')+'>Privacy notice</a></div>'+themeSwitch()+'<div class="sync">'+syncText()+'</div></div></aside><div class="scrim'+(ui.menu?' open':'')+'" data-menu="0"></div>';
     var action='';
     if(ui.view==='ideas') action='<button class="btn primary" data-newidea="1">'+ic('plus')+'New idea</button>';
     else if(ui.view==='tasks') action='<div class="seg hide-sm" role="group" aria-label="Layout"><button data-tview="list" aria-pressed="'+(ui.taskView==='list')+'">'+ic('list')+'List</button><button data-tview="board" aria-pressed="'+(ui.taskView==='board')+'">'+ic('board')+'Board</button></div>';
     else if(ui.view==='home') action='<button class="btn hide-sm" data-newidea="1">'+ic('plus')+'New idea</button>';
     var top='<header class="top"><button class="menu-btn" data-menu="1" aria-label="Open menu">'+ic('menu')+'</button><h1><span class="crumb">'+esc(state.course||'Finals')+' / </span>'+TITLES[ui.view]+'</h1><div class="top-actions">'+action+'</div></header>';
-    var body={home:home,ideas:ideasView,tasks:tasksView,files:filesView,team:teamView,rules:rulesView,updates:updatesView}[ui.view]();
+    var body={home:home,ideas:ideasView,tasks:tasksView,files:filesView,team:teamView,rules:rulesView,updates:updatesView,terms:termsView,privacy:privacyView}[ui.view]();
     var entering = ui.view!==lastView; lastView=ui.view;
     document.getElementById('app').innerHTML='<div class="app">'+side+'<div class="main">'+top+'<div class="page'+(entering?' enter':'')+'">'+body+'</div></div></div>';
     document.querySelectorAll('.ideas-grid > *, .team > *, .col .kc, .frow, .rule').forEach(function(el,i){ el.style.setProperty('--i', i%12); });
     if(entering) countUp();
+    drawConsent();
     if(popKey){ document.querySelectorAll(popKey).forEach(function(el){ el.classList.add('pop'); }); popKey=null; }
   }
   function syncText(){ if(mode==='shared') return '<i class="ok"></i>Saved for the whole group'; if(mode==='readonly') return '<i></i>View only'; if(mode==='local') return '<i></i>Saved on this device only'; return '<i></i>Connecting…'; }
@@ -599,6 +622,54 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
       '<div class="list feed">'+(state.log.length?state.log.slice().reverse().map(function(e){ return feedLine(e).replace('</div></div>','</div><button class="btn sm ghost" data-dellog="'+e.id+'" aria-label="Delete update" title="Delete">'+ic('trash')+'</button></div>'); }).join(''):'<div class="empty-state">No updates yet.</div>')+'</div></div>';
   }
 
+
+  /* ---------- legal ---------- */
+  var LEGAL_DATE='November 14, 2026';
+  function legalShell(title, intro, sections){
+    return '<div class="card legal"><div class="legal-head"><span class="tag accent">Effective '+LEGAL_DATE+'</span><h2>'+title+'</h2><p>'+intro+'</p></div>'+
+      '<nav class="legal-toc" aria-label="On this page">'+sections.map(function(x,i){return '<a href="#'+ui.view+'" data-jump="lg-'+i+'">'+(i+1)+'. '+x[0]+'</a>';}).join('')+'</nav>'+
+      sections.map(function(x,i){return '<section id="lg-'+i+'"><h3>'+(i+1)+'. '+x[0]+'</h3>'+x[1]+'</section>';}).join('')+
+      '<p class="legal-foot">This notice was written for a student project and is not legal advice. For questions about the Data Privacy Act, see the National Privacy Commission at <a href="https://privacy.gov.ph" target="_blank" rel="noopener">privacy.gov.ph</a>.</p></div>';
+  }
+  function memberNames(){ return state.members.map(function(m){return esc(m.first+' '+m.last);}).join(', '); }
+  function termsView(){
+    return legalShell('Terms and Conditions','These terms apply to everyone who opens or edits the SYSANDE Finals Portal. By using the portal, you agree to them.',[
+      ['What this portal is','<p>The SYSANDE Finals Portal is a planning tool made by '+memberNames()+' for our finals project in SYSANDE at De La Salle-College of Saint Benilde. It is not an official school system, and it is not endorsed by the college or the course instructor.</p>'],
+      ['Who may use it','<p>The portal is meant for the four group members. Classmates or instructors may view it if a member shares the link with them. Anyone without edit access can view the page but cannot save changes.</p>'],
+      ['Acceptable use','<ul><li>Post only content related to our finals project.</li><li>Be respectful. No offensive, harassing or discriminatory content.</li><li>Don’t delete or change another member’s idea, task or update without telling them first.</li><li>Don’t post passwords, ID numbers, financial details, or any sensitive personal information (see the Data Privacy Notice).</li><li>Don’t post personal data of survey or interview respondents. Keep elicitation results anonymized.</li></ul>'],
+      ['Accuracy of deadlines and rules','<p>Deadlines and grading weights come from the finals presentation guide given to our class. If the instructor announces a change, the instructor’s announcement wins. Always confirm important dates in class or on the official course channel.</p>'],
+      ['AI-generated content','<p>The three project ideas marked <b>Examples by Claude AI</b> were drafted by an AI assistant as starting points. Members must review, verify and rewrite any AI-assisted content before using it in a graded output, and follow the college’s academic integrity policies and the instructor’s rules on AI use.</p>'],
+      ['Ownership of work','<p>Ideas, documents and designs created by the group belong to the group members. Files linked from the portal, such as Google Drive, Canva and Figma files, stay under the sharing settings of those services.</p>'],
+      ['Availability','<p>The portal is provided as is, without any guarantee that it will always be online or error free. Keep your own copies of important files in the shared Drive folder. On the GitHub Pages version, changes are saved in your browser only and can be lost if you clear your browser data.</p>'],
+      ['Changes to these terms','<p>The group may update these terms. The effective date at the top will change when we do, and we will tell members in the group chat.</p>'],
+      ['Contact','<p>For questions about these terms, contact Victor Tarra through the group chat.</p>']
+    ]);
+  }
+  function privacyView(){
+    return legalShell('Data Privacy Notice','This notice explains what personal information the portal handles, why, and your rights under Republic Act No. 10173, the Data Privacy Act of 2012.',[
+      ['Who is responsible','<p>Victor Tarra manages the portal for the group and acts as the contact person for privacy concerns. The other members, '+state.members.filter(function(m){return m.id!=='tarra';}).map(function(m){return esc(m.first+' '+m.last);}).join(', ')+', can also view and edit the information.</p>'],
+      ['What information we process','<ul><li><b>Member information:</b> first and last names, project roles and focus areas, and initials shown on avatars.</li><li><b>Project activity:</b> task owners and status, project ideas, votes, updates you post, and links to project files.</li><li><b>Preferences on your device:</b> your selected name (“Who are you?”), light or dark theme, and whether you have seen the tour. These are saved in your browser’s local storage and are not sent to us.</li></ul><p>We do not ask for and do not want sensitive personal information, such as health, religion, government ID numbers or financial details. Please don’t enter it.</p>'],
+      ['Why we process it','<p>Only to plan, divide and track work on our SYSANDE finals project, and to prepare the SRS, promotional video and presentation. We will not use the information for any other purpose, sell it, or use it for marketing.</p>'],
+      ['Where it is stored and who can see it','<ul><li><b>Claude-hosted version:</b> the shared data is stored inside the page on Anthropic’s Claude service and is visible only to people the owner shares it with.</li><li><b>GitHub Pages version:</b> the page itself is public. Member names and roles shown on the page can be seen by anyone with the link. Changes you make are saved only in your own browser.</li><li><b>Third-party services:</b> loading the page contacts GitHub (hosting) and Google Fonts (typeface), which may receive your IP address and browser details under their own privacy policies. Linked files on Google Drive, Canva and Figma follow those services’ policies.</li></ul>'],
+      ['How long we keep it','<p>We keep the information until the end of the current term, after final grades are released. After that, the group will delete the shared data or archive the repository, unless all members agree to keep it for a portfolio.</p>'],
+      ['How we protect it','<p>Edit access is limited to group members. We keep the information to the minimum needed for the project, in line with the principles of transparency, legitimate purpose and proportionality. Members agree not to copy portal data outside the group without permission.</p>'],
+      ['Survey and interview data (elicitation)','<p>For our elicitation, we will tell respondents what the survey is for and ask for their consent before collecting answers. We will collect only what we need, keep raw responses in a restricted Drive folder, and share only anonymized or summarized results in the portal, the SRS and the presentation.</p>'],
+      ['Your rights under RA 10173','<p>As a data subject, you have the right to:</p><ul><li><b>Be informed</b> about whether and how your personal data is processed.</li><li><b>Access</b> your personal data and details about how it is handled.</li><li><b>Object</b> to the processing of your personal data.</li><li><b>Erasure or blocking</b> of your data when it is inaccurate, no longer needed, or processed unlawfully.</li><li><b>Rectification</b> of inaccurate or incomplete data.</li><li><b>Data portability</b>: get a copy of your data in a commonly used electronic format.</li><li><b>Damages</b> for harm caused by inaccurate, unlawfully obtained or unauthorized use of your data.</li><li><b>File a complaint</b> with the National Privacy Commission.</li></ul><p>Your lawful heirs and assigns may also exercise these rights for you if you die or become incapacitated.</p>'],
+      ['How to exercise your rights','<p>Message Victor Tarra in the group chat. You can also correct your own role, focus, tasks and posts directly in the portal. We will act on a request as soon as we can, and within the term at the latest.</p>'],
+      ['Changes to this notice','<p>If we change how we handle information, we will update this notice and its effective date and tell members in the group chat.</p>']
+    ]);
+  }
+  var CK='sysande-consent-v1';
+  function drawConsent(){
+    var ok=false; try{ ok=!!localStorage.getItem(CK); }catch(e){}
+    var ex=document.getElementById('consent');
+    if(ok){ if(ex) ex.remove(); return; }
+    if(ex) return;
+    var el=document.createElement('div'); el.id='consent'; el.className='consent'; el.setAttribute('role','region'); el.setAttribute('aria-label','Privacy notice');
+    el.innerHTML='<span class="ri">'+ic('doc')+'</span><p>This portal shows member names, roles and project activity. Read our <a href="#privacy">Data Privacy Notice</a> (RA 10173) and <a href="#terms">Terms and Conditions</a>.</p><button class="btn primary sm" data-consent="1">I understand</button>';
+    document.body.appendChild(el);
+  }
+
   /* ---------- modal: new idea ---------- */
   function openIdea(){
     var mo=document.createElement('div'); mo.className='modal'; mo.id='idea-modal';
@@ -634,6 +705,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
 
   document.addEventListener('click',function(e){
     var a=e.target.closest('[data-goto-group]'); if(a){ ui.taskFilter=a.dataset.gotoGroup; }
+    var j=e.target.closest('[data-jump]'); if(j){ e.preventDefault(); var t=document.getElementById(j.dataset.jump); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); return; }
     var b=e.target.closest('button,[data-menu]'); if(!b) return; var d=b.dataset;
     if(d.status){ popKey='[data-status="'+d.status+'"]'; var it=findItem(d.status); it.status=STATUSES[(STATUSES.indexOf(it.status)+1)%3]; commit(it.status==='done'?'Marked done':''); }
     else if(d.vote){ popKey='[data-vote="'+d.vote+'"][data-m="'+d.m+'"]'; var o=findProject(d.vote), i=o.votes.indexOf(d.m); if(i>-1) o.votes.splice(i,1); else o.votes.push(d.m); commit(); }
@@ -649,6 +721,7 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
     else if(d.dellog){ state.log=state.log.filter(function(x){return x.id!==d.dellog;}); commit('Update deleted'); }
     else if(d.menu){ re(function(){ ui.menu=d.menu==='1'; }); }
     else if(d.themeSet){ themePref=d.themeSet; try{ localStorage.setItem(TK,themePref); }catch(err){} applyTheme(); document.querySelectorAll('[data-theme-set]').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.themeSet===themePref)); }); }
+    else if(d.consent){ try{ localStorage.setItem(CK,'1'); }catch(err){} var c=document.getElementById('consent'); if(c){ c.classList.add('out'); setTimeout(function(){ c.remove(); },250); } }
     else if(d.guide){ openGuide(0); }
     else if(d.g){ guideNav(d.g); }
   });
