@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finals Project Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="app-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style id="app-style">
+/* Layout idea: a project binder. Sticky index on the left, sections behind divider tabs, a dated timeline up top. */
+:root{
+  --paper:#EBEDE8; --sheet:#FAFBF8; --ink:#15171C; --muted:#5B6068; --line:#D3D6CF;
+  --accent:#2347D6; --accent-soft:#DDE3FB; --mark:#F2CF3B;
+  --ok:#1E8150; --ok-soft:#D9EFE2; --warn:#A8690F; --warn-soft:#F7E8CC; --bad:#BE3B27;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#101215; --sheet:#171A1E; --ink:#E7E9E4; --muted:#99A0A9; --line:#2A2F36;
+    --accent:#8198FF; --accent-soft:#232C4D; --mark:#E3BF2C;
+    --ok:#5CC48C; --ok-soft:#183325; --warn:#E0A548; --warn-soft:#3A2B12; --bad:#F07A63;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101215; --sheet:#171A1E; --ink:#E7E9E4; --muted:#99A0A9; --line:#2A2F36;
+  --accent:#8198FF; --accent-soft:#232C4D; --mark:#E3BF2C;
+  --ok:#5CC48C; --ok-soft:#183325; --warn:#E0A548; --warn-soft:#3A2B12; --bad:#F07A63;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-0.01em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+.shell{display:grid;grid-template-columns:210px minmax(0,1fr);gap:40px;max-width:1240px;margin:0 auto;padding:32px 28px 80px}
+nav.index{position:sticky;top:24px;align-self:start;display:flex;flex-direction:column;gap:2px}
+nav.index .brand{font:800 13px/1.2 var(--f-display);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;color:var(--muted)}
+nav.index a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--muted);padding:6px 8px;border-radius:4px;font-weight:500}
+nav.index a span{font:600 11px var(--f-mono);color:var(--muted);opacity:.7;width:18px}
+nav.index a:hover{color:var(--ink);background:var(--sheet)}
+nav.index .sync{margin-top:22px;font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;padding:0 8px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
+.dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)}
+
+main{display:flex;flex-direction:column;gap:28px;min-width:0}
+header.top{display:flex;flex-direction:column;gap:14px;padding-bottom:6px}
+.kicker{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--muted)}
+.kicker input{background:transparent;border:0;border-bottom:1px dashed var(--line);padding:2px 0;min-width:180px;color:var(--ink);font-weight:600}
+.kicker input:hover{border-bottom-color:var(--muted)}
+header.top h1{font-size:clamp(34px,5vw,54px);line-height:1;font-weight:800}
+header.top h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--mark) 62%);padding:0 2px}
+.roster{display:flex;flex-wrap:wrap;gap:6px}
+.roster span{font:600 12px var(--f-mono);letter-spacing:.04em;padding:4px 8px;border:1px solid var(--line);border-radius:3px;background:var(--sheet)}
+
+/* timeline */
+.timeline{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:20px 22px 18px}
+.tl-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.tl-head h2{font-size:18px}
+.next{font-size:14px;color:var(--muted)}
+.next b{color:var(--ink)}
+.track-wrap{overflow-x:auto}
+.track{position:relative;height:150px;min-width:640px}
+.rail{position:absolute;left:0;right:0;top:74px;height:2px;background:var(--line)}
+.rail-done{position:absolute;left:0;top:74px;height:2px;background:var(--ink)}
+.today{position:absolute;top:56px;width:2px;height:38px;background:var(--bad)}
+.today b{position:absolute;top:22px;left:6px;font:600 10px var(--f-mono);color:var(--bad);letter-spacing:.06em;white-space:nowrap}
+.pin{position:absolute;top:68px;width:14px;height:14px;margin-left:-7px;border:2px solid var(--ink);background:var(--sheet);transform:rotate(45deg)}
+.pin.past{background:var(--ink)}
+.pin.soon{border-color:var(--warn);background:var(--warn)}
+.pin-label{position:absolute;width:150px;margin-left:-75px;text-align:center;font-size:12.5px;line-height:1.3}
+.pin-label.up{bottom:92px}
+.pin-label.down{top:92px}
+.pin-label .d{display:block;font:600 11px var(--f-mono);color:var(--muted);margin-bottom:2px}
+.pin-label.tbd .d{color:var(--warn)}
+.month{position:absolute;top:82px;font:600 10px var(--f-mono);color:var(--muted);letter-spacing:.1em;padding-top:4px}
+
+/* sections */
+section.part{position:relative;background:var(--sheet);border:1px solid var(--line);border-radius:0 6px 6px 6px;padding:26px 26px 24px;margin-top:22px;scroll-margin-top:20px}
+.tab{position:absolute;top:-23px;left:-1px;height:23px;padding:3px 12px 0;background:var(--sheet);border:1px solid var(--line);border-bottom:0;border-radius:6px 6px 0 0;font:600 11px var(--f-mono);letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.tab i{font-style:normal;color:var(--accent);margin-right:6px}
+.part-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.part-head h2{font-size:24px;font-weight:700}
+.part-head p{margin:4px 0 0;color:var(--muted);max-width:62ch;font-size:14px}
+
+/* project options */
+.options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:4px}
+.opt{padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;border-left:1px solid var(--line);position:relative}
+.opt:first-child{border-left:0}
+.opt.chosen{background:var(--accent-soft)}
+.opt.chosen::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--accent)}
+.opt h3{font-size:20px;font-weight:700}
+.opt .what{font:600 11px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.opt p{margin:0;font-size:14px}
+.opt ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--muted)}
+.sdg{display:flex;gap:6px;flex-wrap:wrap}
+.sdg span{font:600 11px var(--f-mono);padding:2px 6px;border-radius:3px;background:var(--paper);border:1px solid var(--line)}
+.votes{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px dashed var(--line)}
+.votes .row{display:flex;gap:4px;flex-wrap:wrap}
+.vote{border:1px solid var(--line);background:transparent;border-radius:3px;padding:3px 7px;font:600 11px var(--f-mono);cursor:pointer;color:var(--muted)}
+.vote.on{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.pick{align-self:flex-start;border:1px solid var(--ink);background:transparent;border-radius:4px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer}
+.opt.chosen .pick{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* tasks */
+.ms{border-top:1px solid var(--line);padding:18px 0 6px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px}
+.ms:first-of-type{border-top:0;padding-top:0}
+.ms-date{display:flex;flex-direction:column;gap:4px}
+.ms-date .d{font:600 15px var(--f-mono)}
+.ms-date .left{font-size:12px;color:var(--muted)}
+.ms-date .left.urgent{color:var(--bad);font-weight:600}
+.ms-date .left.soon{color:var(--warn);font-weight:600}
+.meter{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:6px}
+.meter b{display:block;height:100%;background:var(--ok)}
+.ms h3{font-size:17px;margin-bottom:4px}
+.ms .note{font-size:13px;color:var(--muted);margin:0 0 10px}
+.ms .note strong{color:var(--warn)}
+table.tasks{width:100%;border-collapse:collapse;font-size:14px}
+.tasks td{padding:7px 8px 7px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+.tasks tr:last-child td{border-bottom:0}
+.tasks td.t{width:100%}
+.tasks tr.done td.t{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
+.status{border:0;border-radius:3px;padding:3px 8px;font:600 11px var(--f-mono);letter-spacing:.04em;cursor:pointer;white-space:nowrap;min-width:64px}
+.status.todo{background:var(--paper);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+.status.doing{background:var(--warn-soft);color:var(--warn)}
+.status.done{background:var(--ok-soft);color:var(--ok)}
+.owner{background:transparent;border:1px solid var(--line);border-radius:3px;padding:3px 4px;font-size:12.5px;max-width:120px}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:4px}
+.member{padding:18px;display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;border-top:1px solid var(--line)}
+.member:nth-child(-n+2){border-top:0}
+.member:nth-child(even){border-left:1px solid var(--line)}
+.mono-badge{width:48px;height:48px;border-radius:4px;background:var(--ink);color:var(--sheet);display:grid;place-items:center;font:800 18px var(--f-display)}
+.member .name{font:700 17px var(--f-display)}
+.member .name small{font:500 13px var(--f-body);color:var(--muted);margin-left:4px}
+.field{display:block;width:100%;border:0;border-bottom:1px dashed transparent;background:transparent;padding:2px 0;font-size:14px}
+.field:hover{border-bottom-color:var(--line)}
+.field:focus{border-bottom-color:var(--accent);outline:none}
+.field.role{font-weight:600;color:var(--accent)}
+.field.focus{color:var(--muted);font-size:13.5px}
+.load{font:600 11px var(--f-mono);color:var(--muted);margin-top:6px}
+
+/* links */
+.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.link{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:4px}
+.link.set{border-color:var(--ink)}
+.ico{width:34px;height:34px;border-radius:4px;display:grid;place-items:center;background:var(--paper);border:1px solid var(--line)}
+.ico svg{width:18px;height:18px}
+.link .lbl{font-weight:600;font-size:14px}
+.link .hint{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.link a.open{font-weight:600;font-size:13px;text-decoration:none;border:1px solid var(--ink);color:var(--ink);padding:5px 10px;border-radius:4px;white-space:nowrap}
+.link a.open:hover{background:var(--ink);color:var(--sheet)}
+.link .edit{border:0;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;padding:2px}
+.link form{grid-column:1/-1;display:flex;gap:8px}
+.link form input{flex:1;min-width:0;border:1px solid var(--line);border-radius:4px;padding:7px 9px;background:var(--paper);font-size:13px}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--sheet);border-radius:4px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+
+/* rules + grading */
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px}
+.rules{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.rules li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rules li:last-child{border-bottom:0}
+.rules b{font:600 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:3px}
+.bar{display:flex;height:38px;border-radius:4px;overflow:hidden;border:1px solid var(--ink)}
+.bar div{display:flex;align-items:center;padding:0 10px;font:600 13px var(--f-mono);border-left:1px solid var(--ink)}
+.bar div:first-child{border-left:0}
+.bar .a{background:var(--sheet)} .bar .b{background:var(--accent-soft)} .bar .c{background:var(--mark);color:#15171C}
+.legend{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.legend li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dotted var(--line);padding-bottom:6px}
+.legend .mono{font-weight:600}
+
+/* log */
+.log-form{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:8px;margin-bottom:14px}
+.log-form select,.log-form input{border:1px solid var(--line);border-radius:4px;padding:7px 9px;background:var(--paper);font-size:14px}
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.log li{display:grid;grid-template-columns:96px 90px minmax(0,1fr) auto;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:14px;align-items:baseline}
+.log .when{font:12px var(--f-mono);color:var(--muted)}
+.log .who{font-weight:600;font-size:13px}
+.log .x{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:12px}
+.empty{color:var(--muted);font-size:14px;padding:10px 0}
+
+/* loader */
+.loader{position:fixed;inset:0;z-index:60;background:var(--paper);display:grid;place-items:center;transition:opacity .4s ease}
+.loader.hide{opacity:0;pointer-events:none}
+.ld{display:flex;flex-direction:column;align-items:center;gap:18px}
+.ld-stack{position:relative;width:132px;height:92px}
+.ld-sheet{position:absolute;left:0;right:0;height:72px;background:var(--sheet);border:1.5px solid var(--ink);border-radius:0 5px 5px 5px;animation:ldUp 1.1s cubic-bezier(.2,.8,.2,1) both}
+.ld-sheet::before{content:"";position:absolute;top:-11px;left:-1.5px;width:34px;height:11px;background:var(--sheet);border:1.5px solid var(--ink);border-bottom:0;border-radius:4px 4px 0 0}
+.ld-sheet:nth-child(1){top:20px;animation-delay:0s}
+.ld-sheet:nth-child(1)::before{left:auto;right:-1.5px;background:var(--mark)}
+.ld-sheet:nth-child(2){top:10px;animation-delay:.12s}
+.ld-sheet:nth-child(2)::before{left:48px;background:var(--accent-soft)}
+.ld-sheet:nth-child(3){top:0;animation-delay:.24s}
+@keyframes ldUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.ld-bar{width:180px;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.ld-bar b{display:block;height:100%;width:0;background:var(--ink);animation:ldFill 1.3s ease forwards}
+@keyframes ldFill{to{width:100%}}
+.ld-text{font:600 11px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ld-names{font:700 15px var(--f-display);letter-spacing:.02em}
+
+/* guide */
+.guide{position:fixed;inset:0;z-index:55;background:rgba(10,12,16,.55);display:grid;place-items:center;padding:16px}
+.guide[hidden]{display:none}
+.g-card{position:relative;width:min(560px,100%);background:var(--sheet);border:1px solid var(--line);border-radius:0 8px 8px 8px;box-shadow:0 24px 60px rgba(0,0,0,.25);padding:30px 30px 22px;display:flex;flex-direction:column;gap:14px}
+.g-tab{position:absolute;top:-25px;left:-1px;height:25px;padding:4px 12px 0;background:var(--sheet);border:1px solid var(--line);border-bottom:0;border-radius:7px 7px 0 0;font:600 11px var(--f-mono);letter-spacing:.08em;color:var(--muted)}
+.g-tab b{color:var(--accent)}
+.g-card h2{font-size:26px;font-weight:800;line-height:1.1}
+.g-card p{margin:0;color:var(--muted);font-size:15px;max-width:60ch}
+.g-demo{border:1px dashed var(--line);border-radius:5px;padding:14px;background:var(--paper);display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13.5px;min-height:62px}
+.g-demo .status{cursor:default}
+.g-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px}
+.g-dots{display:flex;gap:6px}
+.g-dots i{width:22px;height:4px;border-radius:2px;background:var(--line)}
+.g-dots i.on{background:var(--ink)}
+.g-btns{display:flex;gap:8px}
+.g-skip{border:0;background:transparent;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:4px}
+nav.index .help{margin-top:10px;border:1px solid var(--line);background:var(--sheet);border-radius:4px;padding:7px 8px;text-align:left;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink)}
+nav.index .help:hover{border-color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.ld-sheet,.ld-bar b{animation:none}.ld-bar b{width:100%}.loader{transition:none}}
+@media (max-width:900px){nav.index .help{margin-top:0;white-space:nowrap}}
+
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--sheet);padding:8px 14px;border-radius:4px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion: reduce){.toast{transition:none}}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr;gap:18px;padding:18px 16px 60px}
+  nav.index{position:static;flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:4px}
+  nav.index .brand,nav.index .sync{display:none}
+  nav.index a{white-space:nowrap;background:var(--sheet);border:1px solid var(--line)}
+  .options,.team,.links,.two{grid-template-columns:1fr}
+  .opt{border-left:0;border-top:1px solid var(--line)} .opt:first-child{border-top:0}
+  .member{border-left:0 !important;border-top:1px solid var(--line) !important} .member:first-child{border-top:0 !important}
+  .ms{grid-template-columns:1fr;gap:8px}
+  section.part{padding:22px 16px 18px}
+  .log-form{grid-template-columns:1fr}
+  .log li{grid-template-columns:80px minmax(0,1fr) auto}
+  .log .who{grid-column:2} .log .txt{grid-column:1/-1;grid-row:2}
+}
+</style>
+</head>
+<body>
+<script type="application/json" id="portal-state">{"course":"","finalDate":"","chosen":"","members":[{"id":"arradaza","last":"Arradaza","first":"Maynard","role":"Project Manager / Business Analyst","focus":"Problem definition, objectives, SWOT, keeps deadlines"},{"id":"barba","last":"Barba","first":"Raymond","role":"Requirements Analyst","focus":"Elicitation (survey + interviews), user stories, FR/NFR"},{"id":"grefaldeo","last":"Grefaldeo","first":"Shawn","role":"Systems Analyst","focus":"Use case diagram, DFD (Context, L1, L2), data dictionary"},{"id":"tarra","last":"Tarra","first":"Victor","role":"UI/UX Designer & Media Lead","focus":"High-fidelity Figma, promotional video"}],"options":[{"id":"agos","name":"AgosAlert","what":"Barangay flood risk & response","desc":"Residents report flooding on their street with photos; the system combines this with rainfall data to predict risk per barangay and push early warnings. Officials get a dashboard for evacuation and relief.","solves":["Late or overly general flood warnings","No street-level flood data","Disorganized evacuation and relief"],"ai":"Risk prediction, photo-based water depth estimate, flood heatmaps","sdg":["SDG 11","SDG 13"],"votes":[]},{"id":"tinda","name":"TindaSmart","what":"AI assistant for sari-sari stores","desc":"Store owners log sales and expenses. The app forecasts what will run out, suggests restock amounts, tracks utang, and builds a record owners can show when applying for microloans.","solves":["Overstock and stockouts","Unrecorded customer credit (utang)","No records to qualify for formal loans"],"ai":"Demand forecasting, restock suggestions, credit risk scoring","sdg":["SDG 8","SDG 1"],"votes":[]},{"id":"konsulta","name":"KonsultaQ","what":"Smart queue for health centers","desc":"Patients book a slot and answer guided symptom questions before arriving. Urgent cases are flagged first. Health workers see illness trends per area to catch outbreaks early.","solves":["Long queues at barangay health centers","Urgent cases waiting behind routine ones","Slow detection of local outbreaks"],"ai":"Urgency triage support, outbreak spike detection, volume forecasting","sdg":["SDG 3"],"votes":[]}],"milestones":[{"id":"m1","title":"Feasible project options","due":"2026-11-14","note":"","items":[{"id":"t1","text":"Write 3 project options: name, description, benefits (issues solved)","owner":"arradaza","status":"doing"},{"id":"t2","text":"Run elicitation: short survey + 2–3 stakeholder interviews","owner":"barba","status":"todo"},{"id":"t3","text":"Check each option uses AI & analytics and maps to an SDG","owner":"grefaldeo","status":"todo"},{"id":"t4","text":"Make the slides for the 3 options","owner":"tarra","status":"todo"},{"id":"t5","text":"Vote and lock in the final project","owner":"","status":"todo"}]},{"id":"m2","title":"Promotional video + Canva deck","due":"2026-12-06","note":"The deck needs user stories, use case, DFD, data dictionary and Figma, so those SRS artifacts must be <strong>drafted before Dec 6</strong>, not Dec 28.","items":[{"id":"v1","text":"Video script + storyboard (current issue → system → how it solves it)","owner":"tarra","status":"todo"},{"id":"v2","text":"Record footage, screen captures of the Figma prototype, voice-over","owner":"tarra","status":"todo"},{"id":"v3","text":"Edit to 1–2 minutes, professional look, captions","owner":"tarra","status":"todo"},{"id":"d1","text":"Deck: Project introduction (embed promo video) + Meet the Team","owner":"arradaza","status":"todo"},{"id":"d2","text":"Deck: Problem definition + General & specific objectives","owner":"arradaza","status":"todo"},{"id":"d3","text":"Deck: User stories","owner":"barba","status":"todo"},{"id":"d4","text":"Deck: Use case diagram, DFD, data dictionary","owner":"grefaldeo","status":"todo"},{"id":"d5","text":"Deck: Figma design screens","owner":"tarra","status":"todo"}]},{"id":"m3","title":"Recorded group presentation","due":"rec","note":"Teams or Loom, max 20 minutes, every member presents. Due 1 week before the final presentation.","items":[{"id":"r1","text":"Assign speaking parts for all 4 members","owner":"arradaza","status":"todo"},{"id":"r2","text":"Rehearse once with a timer (stay under 20 min)","owner":"","status":"todo"},{"id":"r3","text":"Record and submit the video","owner":"","status":"todo"}]},{"id":"m4","title":"Software Requirements Specification (SRS)","due":"2026-12-28","note":"Finals paper, 30% of the grade.","items":[{"id":"s1","text":"SWOT analysis","owner":"arradaza","status":"todo"},{"id":"s2","text":"User stories → functional & non-functional requirements (from Weaknesses and Opportunities)","owner":"barba","status":"todo"},{"id":"s3","text":"Figma design (high fidelity)","owner":"tarra","status":"todo"},{"id":"s4","text":"Use case diagram (high level)","owner":"grefaldeo","status":"todo"},{"id":"s5","text":"Data flow diagrams: Context, Level 1, Level 2","owner":"grefaldeo","status":"todo"},{"id":"s6","text":"Data dictionaries","owner":"grefaldeo","status":"todo"},{"id":"s7","text":"Compile, format and proofread the SRS document","owner":"arradaza","status":"todo"}]},{"id":"m5","title":"Final presentation & defense","due":"final","note":"On-site, semi-formal attire, 20-minute Q&A defense.","items":[{"id":"f1","text":"List likely panel questions and assign who answers each","owner":"","status":"todo"},{"id":"f2","text":"Confirm attire and arrival time","owner":"","status":"todo"}]}],"links":[{"id":"drive","label":"Shared Drive folder","hint":"Main Google Drive folder for everything","kind":"drive","url":""},{"id":"srs","label":"SRS document","hint":"Google Doc of the finals paper","kind":"doc","url":""},{"id":"canva","label":"Canva presentation deck","hint":"Edit link to the deck","kind":"canva","url":""},{"id":"figma","label":"Figma file","hint":"High-fidelity screens and prototype","kind":"figma","url":""},{"id":"video","label":"Promotional video","hint":"Drive folder for raw clips and final export","kind":"video","url":""},{"id":"survey","label":"Elicitation survey","hint":"Google Form + responses sheet","kind":"form","url":""},{"id":"diagrams","label":"Diagrams (UCD, DFD)","hint":"draw.io / Lucidchart / Figma board","kind":"diagram","url":""},{"id":"recording","label":"Recorded presentation","hint":"Teams / Loom link for submission","kind":"video","url":""}],"log":[{"id":"l1","date":"2026-11-14","by":"tarra","text":"Portal set up. 3 project options drafted: AgosAlert, TindaSmart, KonsultaQ."}]}</script>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script id="app-script">
+(function(){
+  var SELF = document.currentScript;
+  var STATE_EL = document.getElementById('portal-state');
+  var state = JSON.parse(STATE_EL.textContent);
+  var api = null, mode = 'connecting', timer = null;
+  var LS_KEY = 'finals-portal-local';
+  var editingLink = null;
+
+  var STATUSES = ['todo','doing','done'];
+  var STATUS_LABEL = {todo:'To do', doing:'Doing', done:'Done'};
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function parse(d){ if(!d) return null; var p=d.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function iso(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
+  function today(){ var n=new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function fmt(dt){ return dt ? DAY[dt.getDay()]+', '+MON[dt.getMonth()]+' '+dt.getDate() : 'Date not set'; }
+  function daysTo(dt){ return Math.round((dt - today())/86400000); }
+  function member(id){ for(var i=0;i<state.members.length;i++) if(state.members[i].id===id) return state.members[i]; return null; }
+  function uid(){ return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+  function dueOf(ms){
+    if(ms.due==='final') return parse(state.finalDate);
+    if(ms.due==='rec'){ var f=parse(state.finalDate); if(!f) return null; var r=new Date(f); r.setDate(r.getDate()-7); return r; }
+    return parse(ms.due);
+  }
+  function leftText(dt){
+    if(!dt) return {t:'Set the final presentation date above', c:'soon'};
+    var d=daysTo(dt);
+    if(d<0) return {t:Math.abs(d)+' day'+(d===-1?'':'s')+' ago', c:''};
+    if(d===0) return {t:'Due today', c:'urgent'};
+    if(d===1) return {t:'Due tomorrow', c:'urgent'};
+    return {t:d+' days left', c:d<=7?'soon':''};
+  }
+
+  var ICONS = {
+    drive:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3h8l6 10-4 7H6l-4-7z"/><path d="M8 3l6 10H2M16 3L10 13M14 13h8M6 20l4-7"/></svg>',
+    doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5M9 12h8M9 16h8M9 8h3"/></svg>',
+    canva:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="1"/><path d="M12 17v4M8 21h8M7 9h6M7 12h10"/></svg>',
+    figma:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 2h3v6H9a3 3 0 010-6zM12 2h3a3 3 0 010 6h-3zM9 8h3v6H9a3 3 0 010-6zM12 11a3 3 0 106 0 3 3 0 00-6 0zM9 14h3v3a3 3 0 11-3-3z"/></svg>',
+    video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="14" height="14" rx="1"/><path d="M16 10l6-3v10l-6-3"/></svg>',
+    form:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+    diagram:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="5"/><rect x="14" y="16" width="7" height="5"/><rect x="14" y="3" width="7" height="5"/><path d="M10 5.5h4M17.5 8v8"/></svg>'
+  };
+
+  /* ---------- render ---------- */
+  function render(){
+    var t = today();
+    var allItems=[], doneItems=0;
+    state.milestones.forEach(function(m){ m.items.forEach(function(i){ allItems.push(i); if(i.status==='done') doneItems++; }); });
+    var chosen = state.options.filter(function(o){return o.id===state.chosen;})[0];
+
+    var h = '';
+    h += '<div class="shell">';
+    h += '<nav class="index" aria-label="Sections"><div class="brand">Finals Portal</div>'+
+      '<a href="#timeline"><span>00</span>Timeline</a>'+
+      '<a href="#project"><span>01</span>Project</a>'+
+      '<a href="#tasks"><span>02</span>Deliverables</a>'+
+      '<a href="#team"><span>03</span>Team</a>'+
+      '<a href="#files"><span>04</span>Drive &amp; files</a>'+
+      '<a href="#rules"><span>05</span>Rules &amp; grading</a>'+
+      '<a href="#log"><span>06</span>Team log</a>'+
+      '<button class="help" data-guide="1">How to use this portal</button>'+
+      '<div class="sync">'+syncChip()+'</div></nav>';
+
+    h += '<main>';
+    // header
+    h += '<header class="top"><div class="kicker">'+
+      '<span class="mono">'+esc(fmt(t))+'</span>'+
+      '<label>Course <input id="f-course" value="'+esc(state.course)+'" placeholder="Add course code"></label>'+
+      '<label>Final presentation <input id="f-final" type="date" value="'+esc(state.finalDate)+'" style="min-width:140px"></label>'+
+      '</div>'+
+      '<h1>'+(chosen?'<em>'+esc(chosen.name)+'</em> finals project':'Finals project <em>portal</em>')+'</h1>'+
+      '<div class="roster">'+state.members.map(function(m){return '<span>'+esc(m.last.toUpperCase())+'</span>';}).join('')+
+      '<span style="background:transparent;border-style:dashed">'+doneItems+' / '+allItems.length+' tasks done</span></div>'+
+      '</header>';
+
+    h += renderTimeline();
+    h += renderProject();
+    h += renderTasks();
+    h += renderTeam();
+    h += renderLinks();
+    h += renderRules();
+    h += renderLog();
+    h += '</main></div>';
+    document.getElementById('app').innerHTML = h;
+  }
+
+  function syncChip(){
+    if(mode==='shared') return '<span class="dot ok"></span>Saved for everyone';
+    if(mode==='readonly') return '<span class="dot warn"></span>View only';
+    if(mode==='local') return '<span class="dot warn"></span>Saved on this device only';
+    return '<span class="dot"></span>Connecting…';
+  }
+
+  function renderTimeline(){
+    var start = new Date(2026,10,10), end = new Date(2027,0,6);
+    var span = end - start;
+    function pos(dt){ return Math.max(1, Math.min(99, (dt-start)/span*100)); }
+    var pins = state.milestones.map(function(m){ return {m:m, d:dueOf(m)}; });
+    var dated = pins.filter(function(p){return p.d;}).sort(function(a,b){return a.d-b.d;});
+    var t = today();
+    var next = dated.filter(function(p){ return p.d>=t; })[0];
+    var h = '<div class="timeline" id="timeline"><div class="tl-head"><h2>Timeline</h2>';
+    if(next){ var l=leftText(next.d); h += '<div class="next">Next up: <b>'+esc(next.m.title)+'</b> · '+esc(fmt(next.d))+' · '+esc(l.t)+'</div>'; }
+    h += '</div><div class="track-wrap"><div class="track">';
+    h += '<div class="rail"></div><div class="rail-done" style="width:'+pos(t)+'%"></div>';
+    [[new Date(2026,10,1),'NOV'],[new Date(2026,11,1),'DEC'],[new Date(2027,0,1),'JAN']].forEach(function(mo){
+      if(mo[0]>=start) h += '<div class="month" style="left:'+pos(mo[0])+'%">'+mo[1]+'</div>';
+      else h += '<div class="month" style="left:0">'+mo[1]+'</div>';
+    });
+    h += '<div class="today" style="left:'+pos(t)+'%"><b>TODAY</b></div>';
+    var i = 0;
+    dated.forEach(function(p){
+      var cls = p.d < t ? 'past' : (daysTo(p.d)<=7 ? 'soon' : '');
+      h += '<div class="pin '+cls+'" style="left:'+pos(p.d)+'%"></div>';
+      h += '<div class="pin-label '+(i%2?'down':'up')+'" style="left:clamp(75px,'+pos(p.d)+'%,calc(100% - 75px))"><span class="d">'+MON[p.d.getMonth()]+' '+p.d.getDate()+'</span>'+esc(p.m.title)+'</div>';
+      i++;
+    });
+    h += '</div></div>';
+    var undated = pins.filter(function(p){return !p.d;});
+    if(undated.length){
+      h += '<div class="next" style="margin-top:4px"><span class="mono" style="color:var(--warn);font-weight:600;font-size:12px">DATE TBD</span> '+undated.map(function(p){return esc(p.m.title);}).join(' · ')+'. Set the final presentation date at the top.</div>';
+    }
+    h += '</div>';
+    return h;
+  }
+
+  function renderProject(){
+    var h = '<section class="part" id="project"><div class="tab"><i>01</i>Project</div>';
+    h += '<div class="part-head"><div><h2>Pick one of three</h2><p>Each member taps their name under the option they back. Lock in the winner with “Choose this”. Due today: present all three with name, description and benefits.</p></div></div>';
+    h += '<div class="options">';
+    state.options.forEach(function(o){
+      var on = state.chosen===o.id;
+      h += '<article class="opt'+(on?' chosen':'')+'">';
+      h += '<div class="what">'+esc(o.what)+'</div><h3>'+esc(o.name)+'</h3><p>'+esc(o.desc)+'</p>';
+      h += '<div><div class="what" style="margin-bottom:4px">Solves</div><ul>'+o.solves.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul></div>';
+      h += '<div><div class="what" style="margin-bottom:4px">AI &amp; analytics</div><p style="font-size:13.5px;color:var(--muted)">'+esc(o.ai)+'</p></div>';
+      h += '<div class="sdg">'+o.sdg.map(function(s){return '<span>'+esc(s)+'</span>';}).join('')+'</div>';
+      h += '<div class="votes"><div class="row">'+state.members.map(function(m){
+        var v = o.votes.indexOf(m.id)>-1;
+        return '<button class="vote'+(v?' on':'')+'" data-vote="'+o.id+'" data-m="'+m.id+'" aria-pressed="'+v+'">'+esc(m.last)+'</button>';
+      }).join('')+'</div>';
+      h += '<button class="pick" data-pick="'+o.id+'">'+(on?'Chosen project':'Choose this')+'</button></div>';
+      h += '</article>';
+    });
+    h += '</div></section>';
+    return h;
+  }
+
+  function ownerSelect(item){
+    return '<select class="owner" data-owner="'+item.id+'" aria-label="Owner"><option value="">Unassigned</option>'+
+      state.members.map(function(m){return '<option value="'+m.id+'"'+(item.owner===m.id?' selected':'')+'>'+esc(m.last)+'</option>';}).join('')+'</select>';
+  }
+
+  function renderTasks(){
+    var h = '<section class="part" id="tasks"><div class="tab"><i>02</i>Deliverables</div>';
+    h += '<div class="part-head"><div><h2>What’s due, and who owns it</h2><p>Click a status to move it along: To do, Doing, Done.</p></div></div>';
+    state.milestones.forEach(function(m){
+      var d = dueOf(m), l = leftText(d);
+      var done = m.items.filter(function(i){return i.status==='done';}).length;
+      var pct = m.items.length ? Math.round(done/m.items.length*100) : 0;
+      h += '<div class="ms"><div class="ms-date"><span class="d">'+(d?MON[d.getMonth()]+' '+d.getDate():'TBD')+'</span>'+
+        '<span class="left '+l.c+'">'+esc(l.t)+'</span>'+
+        '<div class="meter" title="'+pct+'% done"><b style="width:'+pct+'%"></b></div>'+
+        '<span class="left mono">'+done+'/'+m.items.length+' done</span></div>';
+      h += '<div><h3>'+esc(m.title)+'</h3>'+(m.note?'<p class="note">'+m.note+'</p>':'');
+      h += '<table class="tasks"><tbody>'+m.items.map(function(i){
+        return '<tr class="'+(i.status==='done'?'done':'')+'"><td><button class="status '+i.status+'" data-status="'+i.id+'">'+STATUS_LABEL[i.status]+'</button></td>'+
+          '<td class="t">'+esc(i.text)+'</td><td>'+ownerSelect(i)+'</td></tr>';
+      }).join('')+'</tbody></table></div></div>';
+    });
+    h += '</section>';
+    return h;
+  }
+
+  function renderTeam(){
+    var counts = {};
+    state.milestones.forEach(function(m){ m.items.forEach(function(i){ if(i.owner){ counts[i.owner]=counts[i.owner]||{a:0,d:0}; counts[i.owner].a++; if(i.status==='done') counts[i.owner].d++; } }); });
+    var h = '<section class="part" id="team"><div class="tab"><i>03</i>Team</div>';
+    h += '<div class="part-head"><div><h2>Meet the team</h2><p>Roles feed the “Meet the Team” slide. Click a role or focus line to edit it.</p></div></div><div class="team">';
+    state.members.forEach(function(m){
+      var c = counts[m.id]||{a:0,d:0};
+      h += '<div class="member"><div class="mono-badge" aria-hidden="true">'+esc(m.first[0]+m.last[0])+'</div><div>'+
+        '<div class="name">'+esc(m.last.toUpperCase())+'<small>'+esc(m.first)+'</small></div>'+
+        '<input class="field role" data-mrole="'+m.id+'" value="'+esc(m.role)+'" aria-label="Role of '+esc(m.first)+'">'+
+        '<input class="field focus" data-mfocus="'+m.id+'" value="'+esc(m.focus)+'" aria-label="Focus of '+esc(m.first)+'">'+
+        '<div class="load">'+c.d+' of '+c.a+' assigned tasks done</div></div></div>';
+    });
+    h += '</div></section>';
+    return h;
+  }
+
+  function renderLinks(){
+    var h = '<section class="part" id="files"><div class="tab"><i>04</i>Drive &amp; files</div>';
+    h += '<div class="part-head"><div><h2>Where everything lives</h2><p>Paste the share link once and the whole group can open it from here. Set Drive sharing to “Anyone in the group with the link can edit.”</p></div></div><div class="links">';
+    state.links.forEach(function(k){
+      var set = !!k.url;
+      h += '<div class="link'+(set?' set':'')+'"><div class="ico">'+(ICONS[k.kind]||ICONS.doc)+'</div>'+
+        '<div style="min-width:0"><div class="lbl">'+esc(k.label)+'</div><div class="hint">'+esc(set?k.url.replace(/^https?:\/\//,''):k.hint)+'</div></div>';
+      if(set) h += '<div style="display:flex;gap:6px;align-items:center"><a class="open" href="'+esc(k.url)+'" target="_blank" rel="noopener">Open</a><button class="edit" data-editlink="'+k.id+'">Edit</button></div>';
+      else h += '<button class="btn ghost" data-editlink="'+k.id+'">Add link</button>';
+      if(editingLink===k.id){
+        h += '<form data-linkform="'+k.id+'"><input id="link-'+k.id+'" type="url" value="'+esc(k.url)+'" placeholder="https://drive.google.com/…" aria-label="Link for '+esc(k.label)+'"><button class="btn" type="submit">Save</button><button class="btn ghost" type="button" data-cancel="1">Cancel</button></form>';
+      }
+      h += '</div>';
+    });
+    h += '</div></section>';
+    return h;
+  }
+
+  function renderRules(){
+    var h = '<section class="part" id="rules"><div class="tab"><i>05</i>Rules &amp; grading</div>';
+    h += '<div class="part-head"><div><h2>How we’re graded</h2></div></div><div class="two"><ul class="rules">'+
+      '<li><b>Recording</b><span>Group presentation recorded on Teams or Loom, 20 minutes max. Every member must present.</span></li>'+
+      '<li><b>Submit</b><span>Recording due 1 week before the final presentation.</span></li>'+
+      '<li><b>Defense</b><span>20-minute Q&amp;A with the panel, on-site.</span></li>'+
+      '<li><b>Attire</b><span>Semi-formal.</span></li>'+
+      '<li><b>Video</b><span>1–2 minutes, professional. Shows the current issue, then how the system solves it.</span></li>'+
+      '<li><b>Project</b><span>Innovative, uses AI &amp; analytics, addresses a current societal issue and an SDG, backed by elicitation.</span></li>'+
+      '</ul><div><div class="bar" role="img" aria-label="Class participation 35%, SRS paper 30%, final presentation 35%"><div class="a" style="width:35%">35</div><div class="b" style="width:30%">30</div><div class="c" style="width:35%">35</div></div>'+
+      '<ul class="legend"><li><span>Class participation (assignments, quizzes, seatwork, recitation)</span><span class="mono">35%</span></li>'+
+      '<li><span>Finals paper (SRS)</span><span class="mono">30%</span></li>'+
+      '<li><span>Final presentation</span><span class="mono">35%</span></li></ul>'+
+      '<p style="font-size:13px;color:var(--muted);margin:14px 0 0">The group work (SRS + presentation) is 65% of the final grade.</p></div></div></section>';
+    return h;
+  }
+
+  function renderLog(){
+    var h = '<section class="part" id="log"><div class="tab"><i>06</i>Team log</div>';
+    h += '<div class="part-head"><div><h2>Updates &amp; decisions</h2><p>Short notes so nobody has to scroll the group chat.</p></div></div>';
+    h += '<form class="log-form" id="log-form"><select id="log-by" aria-label="Who"><option value="">Who?</option>'+state.members.map(function(m){return '<option value="'+m.id+'">'+esc(m.last)+'</option>';}).join('')+'</select>'+
+      '<input id="log-text" placeholder="e.g. Survey sent to 30 respondents" aria-label="Update"><button class="btn" type="submit">Post</button></form>';
+    if(!state.log.length) h += '<div class="empty">No updates yet.</div>';
+    h += '<ul class="log">'+state.log.slice().reverse().map(function(e){
+      var m = member(e.by), d = parse(e.date);
+      return '<li><span class="when">'+(d?MON[d.getMonth()]+' '+d.getDate():'')+'</span><span class="who">'+esc(m?m.last:'Team')+'</span><span class="txt">'+esc(e.text)+'</span><button class="x" data-dellog="'+e.id+'" aria-label="Delete update">Remove</button></li>';
+    }).join('')+'</ul></section>';
+    return h;
+  }
+
+  /* ---------- state changes ---------- */
+  function findItem(id){ for(var a=0;a<state.milestones.length;a++){ var it=state.milestones[a].items; for(var b=0;b<it.length;b++) if(it[b].id===id) return it[b]; } return null; }
+
+  function commit(msg){
+    var y = window.scrollY;
+    render(); window.scrollTo(0,y);
+    if(mode==='readonly'){ toast('View only: ask the owner for edit access'); return; }
+    if(mode!=='shared'){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} if(msg) toast(msg+' (this device)'); return; }
+    clearTimeout(timer);
+    timer = setTimeout(publish, 900);
+    if(msg) toast(msg);
+  }
+
+  function buildDoc(){
+    var json = JSON.stringify(state).replace(/</g,'\\u003c');
+    var head = '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Finals Project Portal</title>\n'+
+      '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
+      document.getElementById('app-fonts').outerHTML+'\n'+document.getElementById('app-style').outerHTML;
+    return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'+head+'\n</head>\n<body>\n'+
+      '<script type="application/json" id="portal-state">'+json+'<\/script>\n'+
+      '<div id="app"></div>\n<div class="toast" id="toast" role="status" aria-live="polite"></div>\n'+
+      SELF.outerHTML+'\n</body>\n</html>';
+  }
+
+  function publish(){
+    if(!api) return;
+    api.publish(buildDoc()).catch(function(err){
+      var code = (err && (err.code||err.name||err.message))||'';
+      if(/not_granted|not_writer/.test(code)){ mode='readonly'; render(); toast('View only: your changes were not saved'); }
+      else if(/conflict/.test(code)){ /* another view won; page reloads */ }
+      else toast('Could not save. Try again in a moment.');
+    });
+  }
+
+  var toastT;
+  function toast(t){ var el=document.getElementById('toast'); if(!el) return; el.textContent=t; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){el.classList.remove('show');},1800); }
+
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    if(b.dataset.status){ var it=findItem(b.dataset.status); it.status = STATUSES[(STATUSES.indexOf(it.status)+1)%3]; commit(); }
+    else if(b.dataset.vote){ var o=state.options.filter(function(x){return x.id===b.dataset.vote;})[0]; var i=o.votes.indexOf(b.dataset.m); if(i>-1) o.votes.splice(i,1); else o.votes.push(b.dataset.m); commit(); }
+    else if(b.dataset.pick){ state.chosen = state.chosen===b.dataset.pick ? '' : b.dataset.pick; commit(state.chosen?'Project locked in':'Choice cleared'); }
+    else if(b.dataset.editlink){ editingLink=b.dataset.editlink; var y=window.scrollY; render(); window.scrollTo(0,y); var inp=document.getElementById('link-'+editingLink); if(inp) inp.focus(); }
+    else if(b.dataset.cancel){ editingLink=null; var y2=window.scrollY; render(); window.scrollTo(0,y2); }
+    else if(b.dataset.guide){ openGuide(0); }
+    else if(b.dataset.g){ guideNav(b.dataset.g); }
+    else if(b.dataset.dellog){ state.log = state.log.filter(function(x){return x.id!==b.dataset.dellog;}); commit('Update removed'); }
+  });
+
+  document.addEventListener('change', function(e){
+    var el = e.target;
+    if(el.dataset.owner){ findItem(el.dataset.owner).owner = el.value; commit(); }
+    else if(el.dataset.mrole){ member(el.dataset.mrole).role = el.value.trim(); commit('Role updated'); }
+    else if(el.dataset.mfocus){ member(el.dataset.mfocus).focus = el.value.trim(); commit('Saved'); }
+    else if(el.id==='f-course'){ state.course = el.value.trim(); commit('Saved'); }
+    else if(el.id==='f-final'){ state.finalDate = el.value; commit('Presentation date set'); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Enter' && e.target.matches('.field, #f-course')){ e.preventDefault(); e.target.blur(); }
+  });
+
+  document.addEventListener('submit', function(e){
+    e.preventDefault();
+    var f = e.target;
+    if(f.dataset.linkform){
+      var v = document.getElementById('link-'+f.dataset.linkform).value.trim();
+      if(v && !/^https?:\/\//i.test(v)) v = 'https://'+v;
+      state.links.forEach(function(k){ if(k.id===f.dataset.linkform) k.url=v; });
+      editingLink=null; commit(v?'Link saved':'Link removed');
+    } else if(f.id==='log-form'){
+      var txt = document.getElementById('log-text').value.trim();
+      if(!txt){ toast('Write an update first'); return; }
+      state.log.push({id:uid(), date:iso(today()), by:document.getElementById('log-by').value, text:txt});
+      commit('Posted');
+    }
+  });
+
+  /* ---------- loader + guide ---------- */
+  var GUIDE_KEY = 'finals-portal-guide-seen', step = 0, lastFocus = null;
+  var STEPS = [
+    {t:'Welcome to your finals portal', p:'One place for the group’s project choice, deadlines, task owners, Drive links and updates. Here’s a 30-second tour.',
+     d:function(){ return state.members.map(function(m){return '<span class="vote on" style="cursor:default">'+esc(m.last)+'</span>';}).join(''); }},
+    {t:'Check the timeline first', p:'The top strip shows every deadline against today. Diamonds turn yellow within 7 days. Set the final presentation date at the top so the recording deadline (1 week before) appears.',
+     d:function(){ return '<span class="mono">Nov 14</span> Project options <span class="mono" style="margin-left:10px">Dec 6</span> Video + deck <span class="mono" style="margin-left:10px">Dec 28</span> SRS'; }},
+    {t:'Vote, then lock in the project', p:'Under each of the 3 options, tap your surname to vote. When the group agrees, press “Choose this”. The page title changes to the chosen project.',
+     d:function(){ return '<span class="vote on" style="cursor:default">Tarra</span><span class="vote" style="cursor:default">Barba</span><span class="pick" style="cursor:default">Choose this</span>'; }},
+    {t:'Move your tasks along', p:'In Deliverables, click a task’s status to cycle it. Use the dropdown to change who owns it. The Team section counts how many of your tasks are done.',
+     d:function(){ return '<span class="status todo">To do</span>→<span class="status doing">Doing</span>→<span class="status done">Done</span>'; }},
+    {t:'Keep links in Drive & files', p:'Paste the share link for the Drive folder, SRS doc, Canva deck, Figma and videos once. Everyone opens them from here instead of searching the group chat.',
+     d:function(){ return '<span class="btn ghost" style="cursor:default">Add link</span> <span style="color:var(--muted)">https://drive.google.com/…</span>'; }},
+    {t:'How your changes are saved', p:'', d:function(){ return syncChip(); }}
+  ];
+  function savedText(){
+    if(mode==='shared') return 'Changes you make here are saved for everyone who opens this page.';
+    if(mode==='readonly') return 'You can view this page but not edit it. Ask Vik for edit access.';
+    return 'On this site, changes are saved in your own browser only, so teammates won’t see them. Post important updates in the group chat too, and ask Vik to update the shared copy.';
+  }
+
+  function showLoader(){
+    var first = true;
+    try{ first = !sessionStorage.getItem('finals-portal-loaded'); sessionStorage.setItem('finals-portal-loaded','1'); }catch(e){}
+    if(!first) return Promise.resolve();
+    var el = document.createElement('div');
+    el.className = 'loader'; el.setAttribute('role','status'); el.setAttribute('aria-label','Loading portal');
+    el.innerHTML = '<div class="ld"><div class="ld-stack"><div class="ld-sheet"></div><div class="ld-sheet"></div><div class="ld-sheet"></div></div>'+
+      '<div class="ld-names">'+state.members.map(function(m){return esc(m.last);}).join(' · ')+'</div>'+
+      '<div class="ld-bar"><b></b></div><div class="ld-text">Opening the project binder</div></div>';
+    document.body.appendChild(el);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return new Promise(function(res){
+      setTimeout(function(){ el.classList.add('hide'); setTimeout(function(){ el.remove(); res(); }, reduce?0:400); }, reduce?300:1400);
+    });
+  }
+
+  function guideEl(){
+    var g = document.getElementById('guide');
+    if(!g){
+      g = document.createElement('div'); g.id='guide'; g.className='guide'; g.hidden=true;
+      g.setAttribute('role','dialog'); g.setAttribute('aria-modal','true'); g.setAttribute('aria-labelledby','g-title');
+      document.body.appendChild(g);
+      g.addEventListener('click', function(e){ if(e.target===g) closeGuide(); });
+    }
+    return g;
+  }
+  function drawGuide(){
+    var s = STEPS[step], g = guideEl(), last = step===STEPS.length-1;
+    g.innerHTML = '<div class="g-card"><div class="g-tab"><b>'+String(step+1).padStart(2,'0')+'</b> / '+String(STEPS.length).padStart(2,'0')+' &nbsp;HOW TO USE</div>'+
+      '<h2 id="g-title">'+esc(s.t)+'</h2><p>'+esc(s.p || savedText())+'</p><div class="g-demo">'+s.d()+'</div>'+
+      '<div class="g-foot"><div class="g-dots">'+STEPS.map(function(_,i){return '<i class="'+(i<=step?'on':'')+'"></i>';}).join('')+'</div>'+
+      '<div class="g-btns">'+(last?'':'<button class="g-skip" data-g="skip">Skip tour</button>')+
+      (step>0?'<button class="btn ghost" data-g="back">Back</button>':'')+
+      '<button class="btn" data-g="next" id="g-next">'+(last?'Start working':'Next')+'</button></div></div></div>';
+    var n = document.getElementById('g-next'); if(n) n.focus();
+  }
+  function openGuide(i){ lastFocus = document.activeElement; step = i||0; guideEl().hidden=false; drawGuide(); }
+  function closeGuide(){ guideEl().hidden=true; try{ localStorage.setItem(GUIDE_KEY,'1'); }catch(e){} if(lastFocus && lastFocus.focus) lastFocus.focus(); }
+  function guideNav(a){
+    if(a==='skip') return closeGuide();
+    if(a==='back'){ step=Math.max(0,step-1); return drawGuide(); }
+    if(step===STEPS.length-1) return closeGuide();
+    step++; drawGuide();
+  }
+  document.addEventListener('keydown', function(e){
+    var g = document.getElementById('guide'); if(!g || g.hidden) return;
+    if(e.key==='Escape') closeGuide();
+    else if(e.key==='ArrowRight') guideNav('next');
+    else if(e.key==='ArrowLeft') guideNav('back');
+  });
+
+  render();
+  showLoader().then(function(){
+    var seen = false; try{ seen = !!localStorage.getItem(GUIDE_KEY); }catch(e){}
+    if(!seen) openGuide(0);
+  });
+
+  var cl = window.claude;
+  if(cl && typeof cl.use==='function'){
+    cl.use('artifact').then(function(a){
+      if(a){ api=a; mode='shared'; }
+      else { mode='local'; loadLocal(); }
+      render();
+    }).catch(function(){ mode='local'; loadLocal(); render(); });
+  } else { mode='local'; loadLocal(); render(); }
+
+  function loadLocal(){ try{ var s=localStorage.getItem(LS_KEY); if(s) state=JSON.parse(s); }catch(e){} }
+})();
+</script>
+</body>
+</html>
