@@ -480,6 +480,71 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   .sheet-f{flex-wrap:wrap}
 }
 
+.lms{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.lms-main,.lms-rail{display:flex;flex-direction:column;gap:22px;min-width:0}
+.banner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;background:var(--accent);color:#fff;border-radius:14px;padding:26px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.banner::after{content:"";position:absolute;right:-50px;bottom:-70px;width:200px;height:200px;border-radius:50%;border:30px solid rgba(255,255,255,.1);animation:drift 9s ease-in-out infinite alternate;pointer-events:none}
+.banner small{opacity:.88;font-weight:500}
+.banner h2{font-size:26px;margin:6px 0;letter-spacing:-.02em}
+.banner p{margin:0 0 16px;opacity:.94;max-width:52ch;font-size:15px}
+.banner .btn{border-color:transparent}
+.banner-txt{position:relative;z-index:1}
+.banner-due{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:170px;padding-left:24px;border-left:1px solid rgba(255,255,255,.28);color:#fff;text-decoration:none}
+.banner-due:hover b{text-decoration:underline}
+.banner-due .big{font-size:48px;font-weight:700;line-height:1.05;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.banner-due .big span{font-size:16px;font-weight:500;letter-spacing:0;margin-left:4px}
+.mod-n{width:28px;height:28px;border-radius:50%;border:2px solid var(--border-strong);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted);flex:none}
+.mod-n.now{border-color:var(--accent);color:var(--accent-text);box-shadow:0 0 0 4px var(--accent-soft)}
+.mod-n.done{background:var(--green);border-color:var(--green);color:#fff}
+.mod-n .ic{width:14px;height:14px}
+.li .t small.soon{color:var(--red);font-weight:500}
+.dbadge{width:44px;border:1px solid var(--border);border-radius:9px;text-align:center;overflow:hidden;flex:none;background:var(--surface)}
+.dbadge i{display:block;font-style:normal;font-size:10.5px;font-weight:600;background:var(--accent-soft);color:var(--accent-text);padding:2px 0}
+.dbadge b{display:block;font-size:16px;font-weight:600;padding:2px 0 3px}
+.rail-foot{padding:12px 18px 16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);font-weight:500}
+.prog{padding:10px 18px 16px;display:flex;flex-direction:column;gap:8px}
+.prog .pct{font-size:30px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.prog + .list{border-top:1px solid var(--border)}
+.who{display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:13.5px;padding:4px 12px 4px 4px;border:1px solid var(--border);border-radius:20px;background:var(--surface)}
+a.crumb{text-decoration:none}
+a.crumb:hover{color:var(--accent-text)}
+.module{overflow:hidden}
+.mod-h{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--side);border-bottom:1px solid var(--border)}
+.module.closed .mod-h{border-bottom:0}
+.mod-h h2{font-size:15px}
+.mod-h .lbl{font-size:12px;color:var(--faint);font-weight:500;display:block}
+.mod-h .bar{width:90px;margin-left:auto}
+.tog{border:0;background:none;cursor:pointer;color:var(--muted);padding:5px;border-radius:6px;display:grid;place-items:center}
+.tog:hover{background:var(--hover);color:var(--text)}
+.tog .ic{transition:transform .15s}
+.module:not(.closed) .tog .ic{transform:rotate(90deg)}
+.module .mod-h + .trow,.module .group-note + .trow{border-top:0}
+.arow .ri-s{width:24px;height:24px;border-radius:6px}
+.arow .ri-s .ic{width:14px;height:14px}
+.arow > a:not(.btn){color:inherit;text-decoration:none;font-weight:500;min-width:0}
+.arow > a:not(.btn):hover{color:var(--accent-text)}
+.arow .sstat{justify-self:start}
+.prow{display:grid;grid-template-columns:44px minmax(0,1.1fr) minmax(0,1.5fr) minmax(0,1.2fr) 120px auto;gap:14px;align-items:center;padding:12px 18px;border-top:1px solid var(--border)}
+.prow.head{border-top:0;font-size:12.5px;color:var(--faint);font-weight:500;padding:10px 18px;background:var(--side);border-radius:14px 14px 0 0}
+.prow b{font-weight:600;display:block}
+.prow small{color:var(--muted)}
+.prow > *{min-width:0}
+.prow .mem-bins .tag{white-space:normal;height:auto;min-height:22px;padding:2px 8px}
+@media (max-width:1100px){.lms{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .banner{grid-template-columns:1fr;padding:22px}
+  .banner-due{border-left:0;padding-left:0;border-top:1px solid rgba(255,255,255,.28);padding-top:14px;flex-direction:row;align-items:baseline;flex-wrap:wrap;gap:6px 10px}
+  .banner-due .big{font-size:34px}
+  .mod-h{flex-wrap:wrap}
+  .mod-h .bar,.mod-li .bar{display:none}
+  .mod-h .tag{order:5}
+  .prow{grid-template-columns:44px minmax(0,1fr) auto;gap:8px 12px}
+  .prow.head{display:none}
+  .prow .c-focus,.prow .c-bins,.prow .c-prog{grid-column:2/-1}
+  .prow .c-acts{grid-column:3;grid-row:1}
+  .arow .owner .muted{font-size:13px}
+}
+
 /* loader */
 .loader{position:fixed;inset:0;z-index:90;background:var(--bg);display:grid;place-items:center;transition:opacity .3s}
 .loader.hide{opacity:0;pointer-events:none}
@@ -555,7 +620,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   }
   ensureSubs(); fixSubs();
   var api=null, mode='connecting', timer=null, LS_KEY='sysande-portal-local';
-  var ui={view:'home', taskFilter:'all', taskView:'list', ideaTab:'team', editingLink:null, menu:false, subSel:'s1', subForm:false, subFilter:'all'};
+  var ui={view:'home', taskFilter:'all', taskView:'list', ideaTab:'team', editingLink:null, menu:false, subSel:'s1', subForm:false, subFilter:'all', closed:{}};
   var me=''; try{ me=localStorage.getItem('sysande-me')||''; }catch(e){}
   var lastView=null, popKey=null;
   function countUp(){
@@ -583,8 +648,9 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   function rel(dt){ if(!dt) return {t:'Needs presentation date',c:'soon'}; var d=daysTo(dt); if(d<0) return {t:'Passed',c:'past'}; if(d===0) return {t:'Due today',c:'soon'}; if(d===1) return {t:'Due tomorrow',c:'soon'}; return {t:'In '+d+' days',c:d<=7?'soon':''}; }
   function sdgList(t){ return String(t||'').split(/[,;\n]+|\s+(?:and|&)\s+(?=SDG\b)/i).map(function(x){return x.trim().replace(/^(?:and|&)\s+/i,'').replace(/\.$/,'');}).filter(Boolean); }
   function fixSubs(){ var D={s1:'arradaza',s2:'tarra',s3:'barba',s4:'grefaldeo',s5:'arradaza',s6:''}; state.submissions.forEach(function(x){ if(x.owner===undefined) x.owner=D[x.id]||''; }); }
-  var APP_VERSION='2026.11.14-4', VK='sysande-seen-version';
-  var CHANGELOG={date:'November 14', items:[
+  var APP_VERSION='2026.11.15-1', VK='sysande-seen-version';
+  var CHANGELOG={date:'November 15', items:[
+    ['layers','New course layout','The portal now works like an LMS. The menu has Announcements, Modules, Assignments and People, and Home shows your To Do list and upcoming deadlines.','home'],
     ['pen','Edit almost anything','Team ideas, updates, file links, deadlines, submission checklists and member details now have an edit button. You can also add new file links and submissions.','ideas'],
     ['inbox','Every submission has an owner','Each deliverable is assigned to a member. Filter to yours, tick the checklist, and upload the file straight to our Google Drive.','submissions'],
     ['pen','Edit, add and delete tasks','Click any task to change its text, owner, status or deadline. Press New task to add one.','tasks'],
@@ -619,6 +685,8 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     list:'<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>', board:'<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/>',
     inbox:'<path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"/>',
     chev:'<path d="m9 6 6 6-6 6"/>',
+    megaphone:'<path d="M3 10v4a1 1 0 0 0 1 1h2l5 4V5L6 9H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/>',
+    layers:'<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
     menu:'<path d="M4 7h16M4 12h16M4 17h16"/>', trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', help:'<circle cx="12" cy="12" r="9"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.5-2.7 2.5M12 16.5h.01"/>',
     drive:'<path d="M8.5 3h7l6 10.5-3.5 6H6l-3.5-6z"/><path d="M8.5 3 15 14.5H2.5M15.5 3l-6.5 11.5M14.8 14.5h6.7M6 19.5l3-5"/>',
     doc:'<path d="M6 2.5h8.5l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h5M9 12h7M9 15.5h7"/>', slides:'<rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M12 17v3.5M8 20.5h8"/>',
@@ -643,22 +711,23 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   window.addEventListener('hashchange',function(){ readHash(); ui.menu=false; render(); window.scrollTo(0,0); });
 
   /* ---------- shell ---------- */
-  var NAV=[['home','home','Home'],['ideas','bulb','Ideas'],['tasks','tasks','Tasks'],['submissions','inbox','Submissions'],['files','folder','Files'],['team','users','Team'],['rules','award','Rules & grading'],['updates','message','Updates']];
-  var TITLES={home:'Home',ideas:'Project ideas',tasks:'Tasks',files:'Files',team:'Team',rules:'Rules & grading',updates:'Updates',submissions:'Submissions',terms:'Terms and Conditions',privacy:'Data Privacy Notice'};
+
+  var NAV=[['home','home','Home'],['updates','megaphone','Announcements'],['tasks','layers','Modules'],['submissions','inbox','Assignments'],['ideas','bulb','Project ideas'],['team','users','People'],['files','folder','Files'],['rules','award','Syllabus']];
+  var TITLES={home:'Home',ideas:'Project ideas',tasks:'Modules',files:'Files',team:'People',rules:'Syllabus and grading',updates:'Announcements',submissions:'Assignments',terms:'Terms and Conditions',privacy:'Data Privacy Notice'};
   function counts(){ var open=allTasks().filter(function(x){return x.i.status!=='done';}).length; return {ideas:state.ideas.length, tasks:open, updates:state.log.length, submissions:state.submissions.filter(function(x){return x.status!=='submitted';}).length}; }
   function render(){
     var c=counts();
-    var side='<aside class="side'+(ui.menu?' open':'')+'" aria-label="Main menu"><div class="ws"><div class="logo">S</div><div><b>SYSANDE Finals</b><small>Group of '+state.members.length+(state.course?'':'')+'</small></div></div>'+
+    var side='<aside class="side'+(ui.menu?' open':'')+'" aria-label="Main menu"><div class="ws"><div class="logo">S</div><div><b>'+esc(state.course||'SYSANDE')+'</b><small>Finals project, group of '+state.members.length+'</small></div></div>'+
       '<div class="me'+(me?'':' ask')+'">'+(me?av(me,'sm'):'<span class="av sm empty">?</span>')+'<select id="me-select" aria-label="Who are you?"><option value="">Who are you?</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(me===m.id?' selected':'')+'>'+esc(m.first+' '+m.last)+'</option>';}).join('')+'</select></div>'+
-      NAV.map(function(n){ var cnt=c[n[0]]; return '<a class="nav-i'+(ui.view===n[0]?' on':'')+'" href="#'+n[0]+'"'+(ui.view===n[0]?' aria-current="page"':'')+'>'+ic(n[1])+'<span>'+n[2]+'</span>'+(cnt?'<span class="count">'+cnt+'</span>':'')+'</a>'; }).join('')+
+      '<div class="side-label">Course menu</div>'+NAV.map(function(n){ var cnt=c[n[0]]; return '<a class="nav-i'+(ui.view===n[0]?' on':'')+'" href="#'+n[0]+'"'+(ui.view===n[0]?' aria-current="page"':'')+'>'+ic(n[1])+'<span>'+n[2]+'</span>'+(cnt?'<span class="count">'+cnt+'</span>':'')+'</a>'; }).join('')+
       '<div class="side-foot"><button class="link-btn" data-news="1">'+ic('spark')+'What’s new'+(newsSeen()?'':'<span class="dot-new" title="New"></span>')+'</button><button class="link-btn" data-guide="1">'+ic('help')+'How to use the portal</button><div class="legal-links"><a href="#terms"'+(ui.view==='terms'?' aria-current="page"':'')+'>Terms</a><a href="#privacy"'+(ui.view==='privacy'?' aria-current="page"':'')+'>Privacy notice</a></div>'+themeSwitch()+'<div class="sync">'+syncText()+'</div></div></aside><div class="scrim'+(ui.menu?' open':'')+'" data-menu="0"></div>';
     var action='';
     if(ui.view==='ideas') action='<button class="btn primary" data-newidea="1">'+ic('plus')+'New idea</button>';
     else if(ui.view==='tasks') action='<button class="btn primary" data-newtask="1">'+ic('plus')+'New task</button>';
-    else if(ui.view==='submissions') action='<button class="btn primary" data-newsub="1">'+ic('plus')+'<span class="hide-sm">New submission</span><span class="show-sm">New</span></button>';
+    else if(ui.view==='submissions') action='<button class="btn primary" data-newsub="1">'+ic('plus')+'<span class="hide-sm">New assignment</span><span class="show-sm">New</span></button>';
     else if(ui.view==='files') action='<button class="btn primary" data-newlink="1">'+ic('plus')+'Add link</button>';
     else if(ui.view==='home') action='<button class="btn hide-sm" data-newidea="1">'+ic('plus')+'New idea</button>';
-    var top='<header class="top"><button class="menu-btn" data-menu="1" aria-label="Open menu">'+ic('menu')+'</button><h1><span class="crumb">'+esc(state.course||'Finals')+' / </span>'+TITLES[ui.view]+'</h1><div class="top-actions">'+action+'</div></header>';
+    var top='<header class="top"><button class="menu-btn" data-menu="1" aria-label="Open menu">'+ic('menu')+'</button><h1>'+(ui.view==='home'?'':'<a class="crumb" href="#home">'+esc(state.course||'SYSANDE')+'</a><span class="crumb"> › </span>')+(ui.view==='home'?esc(state.course||'SYSANDE')+' course home':TITLES[ui.view])+'</h1><div class="top-actions">'+action+(me?'<span class="who hide-sm" title="Signed in on this device as">'+av(me,'sm')+esc(member(me).first)+'</span>':'')+'</div></header>';
     var body={home:home,ideas:ideasView,tasks:tasksView,submissions:subsView,files:filesView,team:teamView,rules:rulesView,updates:updatesView,terms:termsView,privacy:privacyView}[ui.view]();
     var entering = ui.view!==lastView; lastView=ui.view;
     document.getElementById('app').innerHTML='<div class="app">'+side+'<div class="main">'+top+'<div class="page'+(entering?' enter':'')+'">'+body+'</div></div></div>'+tabbar();
@@ -668,7 +737,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     if(popKey){ document.querySelectorAll(popKey).forEach(function(el){ el.classList.add('pop'); }); popKey=null; }
   }
   function tabbar(){
-    var T=[['home','home','Home'],['ideas','bulb','Ideas'],['tasks','tasks','Tasks'],['submissions','inbox','Submit']];
+    var T=[['home','home','Home'],['tasks','layers','Modules'],['submissions','inbox','Assign'],['ideas','bulb','Ideas']];
     return '<nav class="tabbar" aria-label="Quick menu">'+T.map(function(t){ return '<a href="#'+t[0]+'" class="'+(ui.view===t[0]?'on':'')+'"'+(ui.view===t[0]?' aria-current="page"':'')+'>'+ic(t[1])+t[2]+'</a>'; }).join('')+
       '<button data-menu="1" class="'+(T.every(function(t){return t[0]!==ui.view;})?'on':'')+'">'+ic('menu')+'More</button></nav>';
   }
@@ -678,32 +747,36 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   function greet(){ var h=new Date().getHours(); return h<12?'Good morning':(h<18?'Good afternoon':'Good evening'); }
   function home(){
     var m=member(me), nx=nextDue(), chosen=findProject(state.chosen), tasks=allTasks();
-    var done=tasks.filter(function(x){return x.i.status==='done';}).length;
+    var done=tasks.filter(function(x){return x.i.status==='done';}).length, pct=tasks.length?Math.round(done/tasks.length*100):0;
     var mine=tasks.filter(function(x){return x.i.owner===me && x.i.status!=='done';});
     var myBins=state.submissions.filter(function(x){return me && x.owner===me && x.status!=='submitted';});
-    var srs=state.milestones.filter(function(x){return x.code==='P4';})[0], srsD=srs?dueOf(srs):null;
+    var subDone=state.submissions.filter(function(x){return x.status==='submitted';}).length;
     var days=nx?daysTo(nx.d):null;
-    var youHave=m?'You have '+mine.length+' open task'+(mine.length===1?'':'s')+(myBins.length?' and '+myBins.length+' submission'+(myBins.length===1?'':'s')+' to turn in':'')+'.':'Choose your name to see your own tasks and submissions here.';
-    var cdOpen=nx?'<a class="count-down" href="#tasks" data-goto-group="'+nx.m.id+'" title="Open the tasks for this deadline">':'<div class="count-down">';
-    var h='<div class="card hello"><div class="hello-main"><h2>'+greet()+(m?', '+esc(m.first):'')+'</h2>'+
+    var youHave=m?'You have '+mine.length+' open task'+(mine.length===1?'':'s')+(myBins.length?' and '+myBins.length+' assignment'+(myBins.length===1?'':'s')+' to submit':'')+'.':'Choose your name to see your own To Do list.';
+    var h='<div class="lms"><div class="lms-main">';
+    h+='<section class="banner"><div class="banner-txt"><small>'+esc(state.course||'SYSANDE')+' · Finals project</small><h2>'+greet()+(m?', '+esc(m.first):'')+'</h2>'+
       '<p>'+(chosen?'Our project is <b>'+esc(chosen.name)+'</b>. ':'We haven’t chosen a project yet. ')+youHave+'</p>'+
-      '<div class="hello-actions">'+(m?'':'<button class="btn primary" data-pickme="1">'+ic('users')+'Choose your name</button>')+
-      (chosen?'':'<a class="btn'+(m?' primary':'')+'" href="#ideas">'+ic('bulb')+'Review ideas</a>')+
-      '<a class="btn" href="#tasks" data-goto-group="'+(m?'mine':'all')+'">'+ic('tasks')+(m?'My tasks':'Open tasks')+'</a><a class="btn" href="#submissions">'+ic('inbox')+'Submissions</a></div></div>'+
-      cdOpen+'<small>Next deadline</small><div class="big">'+(nx?(days===0?'Today':'<em data-count="'+days+'" style="font-style:normal">'+days+'</em><span>day'+(days===1?'':'s')+'</span>'):'—')+'</div><div><b>'+(nx?esc(nx.m.title):'All done')+'</b><br><small>'+(nx?short(nx.d)+' · View tasks':'')+'</small></div>'+(nx?'</a>':'</div>')+'</div>';
-    h+='<div class="stats"><a class="card stat" href="#tasks" data-goto-group="all"><span class="k">'+ic('check')+'Tasks done</span><span class="v"><span data-count="'+done+'">'+done+'</span> <small>of '+tasks.length+'</small></span><div class="bar"><b style="width:'+(tasks.length?Math.round(done/tasks.length*100):0)+'%"></b></div></a>'+
-      '<a class="card stat" href="#ideas"><span class="k">'+ic('bulb')+'Team ideas</span><span class="v"><span data-count="'+state.ideas.length+'">'+state.ideas.length+'</span> <small>posted</small></span><div class="stack">'+state.members.map(function(mm){ var has=state.ideas.some(function(i){return i.by===mm.id;}); return has?av(mm.id,'sm'):'<span class="av sm empty" title="'+esc(mm.first)+' hasn’t posted">'+initials(mm)+'</span>'; }).join('')+'</div></a>'+
-      '<a class="card stat" href="#submissions" data-gosub="s5"><span class="k">'+ic('doc')+'SRS paper due</span><span class="v">'+(srsD?'<span data-count="'+daysTo(srsD)+'">'+daysTo(srsD)+'</span> <small>days left</small>':'—')+'</span><span class="muted" style="font-size:13px">'+short(srsD)+'</span></a></div>';
-    h+='<div class="card"><div class="card-h"><h2>Timeline</h2><label class="muted" style="font-size:13px;display:flex;gap:8px;align-items:center;font-weight:500">Final presentation<input type="date" id="f-final" class="input" style="height:30px;flex:none" value="'+esc(state.finalDate)+'"></label></div><div class="steps">'+state.milestones.map(function(ms,i){
-      var d=dueOf(ms), r=rel(d), md=ms.items.length&&ms.items.every(function(x){return x.status==='done';});
-      var cls=(md||r.c==='past')?'past':((nx&&nx.m.id===ms.id)?'now':'');
-      return '<a class="step '+cls+'" href="#tasks" data-goto-group="'+ms.id+'"><span class="node">'+(cls==='past'?ic('check',2.6):(i+1))+'</span><span class="s-txt"><b>'+esc(ms.title)+'</b><small class="'+(r.c==='soon'?'soon':'')+'">'+short(d)+(r.c==='soon'?' · '+r.t:'')+'</small></span></a>';
-    }).join('')+'</div></div>';
-    var myList = m ? (mine.length? mine.slice(0,6).map(taskLine).join('') : '<div class="empty-state">'+ic('check')+'<span>You’re all caught up.</span></div>')
-                   : '<div class="empty-state">'+ic('users')+'<span>Choose your name to see your tasks.</span><button class="btn" data-pickme="1">Choose your name</button></div>';
-    var binRows = myBins.length ? '<div class="sub-h">Your submissions</div>'+myBins.map(function(x){ var d=dueOf(subMs(x)); return '<a class="li li-link" href="#submissions" data-gosub="'+x.id+'"><span class="ri-s">'+ic('inbox')+'</span><div class="t"><b>'+esc(x.title)+'</b><small>'+(d?'Due '+short(d):'Date not set')+', '+SUBL[subState(x)].toLowerCase()+'</small></div>'+ic('chev')+'</a>'; }).join('') : '';
-    h+='<div class="home-grid"><div class="card"><div class="card-h"><h2>'+(m?'Your open tasks':'Your tasks')+'</h2><a href="#tasks" data-goto-group="'+(m?'mine':'all')+'">'+(mine.length>6?'All '+mine.length:'All tasks')+'</a></div><div class="list" style="margin-top:10px">'+myList+binRows+'</div></div>'+
-      '<div class="card feed"><div class="card-h"><h2>Recent updates</h2><a href="#updates">View all</a></div><div class="list" style="margin-top:10px">'+(state.log.length?state.log.slice(-4).reverse().map(feedLine).join(''):'<div class="empty-state">No updates yet.</div>')+'</div></div></div>';
+      '<div class="hello-actions">'+(m?'':'<button class="btn" data-pickme="1">'+ic('users')+'Choose your name</button>')+(chosen?'':'<a class="btn" href="#ideas">'+ic('bulb')+'Review ideas</a>')+
+      '<a class="btn" href="#tasks" data-goto-group="all">'+ic('layers')+'Modules</a><a class="btn" href="#submissions">'+ic('inbox')+'Assignments</a></div></div>'+
+      (nx?'<a class="banner-due" href="#tasks" data-goto-group="'+nx.m.id+'" title="Open this module"><small>Next deadline</small><div class="big">'+(days===0?'Today':'<em data-count="'+days+'" style="font-style:normal">'+days+'</em><span>day'+(days===1?'':'s')+'</span>')+'</div><b>'+esc(nx.m.title)+'</b><small>'+short(nx.d)+' · Open module</small></a>':'')+'</section>';
+    h+='<div class="card feed"><div class="card-h"><h2>Recent announcements</h2><a href="#updates">View all</a></div><div class="list" style="margin-top:10px">'+(state.log.length?state.log.slice(-3).reverse().map(feedLine).join(''):'<div class="empty-state">No announcements yet.</div>')+'</div></div>';
+    h+='<div class="card"><div class="card-h"><h2>Modules</h2><a href="#tasks" data-goto-group="all">View all</a></div><div class="list" style="margin-top:10px">'+state.milestones.map(function(ms,i){
+      var d=dueOf(ms), r=rel(d), n=ms.items.length, dn=ms.items.filter(function(x){return x.status==='done';}).length, p=n?Math.round(dn/n*100):0, cur=nx&&nx.m.id===ms.id;
+      return '<a class="li li-link mod-li" href="#tasks" data-goto-group="'+ms.id+'"><span class="mod-n'+(n&&p===100?' done':(cur?' now':''))+'">'+(n&&p===100?ic('check',2.6):(i+1))+'</span><div class="t"><b>'+esc(ms.title)+'</b><small class="'+(r.c==='soon'?'soon':'')+'">'+short(d)+(d&&r.c==='soon'?', '+r.t.toLowerCase():'')+'</small></div><div class="bar" style="width:90px"><b style="width:'+p+'%"></b></div><span class="muted" style="font-size:12.5px;width:34px;text-align:right">'+dn+'/'+n+'</span>'+ic('chev')+'</a>';
+    }).join('')+'</div></div></div>';
+    // right rail
+    var todo;
+    if(!m) todo='<div class="empty-state">'+ic('users')+'<span>Choose your name to see your To Do list.</span><button class="btn" data-pickme="1">Choose your name</button></div>';
+    else if(!mine.length&&!myBins.length) todo='<div class="empty-state">'+ic('check')+'<span>Nothing to do. You’re all caught up.</span></div>';
+    else todo=myBins.map(function(x){ var d=dueOf(subMs(x)); return '<a class="li li-link" href="#submissions" data-gosub="'+x.id+'"><span class="ri-s">'+ic('inbox')+'</span><div class="t"><b>Submit: '+esc(x.title)+'</b><small>'+(d?'Due '+short(d):'Date not set')+'</small></div>'+ic('chev')+'</a>'; }).join('')+
+      mine.slice(0,5).map(function(x){ return '<div class="li">'+checkBtn(x.i)+'<button class="t t-btn" data-edittask="'+x.i.id+'" title="Edit task"><b>'+esc(x.i.text)+'</b><small>'+esc(x.m.title)+', due '+short(dueOf(x.m))+'</small></button></div>'; }).join('');
+    h+='<aside class="lms-rail"><div class="card"><div class="card-h"><h2>To Do</h2>'+(m&&mine.length?'<a href="#tasks" data-goto-group="mine">See all '+mine.length+'</a>':'')+'</div><div class="list" style="margin-top:10px">'+todo+'</div></div>';
+    h+='<div class="card"><div class="card-h"><h2>Upcoming</h2></div><div class="list" style="margin-top:10px">'+state.milestones.map(function(ms){
+      var d=dueOf(ms), r=rel(d); if(d&&daysTo(d)<0) return '';
+      return '<a class="li li-link" href="#tasks" data-goto-group="'+ms.id+'"><span class="dbadge"><i>'+(d?MON[d.getMonth()]:'TBA')+'</i><b>'+(d?d.getDate():'–')+'</b></span><div class="t"><b>'+esc(ms.title)+'</b><small class="'+(d&&r.c==='soon'?'soon':'')+'">'+(d?r.t:'Needs the final presentation date')+'</small></div></a>';
+    }).join('')+'</div><label class="rail-foot" for="f-final">Final presentation date<input type="date" id="f-final" class="input" style="height:34px;flex:none" value="'+esc(state.finalDate)+'"></label></div>';
+    h+='<div class="card"><div class="card-h"><h2>Course progress</h2></div><div class="prog"><span class="pct"><span data-count="'+pct+'">'+pct+'</span>%</span><div class="bar"><b style="width:'+pct+'%"></b></div><span class="muted" style="font-size:13px">'+done+' of '+tasks.length+' tasks done</span></div>'+
+      '<div class="list"><a class="li li-link" href="#submissions"><span class="ri-s">'+ic('inbox')+'</span><div class="t"><b>'+subDone+' of '+state.submissions.length+'</b><small>Assignments submitted</small></div>'+ic('chev')+'</a><a class="li li-link" href="#ideas"><span class="ri-s">'+ic('bulb')+'</span><div class="t"><b>'+state.ideas.length+' posted</b><small>Project ideas</small></div>'+ic('chev')+'</a></div></div></aside></div>';
     return h;
   }
   function checkBtn(i){ return '<button class="check '+i.status+'" data-status="'+i.id+'" aria-label="'+SL[i.status]+'. Change status" title="'+SL[i.status]+'. Click to change">'+(i.status==='done'?ic('check',3):'')+'</button>'; }
@@ -750,17 +823,23 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
           return '<div class="kc"><button class="kt t-btn" data-edittask="'+x.i.id+'" title="Edit task">'+esc(x.i.text)+'</button><div class="kf">'+av(x.i.owner,'sm')+'<span class="tag">'+esc(x.m.title)+'</span><button class="pill '+s+'" data-status="'+x.i.id+'" title="Move to the next status">'+(s==='done'?'Reopen':'Move on')+'</button></div></div>'; }).join('')+'</div>'; }).join('')+'</div>';
     }
     var shown=0;
-    state.milestones.forEach(function(m){
-      var items=m.items.filter(function(i){return keep({i:i,m:m});});
-      if(!items.length && !(ui.taskFilter==='all'||ui.taskFilter===m.id)) return;
+    state.milestones.forEach(function(m,idx){
+      var items=m.items.filter(function(i){return keep({i:i,m:m});}), whole=(ui.taskFilter==='all'||ui.taskFilter===m.id);
+      if(!items.length && !whole) return;
       shown++;
-      var d=dueOf(m), r=rel(d), dn=m.items.filter(function(i){return i.status==='done';}).length;
-      h+='<div class="card group" id="g-'+m.id+'"><div class="group-h"><h2>'+esc(m.title)+'</h2><span class="tag'+(r.c==='soon'?' red':'')+'">'+short(d)+(d?', '+r.t.toLowerCase():'')+'</span><span class="muted">'+dn+'/'+m.items.length+'</span><div class="bar"><b style="width:'+(m.items.length?Math.round(dn/m.items.length*100):0)+'%"></b></div><button class="btn sm ghost" data-editms="'+m.id+'" title="Edit this deadline" aria-label="Edit this deadline">'+ic('pen')+'</button><button class="btn sm ghost" data-newtask="'+m.id+'" title="Add a task to '+esc(m.title)+'">'+ic('plus')+'<span class="hide-sm">Add task</span></button></div>'+
-        (m.note?'<p class="group-note">'+m.note+'</p>':'')+(items.length?'':'<div class="trow-empty">No tasks here yet.</div>')+items.map(function(i){
+      var d=dueOf(m), r=rel(d), dn=m.items.filter(function(i){return i.status==='done';}).length, closed=!!ui.closed[m.id];
+      var bins=whole?state.submissions.filter(function(x){return x.ms===m.id;}):[];
+      h+='<div class="card module'+(closed?' closed':'')+'" id="g-'+m.id+'"><div class="mod-h"><button class="tog" data-modtoggle="'+m.id+'" aria-expanded="'+(!closed)+'" aria-label="'+(closed?'Expand':'Collapse')+' module" title="'+(closed?'Expand':'Collapse')+'">'+ic('chev')+'</button><div><span class="lbl">Module '+(idx+1)+'</span><h2>'+esc(m.title)+'</h2></div><span class="tag'+(r.c==='soon'?' red':'')+'">'+short(d)+(d?', '+r.t.toLowerCase():'')+'</span><span class="muted" style="font-size:13px">'+dn+'/'+m.items.length+' done</span><div class="bar"><b style="width:'+(m.items.length?Math.round(dn/m.items.length*100):0)+'%"></b></div>'+
+        '<button class="btn sm ghost" data-editms="'+m.id+'" title="Edit this module" aria-label="Edit this module">'+ic('pen')+'</button><button class="btn sm ghost" data-newtask="'+m.id+'" title="Add a task to '+esc(m.title)+'">'+ic('plus')+'<span class="hide-sm">Add task</span></button></div>';
+      if(!closed){
+        h+=(m.note?'<p class="group-note">'+m.note+'</p>':'')+(items.length?'':'<div class="trow-empty">No tasks here yet.</div>')+items.map(function(i){
           return '<div class="trow'+(i.status==='done'?' done':'')+'">'+checkBtn(i)+'<button class="tt t-btn" data-edittask="'+i.id+'" title="Edit task">'+esc(i.text)+'</button><button class="pill '+i.status+'" data-status="'+i.id+'">'+SL[i.status]+'</button><span class="owner">'+av(i.owner,'sm')+'<select data-owner="'+i.id+'" aria-label="Owner"><option value="">Unassigned</option>'+state.members.map(function(mm){return '<option value="'+mm.id+'"'+(i.owner===mm.id?' selected':'')+'>'+esc(mm.first)+'</option>';}).join('')+'</select></span><button class="btn sm ghost hide-sm" data-edittask="'+i.id+'" aria-label="Edit task" title="Edit task">'+ic('pen')+'</button></div>';
-        }).join('')+'</div>';
+        }).join('')+bins.map(function(x){ var st=subState(x), o=member(x.owner);
+          return '<div class="trow arow"><span class="ri-s">'+ic('inbox')+'</span><a href="#submissions" data-gosub="'+x.id+'">Assignment: '+esc(x.title)+'</a><span class="sstat '+st+'">'+SUBL[st]+'</span><span class="owner">'+av(x.owner,'sm')+'<span class="muted">'+(o?esc(o.first):'Whole team')+'</span></span><a class="btn sm ghost hide-sm" href="#submissions" data-gosub="'+x.id+'" aria-label="Open assignment" title="Open assignment">'+ic('chev')+'</a></div>'; }).join('');
+      }
+      h+='</div>';
     });
-    if(!shown) h+='<div class="card empty-state">'+ic('tasks')+'<span>No tasks match this filter.</span><button class="btn" data-tfilter="all">Show all tasks</button></div>';
+    if(!shown) h+='<div class="card empty-state">'+ic('tasks')+'<span>No modules match this filter.</span><button class="btn" data-tfilter="all">Show all tasks</button></div>';
     return h;
   }
   function openTask(id, msId){
@@ -804,12 +883,12 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
   }
   function teamView(){
     var c={}; allTasks().forEach(function(x){ var o=x.i.owner; if(o){ c[o]=c[o]||{a:0,d:0}; c[o].a++; if(x.i.status==='done') c[o].d++; } });
-    return '<div class="toolbar"><span class="muted">Roles for the Meet the Team slide. Click a role or focus to edit it.</span></div><div class="team">'+state.members.map(function(m){
+    return '<div class="toolbar"><span class="muted">'+state.members.length+' people in this group. Use the pencil to edit a name, role or focus.</span></div><div class="card"><div class="prow head"><span></span><span>Name and role</span><span>Focus</span><span>Assignments</span><span>Tasks done</span><span></span></div>'+state.members.map(function(m){
       var k=c[m.id]||{a:0,d:0}, bins=state.submissions.filter(function(x){return x.owner===m.id;});
-      return '<div class="card mem"><div class="mem-top">'+av(m.id,'lg')+'<div><b>'+esc(m.first+' '+m.last)+'</b><small>'+(m.id===me?'You':'Member')+'</small></div><span style="margin-left:auto;display:flex;gap:6px"><button class="btn sm ghost" data-editmember="'+m.id+'" title="Edit member" aria-label="Edit member">'+ic('pen')+'</button><a class="btn sm" href="#tasks" data-goto-group="m:'+m.id+'">'+ic('tasks')+'See tasks</a></span></div>'+
-        '<label>Role<input data-mrole="'+m.id+'" value="'+esc(m.role)+'"></label><label>Focus<input data-mfocus="'+m.id+'" value="'+esc(m.focus)+'"></label>'+
-        (bins.length?'<div class="mem-bins"><span>Submits</span>'+bins.map(function(x){return '<a class="tag" href="#submissions" data-gosub="'+x.id+'">'+esc(x.title)+'</a>';}).join('')+'</div>':'')+
-        '<div class="mem-prog"><span>'+k.d+'/'+k.a+' tasks</span><div class="bar"><b style="width:'+(k.a?Math.round(k.d/k.a*100):0)+'%;background:'+col(m.id)+'"></b></div></div></div>';
+      return '<div class="prow">'+av(m.id,'lg')+'<div><b>'+esc(m.first+' '+m.last)+(m.id===me?' <span class="tag accent">You</span>':'')+'</b><small>'+esc(m.role)+'</small></div><div class="c-focus"><small>'+esc(m.focus)+'</small></div>'+
+        '<div class="c-bins mem-bins">'+(bins.length?bins.map(function(x){return '<a class="tag" href="#submissions" data-gosub="'+x.id+'">'+esc(x.title)+'</a>';}).join(''):'<small>None yet</small>')+'</div>'+
+        '<div class="c-prog mem-prog"><span>'+k.d+'/'+k.a+'</span><div class="bar"><b style="width:'+(k.a?Math.round(k.d/k.a*100):0)+'%;background:'+col(m.id)+'"></b></div></div>'+
+        '<div class="c-acts" style="display:flex;gap:6px"><button class="btn sm ghost" data-editmember="'+m.id+'" title="Edit member" aria-label="Edit member">'+ic('pen')+'</button><a class="btn sm" href="#tasks" data-goto-group="m:'+m.id+'">'+ic('tasks')+'<span class="hide-sm">See tasks</span></a></div></div>';
     }).join('')+'</div>';
   }
   function rulesView(){
@@ -820,8 +899,8 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
       '<p class="muted" style="margin:0;font-size:13px">Group work (SRS and presentation) makes up 65% of the grade.</p></div></div></div>';
   }
   function updatesView(){
-    return '<div class="card"><form class="composer" id="log-form">'+(me?av(me):'<span class="av empty">?</span>')+'<select id="log-by" aria-label="Posting as"><option value="">Posting as…</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===me?' selected':'')+'>'+esc(m.first)+'</option>';}).join('')+'</select><input class="input" id="log-text" placeholder="Share an update or decision" aria-label="Update"><button class="btn primary" type="submit">'+ic('send')+'Post</button></form>'+
-      '<div class="list feed">'+(state.log.length?state.log.slice().reverse().map(function(e){ return feedLine(e).replace('</div></div>','</div><button class="btn sm ghost" data-editlog="'+e.id+'" aria-label="Edit update" title="Edit">'+ic('pen')+'</button><button class="btn sm ghost" data-dellog="'+e.id+'" aria-label="Delete update" title="Delete">'+ic('trash')+'</button></div>'); }).join(''):'<div class="empty-state">No updates yet.</div>')+'</div></div>';
+    return '<div class="card"><form class="composer" id="log-form">'+(me?av(me):'<span class="av empty">?</span>')+'<select id="log-by" aria-label="Posting as"><option value="">Posting as…</option>'+state.members.map(function(m){return '<option value="'+m.id+'"'+(m.id===me?' selected':'')+'>'+esc(m.first)+'</option>';}).join('')+'</select><input class="input" id="log-text" placeholder="Post an announcement to the group" aria-label="Update"><button class="btn primary" type="submit">'+ic('send')+'Post</button></form>'+
+      '<div class="list feed">'+(state.log.length?state.log.slice().reverse().map(function(e){ return feedLine(e).replace('</div></div>','</div><button class="btn sm ghost" data-editlog="'+e.id+'" aria-label="Edit update" title="Edit">'+ic('pen')+'</button><button class="btn sm ghost" data-dellog="'+e.id+'" aria-label="Delete update" title="Delete">'+ic('trash')+'</button></div>'); }).join(''):'<div class="empty-state">No announcements yet.</div>')+'</div></div>';
   }
 
 
@@ -838,7 +917,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     var subs=all.filter(function(x){ return f==='all' || (f==='mine'?x.owner===me:x.owner===f); });
     var chips=[['all','All']].concat(me?[['mine','Mine']]:[]).concat(state.members.filter(function(m){return m.id!==me;}).map(function(m){return [m.id,m.first];}));
     var h='<div class="toolbar"><div class="chips">'+chips.map(function(c){ return '<button class="chip" data-subfilter="'+c[0]+'" aria-pressed="'+(f===c[0])+'">'+esc(c[1])+'</button>'; }).join('')+'</div><span class="spacer"></span><span class="muted" style="font-size:13px">'+done+' of '+all.length+' submitted</span></div>';
-    if(!subs.length) return h+'<div class="card empty-state">'+ic('inbox')+'<span>No submissions are assigned to '+(f==='mine'?'you':esc(member(f).first))+' yet. Open one under All and change “Assigned to”.</span><button class="btn" data-subfilter="all">Show all</button></div>';
+    if(!subs.length) return h+'<div class="card empty-state">'+ic('inbox')+'<span>No assignments are assigned to '+(f==='mine'?'you':esc(member(f).first))+' yet. Open one under All and change “Assigned to”.</span><button class="btn" data-subfilter="all">Show all</button></div>';
     var sel=subs.filter(function(x){return x.id===ui.subSel;})[0]||subs[0];
     h+='<div class="subs"><div class="card sub-list" role="list">'+subs.map(function(x){
       var st=subState(x), d=dueOf(subMs(x)), r=rel(d), n=x.reqs.filter(function(q){return q.d;}).length;
@@ -865,7 +944,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
         (n<sel.reqs.length?'<p class="warn">'+ic('help')+(sel.reqs.length-n)+' requirement'+(sel.reqs.length-n===1?' is':'s are')+' not ticked yet. You can still mark it submitted.</p>':'')+
         '<div class="sub-acts"><button type="button" class="btn" data-subform="0">Cancel</button><button type="submit" class="btn primary">'+ic('send')+'Mark as submitted</button></div></form>';
     } else {
-      h+='<div class="sub-acts">'+(st==='review'?'<button class="btn" data-subreview="'+sel.id+'">Back to in progress</button>':'<button class="btn" data-subreview="'+sel.id+'">'+ic('users')+'Ready for review</button>')+'<button class="btn primary" data-subform="1">'+ic('send')+'Upload and submit</button></div>';
+      h+='<div class="sub-acts">'+(st==='review'?'<button class="btn" data-subreview="'+sel.id+'">Back to in progress</button>':'<button class="btn" data-subreview="'+sel.id+'">'+ic('users')+'Ready for review</button>')+'<button class="btn primary" data-subform="1">'+ic('send')+'Submit assignment</button></div>';
     }
     h+='</div></div>';
     return h;
@@ -927,7 +1006,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
       ['Who is responsible','<p>Victor Tarra manages the portal for the group and acts as the contact person for privacy concerns. The other members, '+state.members.filter(function(m){return m.id!=='tarra';}).map(function(m){return esc(m.first+' '+m.last);}).join(', ')+', can also view and edit the information.</p>'],
       ['What information we process','<ul><li><b>Member information:</b> first and last names, project roles and focus areas, and initials shown on avatars.</li><li><b>Project activity:</b> task owners and status, project ideas, votes, updates you post, and links to project files.</li><li><b>Preferences on your device:</b> your selected name (“Who are you?”), light or dark theme, and whether you have seen the tour. These are saved in your browser’s local storage and are not sent to us.</li></ul><p>We do not ask for and do not want sensitive personal information, such as health, religion, government ID numbers or financial details. Please don’t enter it.</p>'],
       ['Why we process it','<p>Only to plan, divide and track work on our SYSANDE finals project, and to prepare the SRS, promotional video and presentation. We will not use the information for any other purpose, sell it, or use it for marketing.</p>'],
-      ['Where it is stored and who can see it','<ul><li><b>Claude-hosted version:</b> the shared data is stored inside the page on Anthropic’s Claude service and is visible only to people the owner shares it with.</li><li><b>GitHub Pages version:</b> the page itself is public. Member names and roles shown on the page can be seen by anyone with the link. Changes you make are saved only in your own browser.</li><li><b>Uploaded files:</b> files you upload under Submissions pass through a Google Apps Script web app and are stored in the group’s Google Drive folder, owned by Victor Tarra’s Google account. They follow that folder’s sharing settings.</li><li><b>Third-party services:</b> loading the page contacts GitHub (hosting) and Google Fonts (typeface), which may receive your IP address and browser details under their own privacy policies. Linked files on Google Drive, Canva and Figma follow those services’ policies.</li></ul>'],
+      ['Where it is stored and who can see it','<ul><li><b>Claude-hosted version:</b> the shared data is stored inside the page on Anthropic’s Claude service and is visible only to people the owner shares it with.</li><li><b>GitHub Pages version:</b> the page itself is public. Member names and roles shown on the page can be seen by anyone with the link. Changes you make are saved only in your own browser.</li><li><b>Uploaded files:</b> files you upload under Assignments pass through a Google Apps Script web app and are stored in the group’s Google Drive folder, owned by Victor Tarra’s Google account. They follow that folder’s sharing settings.</li><li><b>Third-party services:</b> loading the page contacts GitHub (hosting) and Google Fonts (typeface), which may receive your IP address and browser details under their own privacy policies. Linked files on Google Drive, Canva and Figma follow those services’ policies.</li></ul>'],
       ['How long we keep it','<p>We keep the information until the end of the current term, after final grades are released. After that, the group will delete the shared data or archive the repository, unless all members agree to keep it for a portfolio.</p>'],
       ['How we protect it','<p>Edit access is limited to group members. We keep the information to the minimum needed for the project, in line with the principles of transparency, legitimate purpose and proportionality. Members agree not to copy portal data outside the group without permission.</p>'],
       ['Survey and interview data (elicitation)','<p>For our elicitation, we will tell respondents what the survey is for and ask for their consent before collecting answers. We will collect only what we need, keep raw responses in a restricted Drive folder, and share only anonymized or summarized results in the portal, the SRS and the presentation.</p>'],
@@ -987,16 +1066,16 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     var fixed=/^\d{4}-\d\d-\d\d$/.test(m.due);
     var dateF = m.due==='rec' ? '<p class="wide muted" style="margin:0;font-size:13.5px">This deadline is always one week before the final presentation. Change the final presentation date to move it.</p>'
       : '<label class="wide" for="m-date">'+(fixed?'Due date':'Final presentation date')+'<input id="m-date" type="date" value="'+esc(fixed?m.due:state.finalDate)+'"></label>';
-    sheet('ms-form', id, 'Edit deadline', '<label class="wide" for="m-title">Name<input id="m-title" required maxlength="50" value="'+esc(m.title)+'"></label>'+dateF+
+    sheet('ms-form', id, 'Edit module', '<label class="wide" for="m-title">Name<input id="m-title" required maxlength="50" value="'+esc(m.title)+'"></label>'+dateF+
       '<label class="wide" for="m-note">Note <small>Shown above its tasks. Optional</small><textarea id="m-note" rows="2">'+esc(String(m.note||'').replace(/<[^>]+>/g,''))+'</textarea></label>', 'Save changes', '');
   }
   function openSub(id){ var x=id?byId(state.submissions,id):null, nd=nextDue(), v=x||{title:'',kind:'Document',ms:nd?nd.m.id:state.milestones[0].id,reqs:[]};
-    sheet('subedit-form', x?x.id:'', x?'Edit submission':'New submission',
+    sheet('subedit-form', x?x.id:'', x?'Edit assignment':'New assignment',
       '<label class="wide" for="s-title">Name<input id="s-title" required maxlength="60" placeholder="Survey results summary" value="'+esc(v.title)+'"></label>'+
       '<label for="s-kind">Type<input id="s-kind" maxlength="20" placeholder="Document, Video, Slides" value="'+esc(v.kind)+'"></label>'+
       '<label for="s-ms">Due with<select id="s-ms">'+state.milestones.map(function(m){ var d=dueOf(m); return '<option value="'+m.id+'"'+(m.id===v.ms?' selected':'')+'>'+esc(m.title)+(d?' ('+short(d)+')':'')+'</option>'; }).join('')+'</select></label>'+
       '<label class="wide" for="s-reqs">Checklist <small>One requirement per line. Ticks are kept for lines you don’t change</small><textarea id="s-reqs" rows="7" required>'+esc(v.reqs.map(function(q){return q.t;}).join('\n'))+'</textarea></label>',
-      x?'Save changes':'Add submission', x?'sub:'+x.id:'');
+      x?'Save changes':'Add assignment', x?'sub:'+x.id:'');
   }
   function openMember(id){ var m=member(id); if(!m) return;
     sheet('member-form', id, 'Edit member', '<label for="mb-first">First name<input id="mb-first" required maxlength="30" value="'+esc(m.first)+'"></label><label for="mb-last">Last name<input id="mb-last" required maxlength="30" value="'+esc(m.last)+'"></label>'+
@@ -1038,6 +1117,7 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     else if(d.editidea){ openIdea(d.editidea); }
     else if(d.editlog){ openLog(d.editlog); }
     else if(d.editms){ openMs(d.editms); }
+    else if(d.modtoggle){ re(function(){ ui.closed[d.modtoggle]=!ui.closed[d.modtoggle]; }); }
     else if(d.editsub){ openSub(d.editsub); }
     else if(d.newsub){ openSub(''); }
     else if(d.editmember){ openMember(d.editmember); }
@@ -1121,15 +1201,15 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
       closeModal(); commit(lx?'Link saved':'Link added');
     }
     else if(f.id==='ms-form'){
-      var mm=byId(state.milestones,f.dataset.id), mt=document.getElementById('m-title').value.trim(); if(!mt){ toast('Give the deadline a name'); return; }
+      var mm=byId(state.milestones,f.dataset.id), mt=document.getElementById('m-title').value.trim(); if(!mt){ toast('Give the module a name'); return; }
       var md=document.getElementById('m-date');
       mm.title=mt; mm.note=esc(document.getElementById('m-note').value.trim());
       if(md){ if(mm.due==='final') state.finalDate=md.value; else if(md.value) mm.due=md.value; }
-      closeModal(); commit('Deadline saved');
+      closeModal(); commit('Module saved');
     }
     else if(f.id==='subedit-form'){
       var st2=document.getElementById('s-title').value.trim(), lines=document.getElementById('s-reqs').value.split(/\n+/).map(function(x){return x.trim();}).filter(Boolean);
-      if(!st2){ toast('Give the submission a name'); return; }
+      if(!st2){ toast('Give the assignment a name'); return; }
       if(!lines.length){ toast('Add at least one requirement'); return; }
       var sx2=f.dataset.id?byId(state.submissions,f.dataset.id):null, old={};
       if(sx2) sx2.reqs.forEach(function(q){ old[q.t]=q.d; });
@@ -1137,13 +1217,13 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
       var sk=document.getElementById('s-kind').value.trim()||'File', sm=document.getElementById('s-ms').value;
       if(sx2){ sx2.title=st2; sx2.kind=sk; sx2.ms=sm; sx2.reqs=reqs; }
       else { var nid=uid(); state.submissions.push({id:nid,ms:sm,title:st2,kind:sk,reqs:reqs,status:'not',link:'',by:'',at:'',owner:me||''}); ui.subSel=nid; ui.subFilter='all'; }
-      closeModal(); commit(sx2?'Submission saved':'Submission added');
+      closeModal(); commit(sx2?'Assignment saved':'Assignment added');
     }
     else if(f.id==='member-form'){
       var mb=member(f.dataset.id), fn=document.getElementById('mb-first').value.trim(), ln=document.getElementById('mb-last').value.trim(); if(!fn||!ln){ toast('Add a first and last name'); return; }
       mb.first=fn; mb.last=ln; mb.role=document.getElementById('mb-role').value.trim(); mb.focus=document.getElementById('mb-focus').value.trim();
       closeModal(); commit('Member saved');
-    } else if(f.id==='log-form'){ var t=document.getElementById('log-text').value.trim(); if(!t){ toast('Write an update first'); return; } state.log.push({id:uid(),date:iso(today()),by:document.getElementById('log-by').value,text:t}); commit('Update posted'); }
+    } else if(f.id==='log-form'){ var t=document.getElementById('log-text').value.trim(); if(!t){ toast('Write an update first'); return; } state.log.push({id:uid(),date:iso(today()),by:document.getElementById('log-by').value,text:t}); commit('Announcement posted'); }
   });
 
   /* ---------- loader + guide ---------- */
@@ -1152,8 +1232,8 @@ a.tag:hover{background:var(--accent-soft);color:var(--accent-text)}
     {t:'Welcome to the SYSANDE portal',p:'Everything for our finals in one place: ideas, tasks, deadlines and files. This takes 30 seconds.',d:function(){ return '<div class="stack">'+state.members.map(function(m){return av(m.id);}).join('')+'</div><b>Arradaza, Barba, Grefaldeo, Tarra</b>'; }},
     {t:'Tell the portal who you are',p:'Pick your name at the top of the sidebar. Home will then show your own tasks first.',d:function(){ return '<span class="av sm empty">?</span><b>Who are you?</b>'; }},
     {t:'Post ideas and support them',p:'Go to Ideas and press New idea. Tap your initials on an idea to support it. When we agree, press Choose. Claude AI’s examples have their own tab.',d:function(){ return '<span class="btn primary sm">'+ic('plus')+'New idea</span><button class="vote" style="--c:var(--m-tarra)" aria-pressed="true">VT</button>'; }},
-    {t:'Update and edit your tasks',p:'Click a task’s checkbox or status to move it from To do, to In progress, to Done. Click the task itself to edit it, and press New task to add one.',d:function(){ return '<span class="pill todo">To do</span><span class="pill doing">In progress</span><span class="pill done">Done</span>'; }},
-    {t:'Turn in work under Submissions',p:'Each deliverable has an owner and a checklist from the finals guide. Upload the file to our Google Drive with the team code, then mark it submitted.',d:function(){ return '<span class="sstat review">Ready for review</span><span class="sstat submitted">Submitted</span>'; }},
+    {t:'Work through the Modules',p:'Each deadline is a module with its tasks and assignments. Click a task’s checkbox or status to move it from To do, to In progress, to Done. Click the task itself to edit it, and press New task to add one.',d:function(){ return '<span class="pill todo">To do</span><span class="pill doing">In progress</span><span class="pill done">Done</span>'; }},
+    {t:'Turn in work under Assignments',p:'Each deliverable has an owner and a checklist from the finals guide. Upload the file to our Google Drive with the team code, then mark it submitted.',d:function(){ return '<span class="sstat review">Ready for review</span><span class="sstat submitted">Submitted</span>'; }},
     {t:'Light or dark',p:'Switch themes at the bottom of the sidebar. Auto follows your device.',d:function(){ return themeSwitch(); }},
     {t:'How saving works',p:'',d:function(){ return '<span class="sync" style="padding:0">'+syncText()+'</span>'; }}
   ];
