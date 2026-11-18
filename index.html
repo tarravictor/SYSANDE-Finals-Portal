@@ -545,6 +545,15 @@ a.crumb:hover{color:var(--accent-text)}
   .arow .owner .muted{font-size:13px}
 }
 
+.sync i.busy{background:var(--accent);animation:breathe 1s ease-in-out infinite}
+.sync i.err{background:var(--red)}
+.sync-retry{border:0;background:none;color:var(--accent-text);font:inherit;font-weight:600;cursor:pointer;padding:0;text-decoration:underline}
+.import-bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:72;width:min(640px,calc(100% - 24px));display:flex;gap:14px;align-items:center;padding:14px 16px;background:var(--surface);border:1px solid var(--accent);border-radius:14px;box-shadow:var(--shadow-lg);animation:rise .4s both}
+.import-bar p{margin:0;font-size:13.5px;color:var(--muted);flex:1}
+.import-bar p b{color:var(--text);display:block}
+.ib-acts{display:flex;gap:8px;flex:none}
+@media (max-width:860px){.import-bar{bottom:76px;flex-wrap:wrap}.ib-acts{width:100%;justify-content:flex-end}}
+
 /* loader */
 .loader{position:fixed;inset:0;z-index:90;background:var(--bg);display:grid;place-items:center;transition:opacity .3s}
 .loader.hide{opacity:0;pointer-events:none}
@@ -648,8 +657,9 @@ a.crumb:hover{color:var(--accent-text)}
   function rel(dt){ if(!dt) return {t:'Needs presentation date',c:'soon'}; var d=daysTo(dt); if(d<0) return {t:'Passed',c:'past'}; if(d===0) return {t:'Due today',c:'soon'}; if(d===1) return {t:'Due tomorrow',c:'soon'}; return {t:'In '+d+' days',c:d<=7?'soon':''}; }
   function sdgList(t){ return String(t||'').split(/[,;\n]+|\s+(?:and|&)\s+(?=SDG\b)/i).map(function(x){return x.trim().replace(/^(?:and|&)\s+/i,'').replace(/\.$/,'');}).filter(Boolean); }
   function fixSubs(){ var D={s1:'arradaza',s2:'tarra',s3:'barba',s4:'grefaldeo',s5:'arradaza',s6:''}; state.submissions.forEach(function(x){ if(x.owner===undefined) x.owner=D[x.id]||''; }); }
-  var APP_VERSION='2026.11.15-1', VK='sysande-seen-version';
-  var CHANGELOG={date:'November 15', items:[
+  var APP_VERSION='2026.11.18-1', VK='sysande-seen-version';
+  var CHANGELOG={date:'November 18', items:[
+    ['check','Changes now save for the whole group','Tasks, ideas, votes, announcements, links and assignments are saved to one shared copy in our Google Drive. Everyone sees the same portal. The first time you change something, enter the team code.',''],
     ['layers','New course layout','The portal now works like an LMS. The menu has Announcements, Modules, Assignments and People, and Home shows your To Do list and upcoming deadlines.','home'],
     ['pen','Edit almost anything','Team ideas, updates, file links, deadlines, submission checklists and member details now have an edit button. You can also add new file links and submissions.','ideas'],
     ['inbox','Every submission has an owner','Each deliverable is assigned to a member. Filter to yours, tick the checklist, and upload the file straight to our Google Drive.','submissions'],
@@ -741,7 +751,10 @@ a.crumb:hover{color:var(--accent-text)}
     return '<nav class="tabbar" aria-label="Quick menu">'+T.map(function(t){ return '<a href="#'+t[0]+'" class="'+(ui.view===t[0]?'on':'')+'"'+(ui.view===t[0]?' aria-current="page"':'')+'>'+ic(t[1])+t[2]+'</a>'; }).join('')+
       '<button data-menu="1" class="'+(T.every(function(t){return t[0]!==ui.view;})?'on':'')+'">'+ic('menu')+'More</button></nav>';
   }
-  function syncText(){ if(mode==='shared') return '<i class="ok"></i>Saved for the whole group'; if(mode==='readonly') return '<i></i>View only'; if(mode==='local') return '<i></i>Saved on this device only'; return '<i></i>Connecting…'; }
+  function syncText(){
+    if(mode==='cloud'){ if(saveErr) return '<i class="err"></i>'+(saveErr==='Needs the team code'?'Not saved yet':'Not saved')+'. <button class="sync-retry" data-retry="1">Retry</button>'; if(inFlight||dirty) return '<i class="busy"></i>Saving for the group…'; return '<i class="ok"></i>Saved for the whole group'; }
+    if(mode==='offline') return '<i></i>Can’t reach the shared copy. Saving on this device for now';
+    if(mode==='shared') return '<i class="ok"></i>Saved for the whole group'; if(mode==='readonly') return '<i></i>View only'; if(mode==='local') return '<i></i>Saved on this device only'; return '<i></i>Connecting…'; }
 
   /* ---------- views ---------- */
   function greet(){ var h=new Date().getHours(); return h<12?'Good morning':(h<18?'Good afternoon':'Good evening'); }
@@ -996,7 +1009,7 @@ a.crumb:hover{color:var(--accent-text)}
       ['Accuracy of deadlines and rules','<p>Deadlines and grading weights come from the finals presentation guide given to our class. If the instructor announces a change, the instructor’s announcement wins. Always confirm important dates in class or on the official course channel.</p>'],
       ['AI-generated content','<p>The three project ideas marked <b>Examples by Claude AI</b> were drafted by an AI assistant as starting points. Members must review, verify and rewrite any AI-assisted content before using it in a graded output, and follow the college’s academic integrity policies and the instructor’s rules on AI use.</p>'],
       ['Ownership of work','<p>Ideas, documents and designs created by the group belong to the group members. Files linked from the portal, such as Google Drive, Canva and Figma files, stay under the sharing settings of those services.</p>'],
-      ['Availability','<p>The portal is provided as is, without any guarantee that it will always be online or error free. Keep your own copies of important files in the shared Drive folder. On the GitHub Pages version, changes are saved in your browser only and can be lost if you clear your browser data.</p>'],
+      ['Availability','<p>The portal is provided as is, without any guarantee that it will always be online or error free. Keep your own copies of important files in the shared Drive folder. On the GitHub Pages version, changes are saved to a shared file in the group’s Google Drive. If the portal can’t reach it, changes are kept on your device until you retry.</p>'],
       ['Changes to these terms','<p>The group may update these terms. The effective date at the top will change when we do, and we will tell members in the group chat.</p>'],
       ['Contact','<p>For questions about these terms, contact Victor Tarra through the group chat.</p>']
     ]);
@@ -1006,7 +1019,7 @@ a.crumb:hover{color:var(--accent-text)}
       ['Who is responsible','<p>Victor Tarra manages the portal for the group and acts as the contact person for privacy concerns. The other members, '+state.members.filter(function(m){return m.id!=='tarra';}).map(function(m){return esc(m.first+' '+m.last);}).join(', ')+', can also view and edit the information.</p>'],
       ['What information we process','<ul><li><b>Member information:</b> first and last names, project roles and focus areas, and initials shown on avatars.</li><li><b>Project activity:</b> task owners and status, project ideas, votes, updates you post, and links to project files.</li><li><b>Preferences on your device:</b> your selected name (“Who are you?”), light or dark theme, and whether you have seen the tour. These are saved in your browser’s local storage and are not sent to us.</li></ul><p>We do not ask for and do not want sensitive personal information, such as health, religion, government ID numbers or financial details. Please don’t enter it.</p>'],
       ['Why we process it','<p>Only to plan, divide and track work on our SYSANDE finals project, and to prepare the SRS, promotional video and presentation. We will not use the information for any other purpose, sell it, or use it for marketing.</p>'],
-      ['Where it is stored and who can see it','<ul><li><b>Claude-hosted version:</b> the shared data is stored inside the page on Anthropic’s Claude service and is visible only to people the owner shares it with.</li><li><b>GitHub Pages version:</b> the page itself is public. Member names and roles shown on the page can be seen by anyone with the link. Changes you make are saved only in your own browser.</li><li><b>Uploaded files:</b> files you upload under Assignments pass through a Google Apps Script web app and are stored in the group’s Google Drive folder, owned by Victor Tarra’s Google account. They follow that folder’s sharing settings.</li><li><b>Third-party services:</b> loading the page contacts GitHub (hosting) and Google Fonts (typeface), which may receive your IP address and browser details under their own privacy policies. Linked files on Google Drive, Canva and Figma follow those services’ policies.</li></ul>'],
+      ['Where it is stored and who can see it','<ul><li><b>Claude-hosted version:</b> the shared data is stored inside the page on Anthropic’s Claude service and is visible only to people the owner shares it with.</li><li><b>GitHub Pages version:</b> the page itself is public. Changes you make (tasks, ideas, votes, announcements, links and assignments) are saved to one shared file in the group’s Google Drive, owned by Victor Tarra’s Google account, through a Google Apps Script web app. Saving requires the team code, but anyone who opens the page can view the shared data, so don’t post anything private.</li><li><b>Uploaded files:</b> files you upload under Assignments pass through a Google Apps Script web app and are stored in the group’s Google Drive folder, owned by Victor Tarra’s Google account. They follow that folder’s sharing settings.</li><li><b>Third-party services:</b> loading the page contacts GitHub (hosting) and Google Fonts (typeface), which may receive your IP address and browser details under their own privacy policies. Linked files on Google Drive, Canva and Figma follow those services’ policies.</li></ul>'],
       ['How long we keep it','<p>We keep the information until the end of the current term, after final grades are released. After that, the group will delete the shared data or archive the repository, unless all members agree to keep it for a portfolio.</p>'],
       ['How we protect it','<p>Edit access is limited to group members. We keep the information to the minimum needed for the project, in line with the principles of transparency, legitimate purpose and proportionality. Members agree not to copy portal data outside the group without permission.</p>'],
       ['Survey and interview data (elicitation)','<p>For our elicitation, we will tell respondents what the survey is for and ask for their consent before collecting answers. We will collect only what we need, keep raw responses in a restricted Drive folder, and share only anonymized or summarized results in the portal, the SRS and the presentation.</p>'],
@@ -1081,11 +1094,12 @@ a.crumb:hover{color:var(--accent-text)}
     sheet('member-form', id, 'Edit member', '<label for="mb-first">First name<input id="mb-first" required maxlength="30" value="'+esc(m.first)+'"></label><label for="mb-last">Last name<input id="mb-last" required maxlength="30" value="'+esc(m.last)+'"></label>'+
       '<label class="wide" for="mb-role">Role<input id="mb-role" maxlength="60" value="'+esc(m.role)+'"></label><label class="wide" for="mb-focus">Focus<input id="mb-focus" maxlength="120" value="'+esc(m.focus)+'"></label>', 'Save changes', '');
   }
-  function closeModal(){ document.querySelectorAll('#idea-modal,#app-modal').forEach(function(m){ if(m.dataset.news){ try{ localStorage.setItem(VK,APP_VERSION); }catch(e){} } m.remove(); }); }
+  function closeModal(){ if(codeWaiting&&document.getElementById('code-form')){ codeWaiting=false; saveErr='Needs the team code'; setTimeout(paintSync,0); } document.querySelectorAll('#idea-modal,#app-modal').forEach(function(m){ if(m.dataset.news){ try{ localStorage.setItem(VK,APP_VERSION); }catch(e){} } m.remove(); }); }
 
   /* ---------- saving ---------- */
   function commit(msg){ var y=window.scrollY; render(); window.scrollTo(0,y);
     if(mode==='readonly'){ toast('View only. Change not saved'); return; }
+    if(mode==='cloud'){ dirty=true; seq++; paintSync(); clearTimeout(timer); timer=setTimeout(cloudSave,700); if(msg) toast(msg); return; }
     if(mode!=='shared'){ try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} if(msg) toast(msg); return; }
     clearTimeout(timer); timer=setTimeout(publish,900); if(msg) toast(msg); }
   function buildDoc(){
@@ -1237,7 +1251,7 @@ a.crumb:hover{color:var(--accent-text)}
     {t:'Light or dark',p:'Switch themes at the bottom of the sidebar. Auto follows your device.',d:function(){ return themeSwitch(); }},
     {t:'How saving works',p:'',d:function(){ return '<span class="sync" style="padding:0">'+syncText()+'</span>'; }}
   ];
-  function savedText(){ if(mode==='shared') return 'Changes you make here are saved for the whole group.'; if(mode==='readonly') return 'You can view this page but changes won’t save. Ask Vik for edit access.'; return 'On this site, your changes are saved in your own browser only. Share important updates in the group chat too.'; }
+  function savedText(){ if(mode==='shared'||mode==='cloud') return 'Changes you make here are saved for the whole group, so everyone sees the same tasks, ideas and assignments. The first time you change something, the portal asks for the team code.'; if(mode==='readonly') return 'You can view this page but changes won’t save. Ask Vik for edit access.'; return 'On this site, your changes are saved in your own browser only. Share important updates in the group chat too.'; }
   function showLoader(){
     var recent=false; try{ var lt=+sessionStorage.getItem('sysande-loaded-at')||0; recent=Date.now()-lt<20000; sessionStorage.setItem('sysande-loaded-at',String(Date.now())); }catch(e){}
     if(recent) return Promise.resolve();
@@ -1265,9 +1279,101 @@ a.crumb:hover{color:var(--accent-text)}
   document.addEventListener('visibilitychange',function(){ if(!document.hidden) checkUpdate(); });
   render();
   showLoader().then(function(){ lastView=null; render(); var s=false; try{ s=!!localStorage.getItem(GK); }catch(e){} if(!s) openGuide(0); else if(!newsSeen()) openNews(); });
+  /* ---------- shared copy (GitHub site) ---------- */
+  var rev=0, dirty=false, inFlight=false, seq=0, saveErr='', codeWaiting=false, IMP_KEY='sysande-local-imported';
+  function paintSync(){ document.querySelectorAll('.sync').forEach(function(el){ el.innerHTML=syncText(); }); }
+  function adopt(st){ if(!st) return; state=st; if(!state.ideas) state.ideas=[]; if(!state.log) state.log=[]; if(!state.links) state.links=[]; ensureSubs(); fixSubs(); }
+  function busyUI(){ var a=document.activeElement; return !!(document.querySelector('.modal:not([hidden])')||(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))); }
+  function getCode(){ try{ return localStorage.getItem('sysande-code')||''; }catch(e){ return ''; } }
+  function askCode(bad){
+    if(document.getElementById('code-form')) return;
+    codeWaiting=true;
+    sheet('code-form','', bad?'That team code didn’t work':'Enter the team code',
+      '<p class="wide muted" style="margin:0">'+(bad?'Check the code and try again. ':'')+'Your change will be saved for the whole group. You only need to do this once on this device. Ask Vik if you don’t have the code.</p><label class="wide" for="cf-code">Team code<input id="cf-code" autocomplete="off" placeholder="SYS-0000" required></label>',
+      'Save for everyone','');
+  }
+  function cloudGet(){ return fetch(UPLOAD_URL+'?action=state&t='+Date.now(),{cache:'no-store'}).then(function(r){ return r.json(); }); }
+  function cloudSave(){
+    if(mode!=='cloud'||inFlight||!dirty) return;
+    var code=getCode(); if(!code){ askCode(false); return; }
+    inFlight=true; saveErr=''; paintSync();
+    var mySeq=seq;
+    fetch(UPLOAD_URL,{method:'POST',body:JSON.stringify({action:'save',code:code,base:rev,by:me,state:state})})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        inFlight=false;
+        if(j.ok){ rev=j.rev; if(seq===mySeq) dirty=false; try{ localStorage.removeItem(LS_KEY); }catch(e){} paintSync(); if(dirty) cloudSave(); return; }
+        if(j.badCode){ try{ localStorage.removeItem('sysande-code'); }catch(e){} askCode(true); paintSync(); return; }
+        if(j.conflict){ adopt(j.state); rev=j.rev; dirty=false; re(function(){}); toast('Someone else saved at the same moment. Your last change wasn’t kept, so please do it again.'); return; }
+        saveErr=j.error||'Not saved'; paintSync(); toast(saveErr);
+      })
+      .catch(function(){ inFlight=false; saveErr='offline'; try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} paintSync(); toast('Couldn’t reach the shared copy. Press Retry when you’re back online.'); });
+  }
+  function cloudPull(quiet){
+    if(mode!=='cloud'&&mode!=='offline') return;
+    if(dirty||inFlight||busyUI()) return;
+    cloudGet().then(function(j){
+      if(!j||!j.ok) return;
+      var wasOffline=mode==='offline';
+      if(wasOffline){ mode='cloud'; }
+      if(j.state && (j.rev!==rev || wasOffline)){ adopt(j.state); rev=j.rev; re(function(){}); if(!quiet&&!wasOffline) toast('Updated with the group’s latest changes'); }
+      else { rev=j.rev; paintSync(); }
+      if(wasOffline) offerImport();
+    }).catch(function(){});
+  }
+  function mergeLocal(local){
+    var added=0;
+    function addById(dst, src){ var ids={}; dst.forEach(function(x){ ids[x.id]=x; }); (src||[]).forEach(function(x){ if(!ids[x.id]){ dst.push(x); added++; } else if(x.votes&&ids[x.id].votes){ x.votes.forEach(function(v){ if(ids[x.id].votes.indexOf(v)<0){ ids[x.id].votes.push(v); added++; } }); } }); }
+    addById(state.ideas, local.ideas); addById(state.log, local.log); addById(state.links, local.links); addById(state.submissions, local.submissions);
+    (local.milestones||[]).forEach(function(lm){ var sm=byId(state.milestones,lm.id); if(sm) addById(sm.items, lm.items); });
+    if(!state.chosen&&local.chosen){ state.chosen=local.chosen; added++; }
+    if(!state.finalDate&&local.finalDate){ state.finalDate=local.finalDate; added++; }
+    return added;
+  }
+  function localOnlyCount(local){
+    var n=0; function c(dst,src){ var ids={}; (dst||[]).forEach(function(x){ ids[x.id]=1; }); (src||[]).forEach(function(x){ if(!ids[x.id]) n++; }); }
+    c(state.ideas,local.ideas); c(state.log,local.log); c(state.links,local.links); c(state.submissions,local.submissions);
+    (local.milestones||[]).forEach(function(lm){ var sm=byId(state.milestones,lm.id); if(sm) c(sm.items,lm.items); });
+    return n;
+  }
+  function offerImport(){
+    var raw=null; try{ if(localStorage.getItem(IMP_KEY)) return; raw=localStorage.getItem(LS_KEY); }catch(e){ return; }
+    if(!raw) return;
+    var local; try{ local=JSON.parse(raw); }catch(e){ return; }
+    var n=localOnlyCount(local);
+    if(!n){ try{ localStorage.setItem(IMP_KEY,'1'); localStorage.removeItem(LS_KEY); }catch(e){} return; }
+    var el=document.createElement('div'); el.className='import-bar'; el.id='import-bar'; el.setAttribute('role','region'); el.setAttribute('aria-label','Changes saved on this device');
+    el.innerHTML='<span class="ri-s">'+ic('inbox')+'</span><p><b>This device has '+n+' item'+(n===1?'':'s')+' the group hasn’t seen.</b> Ideas, tasks, announcements, links or assignments you added before shared saving existed. Add them to the shared copy?</p><div class="ib-acts"><button class="btn" data-import="0">Discard</button><button class="btn primary" data-import="1">Add for everyone</button></div>';
+    document.body.appendChild(el);
+    el._local=local;
+  }
+  function startCloud(){
+    mode='connecting'; paintSync();
+    cloudGet().then(function(j){
+      if(!j||!j.ok) throw new Error('bad');
+      mode='cloud'; rev=j.rev||0;
+      if(j.state) adopt(j.state);
+      re(function(){}); offerImport();
+    }).catch(function(){ mode='offline'; loadLocal(); re(function(){}); });
+  }
+  setInterval(function(){ if(!document.hidden) cloudPull(false); },25000);
+  window.addEventListener('focus',function(){ cloudPull(false); });
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) cloudPull(false); });
+  window.addEventListener('beforeunload',function(e){ if(mode==='cloud'&&(dirty||inFlight)){ e.preventDefault(); e.returnValue=''; } });
+  document.addEventListener('submit',function(e){ var f=e.target; if(f.id!=='code-form') return; e.preventDefault(); e.stopImmediatePropagation();
+    var v=document.getElementById('cf-code').value.trim().toUpperCase(); if(!v) return;
+    try{ localStorage.setItem('sysande-code',v); }catch(err){} codeWaiting=false; closeModal(); saveErr=''; cloudSave(); },true);
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-retry],[data-import]'); if(!b) return;
+    if(b.dataset.retry){ saveErr=''; dirty=true; cloudSave(); return; }
+    var bar=document.getElementById('import-bar');
+    if(b.dataset.import==='1'&&bar&&bar._local){ var n=mergeLocal(bar._local); try{ localStorage.setItem(IMP_KEY,'1'); }catch(err){} bar.remove(); if(n){ commit('Added '+n+' item'+(n===1?'':'s')+' for everyone'); } }
+    else { try{ localStorage.setItem(IMP_KEY,'1'); localStorage.removeItem(LS_KEY); }catch(err){} if(bar) bar.remove(); }
+  });
   function loadLocal(){ try{ var s=localStorage.getItem(LS_KEY); if(s){ state=JSON.parse(s); if(!state.ideas) state.ideas=[]; ensureSubs(); fixSubs(); } }catch(e){} }
   var cl=window.claude;
   if(cl&&typeof cl.use==='function'){ cl.use('artifact').then(function(a){ if(a){ api=a; mode='shared'; } else { mode='local'; loadLocal(); } render(); }).catch(function(){ mode='local'; loadLocal(); render(); }); }
+  else if(UPLOAD_URL&&/^https?:$/.test(location.protocol)){ startCloud(); }
   else { mode='local'; loadLocal(); render(); }
 })();
 </script>
